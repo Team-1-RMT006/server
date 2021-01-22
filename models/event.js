@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Event.belongsTo(models.Organizer)
+      Event.hasMany(models.Wishlist)
+      Event.hasMany(models.Ticket)
+      Event.belongsTo(models.EventType)
     }
   };
   Event.init({
@@ -23,9 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     status: DataTypes.STRING,
     price_regular: DataTypes.INTEGER,
     price_vip: DataTypes.INTEGER,
-    price_vvip: DataTypes.INTEGER,
-    TypeId: DataTypes.INTEGER,
-    OrganizerId: DataTypes.INTEGER
+    price_vvip: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Event',

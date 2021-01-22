@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Wishlist.belongsTo(models.Event)
+      Wishlist.belongsTo(models.Customer)
     }
   };
   Wishlist.init({
-    CustomerId: DataTypes.INTEGER,
-    EventId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Wishlist',

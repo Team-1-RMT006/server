@@ -35,24 +35,6 @@ module.exports = {
       price_vvip: {
         type: Sequelize.INTEGER
       },
-      TypeId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: {
-            tableName: "EventTypes",
-            key: "id"
-          }
-        }
-      },
-      OrganizerId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: {
-            tableName: "Organizers",
-            key: "id"
-          }
-        }
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

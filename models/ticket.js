@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Ticket.belongsTo(models.Event)
+      Ticket.belongsTo(models.Customer)
     }
   };
   Ticket.init({
@@ -18,9 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     ticketCode: DataTypes.STRING,
     seat: DataTypes.INTEGER,
     status: DataTypes.STRING,
-    price: DataTypes.INTEGER,
-    CustomerId: DataTypes.INTEGER,
-    EventId: DataTypes.INTEGER
+    price: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Ticket',
