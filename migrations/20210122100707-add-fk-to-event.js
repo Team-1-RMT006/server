@@ -36,7 +36,7 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     Promise.all([
-      await queryInterface.removeColumn("Events", "TypeId"),
+      await queryInterface.removeColumn("Events", "EventTypeId"),
       await queryInterface.removeColumn("Events", "OrganizerId")
     ])
     /**

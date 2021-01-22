@@ -1,10 +1,11 @@
 const express = require("express")
 const app = express()
-const PORT = 3000
+const route = require('./src/routes/index')
+const errorhandler = require('./src/middlewares/errorhandler')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use('/', route)
+app.use(errorhandler)
 
-app.listen(PORT, () => {
-    console.log(`I LOVE YOU ${PORT}`);
-})
+module.exports = app
