@@ -1,4 +1,4 @@
-const { Admin } = require('../../models/index')
+const { Admin } = require('../models/index')
 
 class AdminController {
   static async registerAdmin(req, res, next) {
