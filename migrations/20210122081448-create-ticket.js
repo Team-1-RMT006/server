@@ -15,7 +15,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       seat: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       status: {
         type: Sequelize.STRING

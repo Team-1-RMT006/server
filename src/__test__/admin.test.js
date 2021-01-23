@@ -1,5 +1,17 @@
 const request = require('supertest')
 const app = require('../app')
+const { sequelize } = require('../models/index')
+const { queryInterface } = sequelize
+
+afterAll((done) => {
+  queryInterface.bulkDelete("Admins", {}, { logging: false })
+    .then(response => {
+      done()
+    })
+    .catch(error => {
+      done(error)
+    })
+})
 
 describe("Register Admin", () => {
   test("response with data", (done) => {
@@ -68,7 +80,24 @@ describe("Register Admin", () => {
           return done(err)
         }
         expect(status).toBe(400)
-        expect(body).toHaveProperty("message", "Email must be unique")
+        expect(body).toHaveProperty("message", "Email has already use")
+        done()
+      })
+  })
+})
+
+describe("Login Admin", () => {
+  test("response with access token", (done) => {
+    request(app)
+      .post("/admin/login")
+      .send({ email: "admin@mail.com", password: "123456" })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(200)
+        expect(body).toHaveProperty("access_token", expect.any(String))
         done()
       })
   })
