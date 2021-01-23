@@ -1,4 +1,5 @@
-const { Organizer } = require('../models/index');
+const { Organizer } = require('../models');
+const { Event } = require('../models');
 const { compare } = require("../organizerHelpers/bcrypt");
 const { sign } = require("../organizerHelpers/jwt");
 
@@ -69,6 +70,66 @@ class OrganizerController {
         console.log(error);
         next(error);
     });
+  }
+
+  static showEvents(req, res, next) {
+    Event.findAll({
+      where: {
+        OrganizerId = req.loggedInUser.id
+      },
+      order: [["status", "ASC"]],
+      include: [EventType, Organizer]
+    })
+      .then((data) => {
+          res.status(200).json(data);
+      })
+      .catch((error) => {
+          next(error);
+      });
+  }
+
+  static createEvent(req, res, next) {
+    const newEvent = req.body;
+    Event.create(newEvent)
+      .then((data) => {
+        res.status(201).json(data);
+      })
+      .catch((error) => {
+        next(error);
+      });
+  } 
+
+  static updateEvent(req, res, next) {
+    const updatedEvent = req.body;
+    const id = req.params.id;
+    updatedEvent.OrganizerId = req.loggedInUser.id;
+    Event.put(updatedEvent, {
+      where : {
+        id
+      },
+      returning: true
+    })
+      .then((data) => {
+        res.status(200).json(data[1][0]);
+      })
+      .catch((error) => {
+        next(error);
+      });
+  } 
+
+  static deleteEvent(req, res, next) {
+    const id = req.params.id;
+    Event.destroy({
+      where : {
+        id
+      }
+    })
+      .then((data) => {
+        res.status(200).json({ message: "Deleted from database"});
+      })
+      .catch((error) => {
+        next(error);
+      });
   }
 }
 
