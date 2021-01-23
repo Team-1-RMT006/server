@@ -1,9 +1,9 @@
 module.exports = (err, req, res, next) => {
-  const validationErrors = [];
+  const validationErrors = []
   if (err.status) {
-    res.status(err.status).json(err.message)
+    res.status(err.status).json({ message: err.message })
   } else if (err.name === 'SequelizeUniqueConstraintError') {
-    res.status(400).json({ message: 'Email has already use' })
+    res.status(400).json({ message: err.message })
   } else if (err.name === 'SequelizeValidationError') {
     err.errors.forEach(error => validationErrors.push(error.message));
     res.status(401).json({ messages: validationErrors })

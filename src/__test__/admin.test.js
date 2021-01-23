@@ -100,5 +100,75 @@ describe("Login Admin", () => {
         expect(body).toHaveProperty("access_token", expect.any(String))
         done()
       })
+  }),
+  test("response with email and password required", (done) => {
+    request(app)
+      .post("/admin/login")
+      .send({ email: "", password: "" })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(400)
+        expect(body).toHaveProperty("message", "Email and password are required")
+        done()
+      })
+  }),
+  test("response with email required", (done) => {
+    request(app)
+      .post("/admin/login")
+      .send({ email: "", password: "12345" })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(400)
+        expect(body).toHaveProperty("message", "Email is required")
+        done()
+      })
+  }),
+  test("response with password required", (done) => {
+    request(app)
+      .post("/admin/login")
+      .send({ email: "admin@mail.com", password: "" })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(400)
+        expect(body).toHaveProperty("message", "Password is required")
+        done()
+      })
+  }),
+  test("response with email or password incorrect", (done) => {
+    request(app)
+      .post("/admin/login")
+      .send({ email: "admin@mail.com", password: "aaaaaaa" })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(401)
+        expect(body).toHaveProperty("message", "Email or password incorrect")
+        done()
+      })
+  }),
+  test("response with invalid account", (done) => {
+    request(app)
+      .post("/admin/login")
+      .send({ email: "admin5@mail.com", password: "12345" })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(401)
+        expect(body).toHaveProperty("message", "Invalid account")
+        done()
+      })
   })
 })

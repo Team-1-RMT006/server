@@ -31,5 +31,10 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Event',
   });
+
+  Event.beforeCreate((instance, option) => {
+    instance.status = 'active'
+  })
+  
   return Event;
 };
