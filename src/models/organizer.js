@@ -16,13 +16,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Organizer.init({
-<<<<<<< HEAD
-    name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.STRING,
-    address: DataTypes.STRING,
-    phone: DataTypes.STRING
-=======
     name: {
       type: DataTypes.STRING,
       validate: {
@@ -76,7 +69,6 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     }
->>>>>>> main
   }, {
     sequelize,
     modelName: 'Organizer',
