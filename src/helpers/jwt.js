@@ -1,15 +1,15 @@
 const jwt = require('jsonwebtoken')
 
 function getTokenAdmin(obj) {
-  return jwt.sign({ id: obj.id, email: obj.email }, 'rahasia')
+  return jwt.sign({ id: obj.id, email: obj.email, role: obj.role }, 'rahasia')
 }
 
 function getTokenCustomer(obj) {
-  return jwt.sign({ id: obj.id, email: obj.email, name: obj.first_name }, 'rahasia')
+  return jwt.sign({ id: obj.id, email: obj.email, name: obj.first_name, role: obj.role }, 'rahasia')
 }
 
 function getTokenOrganizer(obj) {
-  return jwt.sign({ id: obj.id, email: obj.email, name: obj.name }, 'rahasia')
+  return jwt.sign({ id: obj.id, email: obj.email, name: obj.name, role: obj.role }, 'rahasia')
 }
 
 function verify(token) {
