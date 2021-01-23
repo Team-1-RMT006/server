@@ -7,4 +7,5 @@ routeAdmin.post('/login', AdminController.loginAdmin)
 routeAdmin.use(authentication)
 routeAdmin.post('/event', AdminController.createEvent)
 
+
 module.exports = routeAdmin
