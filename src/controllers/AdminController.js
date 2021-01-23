@@ -1,4 +1,4 @@
-const { Admin, Event } = require('../models/index')
+const { Admin, Event, Banner, EventType } = require('../models/index')
 const { getTokenAdmin } = require('../helpers/jwt')
 const { compare } = require('../helpers/bcrypt')
 
@@ -41,6 +41,7 @@ class AdminController {
         if (dataUser) {
           const dataCompared = compare(obj.password, dataUser.password)
           if (dataCompared) {
+            dataUser.role = 'admin'
             const access_token = getTokenAdmin(dataUser)
             res.status(200).json({ access_token })
           } else {
@@ -77,6 +78,163 @@ class AdminController {
     try {
       const data = await Event.create(obj)
       res.status(201).json(data)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async editEvent (req, res, next) {
+    const obj = {
+      id: req.params.id,
+      title: req.body.title,
+      date: req.body.date,
+      time: req.body.time,
+      location: req.body.location,
+      capacity: req.body.capacity,
+      EventTypeId: req.body.EventTypeId,
+      OrganizerId: req.body.OrganizerId,
+      status: req.body.status
+    }
+    try {
+      const data = await Event.update(obj, { where: { id: obj.id }})
+      res.status(200).json(data)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async getEvent (req, res, next) {
+    try {
+      const data = await Event.find()
+      res.status(200).json(data)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async deleteEvent (req, res, next) {
+    const id = req.params.id
+    try {
+      const data = await Event.destroy({ where: { id }})
+      res.status(200).json({ message: 'Data deleted successful' })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async createBanner (req, res, next) {
+    const obj = {
+      image_url: req.body.image_url
+    }
+    try {
+      const data = await Banner.create(obj)
+      res.status(201).json(data)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async getBanner (req, res, next) {
+    try {
+      const data = await Banner.find()
+      res.status(200).json(data)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async editBanner (req, res, next) {
+    const obj = {
+      id: req.params.id,
+      image_url: req.body.image_url
+    }
+    try {
+      const data = await Banner.update(obj, { where: { id: obj.id }})
+      res.status(200).json(data)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async deleteBanner (req, res, next) {
+    const id = req.params.id
+    try {
+      const data = await Banner.destroy({ where: { id }})
+      res.status(200).json({ message: 'Data deleted successful' })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async getEventById (req, res, next) {
+    const id = req.params.id
+    try {
+      const data = await Event.findByPk(id)
+      res.status(200).json(data)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async getBannerById (req, res, next) {
+    const id = req.params.id
+    try {
+      const data = await Banner.findByPk(id)
+      res.status(200).json(data)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async createEventType (req, res, next) {
+    const obj = {
+      name: req.body.name
+    }
+    try {
+      const data = await EventType.create(obj)
+      res.status(201).json(data)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async getEventType (req, res, next) {
+    try {
+      const data = await EventType.find()
+      res.status(200).json(data)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async editEventType (req, res, next) {
+    const obj = {
+      id: req.params.id,
+      name: req.body.name
+    }
+    try {
+      const data = await EventType.update(obj, { where: { id: obj.id }})
+      res.status(200).json(data)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async deleteEventType (req, res, next) {
+    const id = req.params.id
+    try {
+      const data = await EventType.destroy({ where: { id }})
+      res.status(200).json({ message: 'Data deleted successful' })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async getEventTypeById (req, res, next) {
+    const id = req.params.id
+    try {
+      const data = await EventType.findByPk(id)
+      res.status(200).json(data)
     } catch (error) {
       next(error)
     }
