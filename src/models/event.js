@@ -18,10 +18,34 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Event.init({
-    title: DataTypes.STRING,
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: 'Title is required'
+        },
+        notNull: {
+          args: true,
+          msg: 'Title is required'
+        }
+      }},
     date: DataTypes.DATEONLY,
     time: DataTypes.TIME,
-    location: DataTypes.STRING,
+    location: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: 'Location is required'
+        },
+        notNull: {
+          args: true,
+          msg: 'Location is required'
+        }
+      }},
     capacity: DataTypes.INTEGER,
     status: DataTypes.STRING,
     price_regular: DataTypes.INTEGER,

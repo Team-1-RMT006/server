@@ -16,13 +16,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Organizer.init({
-<<<<<<< HEAD
-    name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.STRING,
-    address: DataTypes.STRING,
-    phone: DataTypes.STRING
-=======
     name: {
       type: DataTypes.STRING,
       validate: {
@@ -35,10 +28,6 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
       validate: {
-        notEmpty: {
-          args: true,
-          msg: 'Email is required'
-        },
         isEmail: {
           args: true,
           msg: 'Email is invalid'
@@ -48,10 +37,6 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
       validate: {
-        notEmpty: {
-          args: true,
-          msg: 'Password is required'
-        },
         len: {
           args: [7, 128],
           msg: 'Password must contain at least 7 characters and maximum 128 characters'
@@ -76,7 +61,6 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     }
->>>>>>> main
   }, {
     sequelize,
     modelName: 'Organizer',

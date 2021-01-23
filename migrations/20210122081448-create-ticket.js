@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       ticketCode: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       seat: {
         type: Sequelize.STRING

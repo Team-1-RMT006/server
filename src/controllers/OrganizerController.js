@@ -12,8 +12,20 @@ class OrganizerController {
       phone: req.body.phone
     };
     try {
-      const data = await Organizer.create(obj);
-      res.status(201).json({ id: data.id, email: data.email });
+      if (!obj.email) {
+        throw {
+          status: 400,
+          message: 'Email is required'
+        }
+      } else if (!obj.password) {
+        throw {
+          status: 400,
+          message: 'Password is required'
+        }
+      } else {
+        const data = await Organizer.create(obj);
+        res.status(201).json({ id: data.id, email: data.email });
+      }
     } catch (error) {
       next(error);
     }
@@ -39,7 +51,7 @@ class OrganizerController {
         if(!data) {
           throw {
             status: 401,
-            message: "Email or password is invalid."
+            message: "Email or password is invalid"
           };
         } else if (compare(req.body.password, data.password)) {
             const access_token = sign(data.id, data.email, data.role);
@@ -47,7 +59,7 @@ class OrganizerController {
         } else {
             throw {
               status: 401,
-              message: "Email or password is invalid."
+              message: "Email or password is invalid"
             };
         }
       }

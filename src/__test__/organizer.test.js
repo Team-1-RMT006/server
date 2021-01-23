@@ -55,12 +55,11 @@ describe("Organizer register POST /organizers/register", () => {
         }
         expect(status).toBe(400);
         expect(body).toHaveProperty("messages", [
-                      "Name is required."
+                      "Name is required"
         ]);
         done();
       });
     });
-  });
     test("cannot register Organizer, name is not provided", (done) => {
       request(app)
       .post("/organizers/register")
@@ -99,9 +98,7 @@ describe("Organizer register POST /organizers/register", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("messages", [
-                      "Email is required"
-        ]);
+        expect(body).toHaveProperty("message", "Email is required");
         done();
       });
     });
@@ -143,9 +140,7 @@ describe("Organizer register POST /organizers/register", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("messages", [
-                      "Password is required"
-        ]);
+        expect(body).toHaveProperty("message", "Password is required");
         done();
       });
     });
@@ -215,6 +210,7 @@ describe("Organizer register POST /organizers/register", () => {
         done();
       });
     });
+  });
 });
 
 describe("Organizer login POST /organizers/login", () => {
@@ -249,7 +245,6 @@ describe("Organizer login POST /organizers/login", () => {
         done();
       });
     });
-  });
     test("cannot log Organizer in, email is not in database", (done) => {
       request(app)
       .post("/organizers/login")
@@ -308,4 +303,5 @@ describe("Organizer login POST /organizers/login", () => {
         done();
       });
     });
+  });
 });

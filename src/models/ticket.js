@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   };
   Ticket.init({
     class: DataTypes.STRING,
-    ticketCode: DataTypes.STRING,
+    ticketCode: DataTypes.TEXT,
     seat: DataTypes.STRING,
     status: DataTypes.STRING,
     price: DataTypes.INTEGER
