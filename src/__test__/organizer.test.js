@@ -55,7 +55,7 @@ describe("Organizer register POST /organizers/register", () => {
         }
         expect(status).toBe(400);
         expect(body).toHaveProperty("messages", [
-                      "Name is required."
+                      "Name is required"
         ]);
         done();
       });
@@ -98,9 +98,7 @@ describe("Organizer register POST /organizers/register", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("messages", [
-                      "Email is required"
-        ]);
+        expect(body).toHaveProperty("message", "Email is required");
         done();
       });
     });
@@ -142,9 +140,7 @@ describe("Organizer register POST /organizers/register", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("messages", [
-                      "Password is required"
-        ]);
+        expect(body).toHaveProperty("message", "Password is required");
         done();
       });
     });
@@ -317,7 +313,7 @@ describe("Organizer create Event POST /organizers/events", () => {
       .post("/organizers/register")
       .send({
         name: "Organizer",
-        email: "organizer@mail.com",
+        email: "organizer2@mail.com",
         password: "1234567",
         address: "123 Street",
         phone: "0123456789"
@@ -329,7 +325,7 @@ describe("Organizer create Event POST /organizers/events", () => {
         }
         expect(status).toBe(201);
         expect(body).toHaveProperty("id", expect.any(Number));
-        expect(body).toHaveProperty("email", "organizer@mail.com");
+        expect(body).toHaveProperty("email", "organizer2@mail.com");
         done();
       });
     });
@@ -340,7 +336,7 @@ describe("Organizer create Event POST /organizers/events", () => {
       .post("/organizers/register")
       .send({
         name: "",
-        email: "organizer@mail.com",
+        email: "organizer2@mail.com",
         password: "1234567",
         address: "123 Street",
         phone: "0123456789"
@@ -352,8 +348,10 @@ describe("Organizer create Event POST /organizers/events", () => {
         }
         expect(status).toBe(400);
         expect(body).toHaveProperty("messages", [
-                      "Name is required."
+                      "Name is required"
         ]);
         done();
       });
     });
+  });
+});

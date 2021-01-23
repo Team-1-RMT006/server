@@ -20,13 +20,17 @@ module.exports = (sequelize, DataTypes) => {
   Event.init({
     title: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notEmpty: {
           args: true,
           msg: 'Title is required'
+        },
+        notNull: {
+          args: true,
+          msg: 'Title is required'
         }
-      }
-    },
+      }},
     date: {
       type: DataTypes.DATEONLY,
       validate: {
@@ -47,13 +51,17 @@ module.exports = (sequelize, DataTypes) => {
     },
     location: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notEmpty: {
           args: true,
           msg: 'Location is required'
+        },
+        notNull: {
+          args: true,
+          msg: 'Location is required'
         }
-      }
-    },
+      }},
     capacity: {
       type: DataTypes.INTEGER,
       validate: {
