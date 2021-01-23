@@ -60,7 +60,6 @@ describe("Organizer register POST /organizers/register", () => {
         done();
       });
     });
-  });
     test("cannot register Organizer, name is not provided", (done) => {
       request(app)
       .post("/organizers/register")
@@ -215,6 +214,7 @@ describe("Organizer register POST /organizers/register", () => {
         done();
       });
     });
+  });
 });
 
 describe("Organizer login POST /organizers/login", () => {
@@ -249,7 +249,6 @@ describe("Organizer login POST /organizers/login", () => {
         done();
       });
     });
-  });
     test("cannot log Organizer in, email is not in database", (done) => {
       request(app)
       .post("/organizers/login")
@@ -308,4 +307,53 @@ describe("Organizer login POST /organizers/login", () => {
         done();
       });
     });
+  });
 });
+
+describe("Organizer create Event POST /organizers/events", () => {
+  describe("success, Organizer registered", () => {
+    test("response Organizer's data", (done) => {
+      request(app)
+      .post("/organizers/register")
+      .send({
+        name: "Organizer",
+        email: "organizer@mail.com",
+        password: "1234567",
+        address: "123 Street",
+        phone: "0123456789"
+      })
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(201);
+        expect(body).toHaveProperty("id", expect.any(Number));
+        expect(body).toHaveProperty("email", "organizer@mail.com");
+        done();
+      });
+    });
+  });
+  describe("error, register ", () => {
+    test("cannot register Organizer, name is not provided", (done) => {
+      request(app)
+      .post("/organizers/register")
+      .send({
+        name: "",
+        email: "organizer@mail.com",
+        password: "1234567",
+        address: "123 Street",
+        phone: "0123456789"
+      })
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(400);
+        expect(body).toHaveProperty("messages", [
+                      "Name is required."
+        ]);
+        done();
+      });
+    });

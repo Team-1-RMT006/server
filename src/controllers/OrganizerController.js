@@ -1,4 +1,4 @@
-const { Organizer } = require('../models');
+const { Organizer, EventType } = require('../models');
 const { Event } = require('../models');
 const { compare } = require("../organizerHelpers/bcrypt");
 const { sign } = require("../organizerHelpers/jwt");
@@ -75,7 +75,7 @@ class OrganizerController {
   static showEvents(req, res, next) {
     Event.findAll({
       where: {
-        OrganizerId = req.loggedInUser.id
+        OrganizerId: req.loggedInUser.id
       },
       order: [["status", "ASC"]],
       include: [EventType, Organizer]
@@ -90,11 +90,13 @@ class OrganizerController {
 
   static createEvent(req, res, next) {
     const newEvent = req.body;
+    newEvent.OrganizerId = req.loggedInUser.id
     Event.create(newEvent)
       .then((data) => {
         res.status(201).json(data);
       })
       .catch((error) => {
+        console.log(error)
         next(error);
       });
   } 
@@ -103,7 +105,7 @@ class OrganizerController {
     const updatedEvent = req.body;
     const id = req.params.id;
     updatedEvent.OrganizerId = req.loggedInUser.id;
-    Event.put(updatedEvent, {
+    Event.update(updatedEvent, {
       where : {
         id
       },
