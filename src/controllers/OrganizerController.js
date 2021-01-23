@@ -10,13 +10,12 @@ class OrganizerController {
       password: req.body.password,
       address: req.body.address,
       phone: req.body.phone
-    }
+    };
     try {
-      const data = await Organizer.create(obj)
-      res.status(201).json(data)
+      const data = await Organizer.create(obj);
+      res.status(201).json({ id: data.id, email: data.email });
     } catch (error) {
-      console.log(error)
-      next(error)
+      next(error);
     }
   }
 
@@ -26,22 +25,22 @@ class OrganizerController {
 
     try {
       if (isEmailEmpty && isPasswordEmpty) {
-        res.status(400).json({ message: 'Email and password are required' })
+        res.status(400).json({ message: 'Email and password are required' });
       } else if (isEmailEmpty) {
-        res.status(400).json({ message: 'Email is required' })
+        res.status(400).json({ message: 'Email is required' });
       } else if (isPasswordEmpty) {
-        res.status(400).json({ message: 'Password is required' })
+        res.status(400).json({ message: 'Password is required' });
       } else {
         const data = await Organizer.findOne({
           where: {
             email: req.body.email
           }
-        })
+        });
         if(!data) {
           throw {
             status: 401,
             message: "Email or password is invalid."
-          }
+          };
         } else if (compare(req.body.password, data.password)) {
             const access_token = sign(data.id, data.email, data.role);
             res.status(200).json({ access_token });
@@ -49,12 +48,11 @@ class OrganizerController {
             throw {
               status: 401,
               message: "Email or password is invalid."
-            }
+            };
         }
       }
     } catch (error) {
-      console.log(error)
-      next(error)
+      next(error);
     }
   }
 
@@ -71,7 +69,7 @@ class OrganizerController {
         console.log(error);
         next(error);
     });
-}
+  }
 }
 
 module.exports = OrganizerController;
