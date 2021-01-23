@@ -305,3 +305,53 @@ describe("Organizer login POST /organizers/login", () => {
     });
   });
 });
+
+describe("Organizer create Event POST /organizers/events", () => {
+  describe("success, Organizer registered", () => {
+    test("response Organizer's data", (done) => {
+      request(app)
+      .post("/organizers/register")
+      .send({
+        name: "Organizer",
+        email: "organizer2@mail.com",
+        password: "1234567",
+        address: "123 Street",
+        phone: "0123456789"
+      })
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(201);
+        expect(body).toHaveProperty("id", expect.any(Number));
+        expect(body).toHaveProperty("email", "organizer2@mail.com");
+        done();
+      });
+    });
+  });
+  describe("error, register ", () => {
+    test("cannot register Organizer, name is not provided", (done) => {
+      request(app)
+      .post("/organizers/register")
+      .send({
+        name: "",
+        email: "organizer2@mail.com",
+        password: "1234567",
+        address: "123 Street",
+        phone: "0123456789"
+      })
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(400);
+        expect(body).toHaveProperty("messages", [
+                      "Name is required"
+        ]);
+        done();
+      });
+    });
+  });
+});
