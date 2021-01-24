@@ -269,7 +269,7 @@ describe("Add Event", () => {
           return done(err)
         }
         expect(status).toBe(400)
-        expect(body).toHaveProperty("messages", ["Title is required"])
+        expect(body).toHaveProperty("message", ["Title is required"])
         done()
       })
   })

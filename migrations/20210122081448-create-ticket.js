@@ -8,9 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      event_preview: {
-        type: Sequelize.TEXT
-      },
       class: {
         type: Sequelize.STRING
       },

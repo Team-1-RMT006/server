@@ -54,7 +54,7 @@ describe("Organizer register POST /organizers/register", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("messages", [
+        expect(body).toHaveProperty("message", [
                       "Name is required"
         ]);
         done();
@@ -76,7 +76,7 @@ describe("Organizer register POST /organizers/register", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("messages", [
+        expect(body).toHaveProperty("message", [
                       "Name is required"
         ]);
         done();
@@ -118,7 +118,7 @@ describe("Organizer register POST /organizers/register", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("messages", [
+        expect(body).toHaveProperty("message", [
                       "Email is invalid"
         ]);
         done();
@@ -160,7 +160,7 @@ describe("Organizer register POST /organizers/register", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("messages", [
+        expect(body).toHaveProperty("message", [
                       "Password must contain at least 7 characters and maximum 128 characters"
         ]);
         done();
@@ -182,7 +182,7 @@ describe("Organizer register POST /organizers/register", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("messages", [
+        expect(body).toHaveProperty("message", [
                       "Address is required"
         ]);
         done();
@@ -204,7 +204,7 @@ describe("Organizer register POST /organizers/register", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("messages", [
+        expect(body).toHaveProperty("message", [
                       "Phone is required"
         ]);
         done();
@@ -347,7 +347,7 @@ describe("Organizer create Event POST /organizers/events", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("messages", [
+        expect(body).toHaveProperty("message", [
                       "Name is required"
         ]);
         done();

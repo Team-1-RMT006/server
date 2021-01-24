@@ -1,4 +1,4 @@
-const { Admin, Event, Banner, EventType } = require('../models/index')
+const { Admin, Event, Banner, EventType, Status, Ticket } = require('../models/index')
 const { getTokenAdmin } = require('../helpers/jwt')
 const { compare } = require('../helpers/bcrypt')
 
@@ -9,16 +9,8 @@ class AdminController {
       password: req.body.password
     }
     try {
-      if (!obj.email && !obj.password) {
-        res.status(400).json({ message: 'Email and password are required' })
-      } else if (!obj.email) {
-        res.status(400).json({ message: 'Email is required' })
-      } else if (!obj.password) {
-        res.status(400).json({ message: 'Password is required' })
-      } else {
-        const data = await Admin.create(obj)
-        res.status(201).json(data)
-      }
+      const data = await Admin.create(obj)
+      res.status(201).json(data)
     } catch (error) {
       next(error)
     }
@@ -65,10 +57,13 @@ class AdminController {
   static async createEvent (req, res, next) {
     const obj = {
       title: req.body.title,
+      event_preview: req.body.event_preview,
       date: req.body.date,
       time: req.body.time,
       location: req.body.location,
-      capacity: req.body.capacity,
+      capacity_regular: req.body.capacity_regular,
+      capacity_vip: req.body.capacity_vip,
+      capacity_vvip: req.body.capacity_vvip,
       price_regular: req.body.price_regular,
       price_vip: req.body.price_vip,
       price_vvip: req.body.price_vvip,
@@ -90,14 +85,19 @@ class AdminController {
       date: req.body.date,
       time: req.body.time,
       location: req.body.location,
-      capacity: req.body.capacity,
+      capacity_regular: req.body.capacity_regular,
+      capacity_vip: req.body.capacity_vip,
+      capacity_vvip: req.body.capacity_vvip,
+      price_regular: req.body.price_regular,
+      price_vip: req.body.price_vip,
+      price_vvip: req.body.price_vvip,
       EventTypeId: req.body.EventTypeId,
       OrganizerId: req.body.OrganizerId,
-      status: req.body.status
+      StatusId: req.body.StatusId
     }
     try {
-      const data = await Event.update(obj, { where: { id: obj.id }})
-      res.status(200).json(data)
+      const data = await Event.update(obj, { where: { id: obj.id }, returning: true})
+      res.status(200).json(data[1][0])
     } catch (error) {
       next(error)
     }
@@ -105,7 +105,9 @@ class AdminController {
 
   static async getEvent (req, res, next) {
     try {
-      const data = await Event.find()
+      const data = await Status.findAll({include: {
+        model: Event,
+        include: [Ticket]}})
       res.status(200).json(data)
     } catch (error) {
       next(error)
@@ -124,7 +126,8 @@ class AdminController {
 
   static async createBanner (req, res, next) {
     const obj = {
-      image_url: req.body.image_url
+      image_url: req.body.image_url,
+      detail: req.body.detail
     }
     try {
       const data = await Banner.create(obj)
@@ -136,7 +139,7 @@ class AdminController {
 
   static async getBanner (req, res, next) {
     try {
-      const data = await Banner.find()
+      const data = await Banner.findAll()
       res.status(200).json(data)
     } catch (error) {
       next(error)
@@ -146,7 +149,8 @@ class AdminController {
   static async editBanner (req, res, next) {
     const obj = {
       id: req.params.id,
-      image_url: req.body.image_url
+      image_url: req.body.image_url,
+      detail: req.body.detail
     }
     try {
       const data = await Banner.update(obj, { where: { id: obj.id }})

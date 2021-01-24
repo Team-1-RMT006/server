@@ -32,6 +32,9 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Title is required'
         }
       }},
+    event_preview: {
+      type: DataTypes.TEXT
+    },
     date: {
       type: DataTypes.DATEONLY,
       validate: {
@@ -92,6 +95,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     price_regular: {
       type: DataTypes.INTEGER,
+      allowNull: true,
       validate: {
         isNumeric: {
           args: true,
@@ -101,6 +105,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     price_vip: {
     type: DataTypes.INTEGER,
+      allowNull: true,
       validate: {
         isNumeric: {
           args: true,
@@ -110,6 +115,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     price_vvip: {
       type: DataTypes.INTEGER,
+      allowNull: true,
       validate: {
         isNumeric: {
           args: true,
@@ -123,7 +129,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Event.beforeCreate((instance, option) => {
-    instance.status = 'active'
+    instance.StatusId = 1
   })
   
   return Event;
