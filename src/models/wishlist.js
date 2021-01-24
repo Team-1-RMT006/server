@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Wishlist.init({
+    
   }, {
     sequelize,
     modelName: 'Wishlist',
