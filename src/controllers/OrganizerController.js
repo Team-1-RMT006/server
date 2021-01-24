@@ -1,4 +1,4 @@
-const { Organizer } = require('../models');
+const { Organizer, EventType } = require('../models');
 const { Event } = require('../models');
 const { compare } = require("../organizerHelpers/bcrypt");
 const { sign } = require("../organizerHelpers/jwt");
@@ -13,8 +13,20 @@ class OrganizerController {
       phone: req.body.phone
     };
     try {
-      const data = await Organizer.create(obj);
-      res.status(201).json({ id: data.id, email: data.email });
+      if (!obj.email) {
+        throw {
+          status: 400,
+          message: 'Email is required'
+        }
+      } else if (!obj.password) {
+        throw {
+          status: 400,
+          message: 'Password is required'
+        }
+      } else {
+        const data = await Organizer.create(obj);
+        res.status(201).json({ id: data.id, email: data.email });
+      }
     } catch (error) {
       next(error);
     }
@@ -40,7 +52,7 @@ class OrganizerController {
         if(!data) {
           throw {
             status: 401,
-            message: "Email or password is invalid."
+            message: "Email or password is invalid"
           };
         } else if (compare(req.body.password, data.password)) {
             const access_token = sign(data.id, data.email, data.role);
@@ -48,7 +60,7 @@ class OrganizerController {
         } else {
             throw {
               status: 401,
-              message: "Email or password is invalid."
+              message: "Email or password is invalid"
             };
         }
       }
@@ -72,29 +84,31 @@ class OrganizerController {
     });
   }
 
-  // static showEvents(req, res, next) {
-  //   Event.findAll({
-  //     where: {
-  //       OrganizerId = req.loggedInUser.id
-  //     },
-  //     order: [["status", "ASC"]],
-  //     include: [EventType, Organizer]
-  //   })
-  //     .then((data) => {
-  //         res.status(200).json(data);
-  //     })
-  //     .catch((error) => {
-  //         next(error);
-  //     });
-  // }
+  static showEvents(req, res, next) {
+    Event.findAll({
+      where: {
+        OrganizerId: req.loggedInUser.id
+      },
+      order: [["status", "ASC"]],
+      include: [EventType, Organizer]
+    })
+      .then((data) => {
+          res.status(200).json(data);
+      })
+      .catch((error) => {
+          next(error);
+      });
+  }
 
   static createEvent(req, res, next) {
     const newEvent = req.body;
+    newEvent.OrganizerId = req.loggedInUser.id
     Event.create(newEvent)
       .then((data) => {
         res.status(201).json(data);
       })
       .catch((error) => {
+        console.log(error)
         next(error);
       });
   } 
@@ -103,7 +117,7 @@ class OrganizerController {
     const updatedEvent = req.body;
     const id = req.params.id;
     updatedEvent.OrganizerId = req.loggedInUser.id;
-    Event.put(updatedEvent, {
+    Event.update(updatedEvent, {
       where : {
         id
       },

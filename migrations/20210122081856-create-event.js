@@ -22,12 +22,17 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      capacity: {
+      capacity_regular: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      status: {
-        type: Sequelize.STRING
+      capacity_vip: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      capacity_vvip: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       price_regular: {
         type: Sequelize.INTEGER

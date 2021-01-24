@@ -15,18 +15,108 @@ module.exports = (sequelize, DataTypes) => {
       Event.hasMany(models.Wishlist)
       Event.hasMany(models.Ticket)
       Event.belongsTo(models.EventType)
+      Event.belongsTo(models.Status)
     }
   };
   Event.init({
-    title: DataTypes.STRING,
-    date: DataTypes.DATEONLY,
-    time: DataTypes.TIME,
-    location: DataTypes.STRING,
-    capacity: DataTypes.INTEGER,
-    status: DataTypes.STRING,
-    price_regular: DataTypes.INTEGER,
-    price_vip: DataTypes.INTEGER,
-    price_vvip: DataTypes.INTEGER
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: 'Title is required'
+        },
+        notNull: {
+          args: true,
+          msg: 'Title is required'
+        }
+      }},
+    date: {
+      type: DataTypes.DATEONLY,
+      validate: {
+        isAfter: {
+          args: (new Date).toString(),
+          msg: "Date must be greater than today"
+        }
+      }
+    },
+    time: {
+      type: DataTypes.TIME,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: 'Time is required'
+        }
+      }
+    },
+    location: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: 'Location is required'
+        },
+        notNull: {
+          args: true,
+          msg: 'Location is required'
+        }
+      }},
+    capacity_regular: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isNumeric: {
+          args: true,
+          msg: 'Capacity must be numeric'
+        }
+      }
+    },
+    capacity_vip: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isNumeric: {
+          args: true,
+          msg: 'Capacity must be numeric'
+        }
+      }
+    },
+    capacity_vvip: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isNumeric: {
+          args: true,
+          msg: 'Capacity must be numeric'
+        }
+      }
+    },
+    price_regular: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isNumeric: {
+          args: true,
+          msg: "Regular price must be numeric"
+        }
+      }
+    },
+    price_vip: {
+    type: DataTypes.INTEGER,
+      validate: {
+        isNumeric: {
+          args: true,
+          msg: "VIP price must be numeric"
+        }
+      }
+    },
+    price_vvip: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isNumeric: {
+          args: true,
+          msg: "VVIP price must be numeric"
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'Event',

@@ -1,10 +1,9 @@
 'use strict';
-const { hash } = require('../helpers/bcrypt')
 const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Admin extends Model {
+  class Status extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,35 +11,26 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Status.hasMany(models.Event)
     }
   };
-  Admin.init({
-    email: {
+  Status.init({
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: {
-        args: true,
-        msg: 'Email has already use'
-      },
       validate: {
-        isEmail: {
+        notEmpty: {
           args: true,
-          msg: 'Format email is required'
+          msg: 'Status name is required'
+        },
+        notNull: {
+          args: true,
+          msg: 'Status name is required'
         }
-      }
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false
-    }
+      }}
   }, {
     sequelize,
-    modelName: 'Admin',
+    modelName: 'Status',
   });
-
-  Admin.beforeCreate((instance, option) => {
-    instance.password = hash(instance.password)
-  })
-
-  return Admin;
+  return Status;
 };

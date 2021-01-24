@@ -3,22 +3,22 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     Promise.all([
-      await queryInterface.addColumn("Events", "EventTypeId", {
+      await queryInterface.addColumn("Wishlists", "CustomerId", {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: "EventTypes"
+            tableName: "Customers"
           },
           key: "id"
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       }),
-      await queryInterface.addColumn("Events", "OrganizerId", {
+      await queryInterface.addColumn("Wishlists", "EventId", {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: "Organizers"
+            tableName: "Events"
           },
           key: "id"
         },
@@ -36,8 +36,8 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     Promise.all([
-      await queryInterface.removeColumn("Events", "EventTypeId"),
-      await queryInterface.removeColumn("Events", "OrganizerId")
+      await queryInterface.removeColumn("Wishlists", "CustomerId"),
+      await queryInterface.removeColumn("Wishlists", "EventId")
     ])
     /**
      * Add reverting commands here.

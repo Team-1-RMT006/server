@@ -3,8 +3,76 @@ const app = require('../app')
 const { sequelize } = require('../models/index')
 const { queryInterface } = sequelize
 
+let access_token
+let organizerId
+let eventTypeId
+
+beforeAll((done) => {
+  queryInterface.bulkInsert("Organizers", [{
+    name: "Organizer",
+    email: "organizer1@mail.com",
+    password: "1234567",
+    address: "123 Street",
+    phone: "0123456789",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }])
+    .then(response => {
+      organizerId = response.id
+      done()
+    })
+    .catch(error => {
+      done(error)
+    })
+})
+
+beforeAll((done) => {
+  queryInterface.bulkInsert("EventTypes", [{
+    name: "Movie",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }])
+    .then(response => {
+      eventTypeId = response.id
+      done()
+    })
+    .catch(error => {
+      done(error)
+    })
+})
+
 afterAll((done) => {
   queryInterface.bulkDelete("Admins", {}, { logging: false })
+    .then(response => {
+      done()
+    })
+    .catch(error => {
+      done(error)
+    })
+})
+
+afterAll((done) => {
+  queryInterface.bulkDelete("Events", {}, { logging: false })
+    .then(response => {
+      done()
+    })
+    .catch(error => {
+      done(error)
+    })
+})
+
+afterAll((done) => {
+  queryInterface.bulkDelete("EventTypes", {}, { logging: false })
+    .then(response => {
+      done()
+    })
+    .catch(error => {
+      done(error)
+    })
+})
+
+afterAll((done) => {
+  queryInterface.bulkDelete("Organizers", {}, { logging: false })
     .then(response => {
       done()
     })
@@ -96,8 +164,9 @@ describe("Login Admin", () => {
         if (err) {
           return done(err)
         }
+        access_token = res.body.access_token
         expect(status).toBe(200)
-        expect(body).toHaveProperty("access_token", expect.any(String))
+        expect(body).toHaveProperty("access_token", access_token)
         done()
       })
   }),
@@ -168,6 +237,39 @@ describe("Login Admin", () => {
         }
         expect(status).toBe(401)
         expect(body).toHaveProperty("message", "Invalid account")
+        done()
+      })
+  })
+})
+
+describe("Add Event", () => {
+  test("response with data", (done) => {
+    request(app)
+      .post("/admin/event")
+      .set("access_token", access_token)
+      .send({ title: "Wayangan", date: '2021-02-13', time: '22:00:00', location: "Balai Kota Yogyakarta", capacity: 40, price_regular: 10000, price_vip: 20000, price_vvip: 40000, EventTypeId: eventTypeId, OrganizerId: organizerId })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(201)
+        expect(body).toHaveProperty("title", "Wayangan")
+        done()
+      })
+  }),
+  test("response with data", (done) => {
+    request(app)
+      .post("/admin/event")
+      .set("access_token", access_token)
+      .send({ title: "", date: '2021-02-13', time: '22:00:00', location: "Balai Kota Yogyakarta", capacity: 40, price_regular: 10000, price_vip: 20000, price_vvip: 40000, EventTypeId: eventTypeId, OrganizerId: organizerId })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(400)
+        expect(body).toHaveProperty("messages", ["Title is required"])
         done()
       })
   })
