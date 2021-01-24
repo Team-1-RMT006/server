@@ -72,21 +72,21 @@ class OrganizerController {
     });
   }
 
-  static showEvents(req, res, next) {
-    Event.findAll({
-      where: {
-        OrganizerId = req.loggedInUser.id
-      },
-      order: [["status", "ASC"]],
-      include: [EventType, Organizer]
-    })
-      .then((data) => {
-          res.status(200).json(data);
-      })
-      .catch((error) => {
-          next(error);
-      });
-  }
+  // static showEvents(req, res, next) {
+  //   Event.findAll({
+  //     where: {
+  //       OrganizerId = req.loggedInUser.id
+  //     },
+  //     order: [["status", "ASC"]],
+  //     include: [EventType, Organizer]
+  //   })
+  //     .then((data) => {
+  //         res.status(200).json(data);
+  //     })
+  //     .catch((error) => {
+  //         next(error);
+  //     });
+  // }
 
   static createEvent(req, res, next) {
     const newEvent = req.body;
