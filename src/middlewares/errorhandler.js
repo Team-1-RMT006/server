@@ -6,7 +6,7 @@ module.exports = (err, req, res, next) => {
     res.status(400).json({ message: err.message })
   } else if (err.name === 'SequelizeValidationError') {
     err.errors.forEach(error => validationErrors.push(error.message));
-    res.status(400).json({ messages: validationErrors })
+    res.status(400).json({ message: validationErrors })
   } else {
     res.status(500).json({ message: 'Internal server error' })
   }
