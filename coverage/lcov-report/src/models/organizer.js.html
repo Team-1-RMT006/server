@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>0/9</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>0/9</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -132,11 +132,11 @@
 <a name='L73'></a><a href='#L73'>73</a>
 <a name='L74'></a><a href='#L74'>74</a>
 <a name='L75'></a><a href='#L75'>75</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -145,10 +145,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -199,30 +199,30 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict';
-const { hash } = require("../organizerHelpers/bcrypt");
+const { hash } = <span class="cstat-no" title="statement not covered" >require("../organizerHelpers/bcrypt");</span>
 const {
   Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) =&gt; {
+} = <span class="cstat-no" title="statement not covered" >require('sequelize');</span>
+<span class="cstat-no" title="statement not covered" >module.exports = <span class="fstat-no" title="function not covered" >(s</span>equelize, DataTypes) =&gt; {</span>
   class Organizer extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+<span class="fstat-no" title="function not covered" >    st</span>atic associate(models) {
       // define association here
-      Organizer.hasMany(models.Event)
+<span class="cstat-no" title="statement not covered" >      Organizer.hasMany(models.Event)</span>
     }
   };
-  Organizer.init({
+<span class="cstat-no" title="statement not covered" >  Organizer.init({</span>
     name: {
       type: DataTypes.STRING,
       validate: {
@@ -273,12 +273,12 @@ module.exports = (sequelize, DataTypes) =&gt; {
     modelName: 'Organizer',
   });
 &nbsp;
-  Organizer.beforeCreate((instance, options) =&gt; {
-    let hashed = hash(instance.password);
-    instance.password = hashed;
+<span class="cstat-no" title="statement not covered" >  Organizer.beforeCreate(<span class="fstat-no" title="function not covered" >(i</span>nstance, options) =&gt; {</span>
+    let hashed = <span class="cstat-no" title="statement not covered" >hash(instance.password);</span>
+<span class="cstat-no" title="statement not covered" >    instance.password = hashed;</span>
   });
 &nbsp;
-  return Organizer;
+<span class="cstat-no" title="statement not covered" >  return Organizer;</span>
 };</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -286,7 +286,7 @@ module.exports = (sequelize, DataTypes) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sat Jan 23 2021 19:56:43 GMT+0700 (Western Indonesia Time)
+                at Sun Jan 24 2021 08:51:37 GMT+0700 (Indochina Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

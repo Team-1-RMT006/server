@@ -13,12 +13,12 @@ class OrganizerController {
       phone: req.body.phone
     };
     try {
-      if (!obj.email) {
+      if (!obj.email || obj.trim() === '') {
         throw {
           status: 400,
           message: 'Email is required'
         }
-      } else if (!obj.password) {
+      } else if (!obj.password || obj.password.trim() === '') {
         throw {
           status: 400,
           message: 'Password is required'

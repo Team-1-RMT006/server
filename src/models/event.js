@@ -18,19 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Event.init({
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: 'Title is required'
-        },
-        notNull: {
-          args: true,
-          msg: 'Title is required'
-        }
-      }},
+    title: DataTypes.STRING,
     date: {
       type: DataTypes.DATEONLY,
       validate: {
@@ -40,28 +28,8 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    time: {
-      type: DataTypes.TIME,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: 'Time is required'
-        }
-      }
-    },
-    location: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: 'Location is required'
-        },
-        notNull: {
-          args: true,
-          msg: 'Location is required'
-        }
-      }},
+    time: DataTypes.TIME,
+    location: DataTypes.STRING,
     capacity: {
       type: DataTypes.INTEGER,
       validate: {
@@ -82,6 +50,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     price_regular: {
       type: DataTypes.INTEGER,
+      allowNull: true,
       validate: {
         isNumeric: {
           args: true,
@@ -91,6 +60,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     price_vip: {
     type: DataTypes.INTEGER,
+    allowNull: true,
       validate: {
         isNumeric: {
           args: true,
@@ -100,6 +70,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     price_vvip: {
       type: DataTypes.INTEGER,
+      allowNull: true,
       validate: {
         isNumeric: {
           args: true,

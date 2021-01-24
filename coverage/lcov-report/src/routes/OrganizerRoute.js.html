@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>14/14</span>
+                <span class='fraction'>0/14</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>14/14</span>
+                <span class='fraction'>0/14</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -74,48 +74,48 @@
 <a name='L15'></a><a href='#L15'>15</a>
 <a name='L16'></a><a href='#L16'>16</a>
 <a name='L17'></a><a href='#L17'>17</a>
-<a name='L18'></a><a href='#L18'>18</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<a name='L18'></a><a href='#L18'>18</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span></td><td class="text"><pre class="prettyprint lang-js">const routeOrganizer = require('express').Router();
-const OrganizerController = require('../controllers/OrganizerController');
-const organizerAuthentication = require('../middlewares/organizerAuthentication');
-const eventAuthorization = require('../middlewares/eventAuthorization');
+<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const routeOrganizer = <span class="cstat-no" title="statement not covered" >require('express').Router();</span>
+const OrganizerController = <span class="cstat-no" title="statement not covered" >require('../controllers/OrganizerController');</span>
+const organizerAuthentication = <span class="cstat-no" title="statement not covered" >require('../middlewares/organizerAuthentication');</span>
+const eventAuthorization = <span class="cstat-no" title="statement not covered" >require('../middlewares/eventAuthorization');</span>
 &nbsp;
-routeOrganizer.post('/register', OrganizerController.registerOrganizer);
-routeOrganizer.post('/login', OrganizerController.loginOrganizer);
+<span class="cstat-no" title="statement not covered" >routeOrganizer.post('/register', OrganizerController.registerOrganizer);</span>
+<span class="cstat-no" title="statement not covered" >routeOrganizer.post('/login', OrganizerController.loginOrganizer);</span>
 &nbsp;
-routeOrganizer.use(organizerAuthentication);
-routeOrganizer.get("/profile", OrganizerController.getProfile);
-routeOrganizer.get("/events", OrganizerController.showEvents);
-routeOrganizer.post("/events", OrganizerController.createEvent);
+<span class="cstat-no" title="statement not covered" >routeOrganizer.use(organizerAuthentication);</span>
+<span class="cstat-no" title="statement not covered" >routeOrganizer.get("/profile", OrganizerController.getProfile);</span>
+<span class="cstat-no" title="statement not covered" >routeOrganizer.get("/events", OrganizerController.showEvents);</span>
+<span class="cstat-no" title="statement not covered" >routeOrganizer.post("/events", OrganizerController.createEvent);</span>
 &nbsp;
-routeOrganizer.use("/events/:id", eventAuthorization);
-routeOrganizer.put("/events/:id", OrganizerController.updateEvent);
-routeOrganizer.delete("/events/:id", OrganizerController.deleteEvent);
+<span class="cstat-no" title="statement not covered" >routeOrganizer.use("/events/:id", eventAuthorization);</span>
+<span class="cstat-no" title="statement not covered" >routeOrganizer.put("/events/:id", OrganizerController.updateEvent);</span>
+<span class="cstat-no" title="statement not covered" >routeOrganizer.delete("/events/:id", OrganizerController.deleteEvent);</span>
 &nbsp;
-module.exports = routeOrganizer;</pre></td></tr></table></pre>
+<span class="cstat-no" title="statement not covered" >module.exports = routeOrganizer;</span></pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sat Jan 23 2021 19:56:43 GMT+0700 (Western Indonesia Time)
+                at Sun Jan 24 2021 08:51:37 GMT+0700 (Indochina Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
