@@ -239,7 +239,7 @@ describe("Organizer login POST /organizers/login", () => {
       .send({ email: "organizerA@mail.com", password: "1234567" })
       .end((err, res) => {
         const { body, status } = res;
-        organizerTokenA = body;
+        organizerTokenA = body.access_token;
         if (err) {
           return done(err);
         }
@@ -255,7 +255,7 @@ describe("Organizer login POST /organizers/login", () => {
       .send({ email: "organizerB@mail.com", password: "1234567" })
       .end((err, res) => {
         const { body, status } = res;
-        organizerTokenB = body;
+        organizerTokenB = body.access_token;
         if (err) {
           return done(err);
         }
