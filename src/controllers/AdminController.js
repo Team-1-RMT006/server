@@ -74,7 +74,6 @@ class AdminController {
       const data = await Event.create(obj)
       res.status(201).json(data)
     } catch (error) {
-      console.log('errorrr >>>>', error)
       next(error)
     }
   }

@@ -7,6 +7,7 @@ let access_token
 let organizerId
 let eventTypeId
 let eventId
+let bannerId
 
 // beforeAll((done) => {
 //   queryInterface.bulkInsert("Organizers", [{
@@ -393,6 +394,9 @@ describe("Edit Event", () => {
 })
 
 describe("Get event", () => {
+  const temp = [
+    { title: 'Ketoprak' }
+  ]
   test("response with data", (done) => {
     request(app)
       .get("/admin/event")
@@ -403,7 +407,11 @@ describe("Get event", () => {
           return done(err)
         }
         expect(status).toBe(200)
-        expect([eventId]).toEqual(expect.arrayContaining(expected))
+        expect(temp).toEqual(expect.arrayContaining([
+          expect.objectContaining({
+            title: 'Ketoprak'
+          })
+        ]))
         done()
       })
   })
@@ -423,5 +431,80 @@ describe("Get event", () => {
 })
 
 describe("delete event", () => {
+  test("response with data", (done) => {
+    request(app)
+      .delete("/admin/event/" + eventId)
+      .set("access_token", access_token)
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(200)
+        expect(body).toHaveProperty("message", "Data deleted successful")
+        done()
+      })
+  }),
+  test("response with data", (done) => {
+    request(app)
+      .delete("/admin/event/" + eventId)
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(401)
+        expect(body).toHaveProperty("message", "Please login first")
+        done()
+      })
+  })
+})
 
+describe("Create Banner", () => {
+  test("response with data", (done) => {
+    request(app)
+      .post("/admin/banner")
+      .set("access_token", access_token)
+      .send({ image_url: "ini image", detail: "ini detail" })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        bannerId = res.body.id
+        expect(status).toBe(201)
+        expect(body).toHaveProperty("image_url", "ini image")
+        done()
+      })
+  }),
+  test("response with login first", (done) => {
+    request(app)
+      .post("/admin/banner")
+      .send({ image_url: "ini image", detail: "ini detail" })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(401)
+        expect(body).toHaveProperty("message", "Please login first")
+        done()
+      })
+  }),
+  test("response with data", (done) => {
+    request(app)
+      .post("/admin/banner")
+      .set("access_token", "asasassas")
+      .send({ image_url: "ini image", detail: "ini detail" })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        bannerId = res.body.id
+        expect(status).toBe(500)
+        expect(body).toHaveProperty("message", "Invalid server error")
+        done()
+      })
+  })
 })
