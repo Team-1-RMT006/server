@@ -3,14 +3,12 @@ const { Wishlist, Ticket } = require("../models")
 function authorizationPayment(req, res, next) {
 
     const id = req.params.id
-    const CustomerId = req.dataUser
+    const CustomerId = req.dataUser.id
+    // console.log(id);
 
-    Ticket.findByPk({
-        where: {
-            id
-        }
-    })
+    Ticket.findByPk(id)
         .then(data => {
+            console.log(data);
             if(CustomerId === data.CustomerId) {
                 next()
             }else {
@@ -25,15 +23,15 @@ function authorizationPayment(req, res, next) {
 
 function authorizationWishlist(req, res, next) {
 
-    const id = req.params.id
-    const CustomerId = req.dataUser
+    // console.log("test auth");
 
-    Wishlist.findByPk({
-        where: {
-            id
-        }
-    })
+    const id = req.params.id
+    const CustomerId = req.dataUser.id
+
+    Wishlist.findByPk(id)
         .then(data => {
+            // console.log(data);
+            // console.log(Customer);
             if(CustomerId === data.CustomerId) {
                 next()
             }else {
