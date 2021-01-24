@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       Event.hasMany(models.Wishlist)
       Event.hasMany(models.Ticket)
       Event.belongsTo(models.EventType)
+      Event.belongsTo(models.Status)
     }
   };
   Event.init({
@@ -62,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Location is required'
         }
       }},
-    capacity: {
+    capacity_regular: {
       type: DataTypes.INTEGER,
       validate: {
         isNumeric: {
@@ -71,12 +72,21 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    status: {
-      type: DataTypes.STRING,
+    capacity_vip: {
+      type: DataTypes.INTEGER,
       validate: {
-        isIn: {
-          args: ["active", "non-active", "cancelled"],
-          msg: "Status is invalid"
+        isNumeric: {
+          args: true,
+          msg: 'Capacity must be numeric'
+        }
+      }
+    },
+    capacity_vvip: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isNumeric: {
+          args: true,
+          msg: 'Capacity must be numeric'
         }
       }
     },

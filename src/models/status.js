@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Banner extends Model {
+  class Status extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,26 +11,26 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Status.hasMany(models.Event)
     }
   };
-  Banner.init({
-    image_url: {
-      type: DataTypes.TEXT,
+  Status.init({
+    name: {
+      type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: {
           args: true,
-          msg: 'Image URL is required'
+          msg: 'Status name is required'
         },
         notNull: {
           args: true,
-          msg: 'Image URL is required'
+          msg: 'Status name is required'
         }
-      }},
-    detail: DataTypes.STRING
+      }}
   }, {
     sequelize,
-    modelName: 'Banner',
+    modelName: 'Status',
   });
-  return Banner;
+  return Status;
 };

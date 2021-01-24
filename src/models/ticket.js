@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Ticket.init({
+    event_preview: DataTypes.TEXT,
     class: DataTypes.STRING,
     ticketCode: DataTypes.TEXT,
     seat: DataTypes.STRING,
