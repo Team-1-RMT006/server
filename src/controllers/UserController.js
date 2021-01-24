@@ -78,16 +78,20 @@ class ControllerUser {
                     ticketCode: data, // GIMANA HAYOOOOO
                     seat: req.body.seat, 
                     status: "Unpaid",
-                    price: req.body.price
+                    price: req.body.price,
+                    event_preview: req.body.event_preview
+                    // event_preview: req.body.event_preview
             }
 
+            
             // console.log(newInputData);
-
+            
             const newData = await Ticket.create(newInputData)
             
             res.status(201).json(newData)
-                
-          } catch (err) {
+            
+        } catch (err) {
+            // console.log(req.body);
             console.error(err, "---------")
           }
 
@@ -131,7 +135,24 @@ class ControllerUser {
             
     }
 
+    static getAllTicketByCustomer(req, res) {
+        const CustomerId = req.dataUser.id
+
+        Ticket.findAll({
+            where: {
+                CustomerId
+            }
+        })
+            .then(data => {
+                res.status(200).json(data)
+            })
+            .catch(err => {
+                res.status(500).json(err)
+            })
+    }
+
     static paymentTicket(req, res, next) {
+        // console.log('sampai');
         const inputData = {
             status: req.body.status
         }
@@ -153,24 +174,38 @@ class ControllerUser {
 
     static getAllDataWishlist(req, res, next) {
         const CustomerId = req.dataUser.id
+        // console.log(CustomerId);
+        let dataWishlist = null
 
         Wishlist.findAll({
             where: {
                 CustomerId
-            },
-            include: Ticket
+            }
         })
             .then(data => {
-                res.status(200).json(data)
+                dataWishlist = data
+                // res.status(200).json(data)
+                return Ticket.findAll({
+                    where: {
+                        CustomerId
+                    }
+                })
+            })
+            .then(data => {
+                // console.log(dataWishlist, "----");
+                // console.log(data, "0000");
+                res.status(200).json(dataWishlist)
             })
             .catch(err => {
+                // console.log(err);
                 res.status(500).json(err)
             })
     }
 
     static addWishlist(req, res, next) {
         const inputData = {
-            CustomerId: req.dataUser.id
+            CustomerId: req.dataUser.id,
+            EventId: Number(req.body.EventId) || null
         }
         console.log(inputData);
 
@@ -180,12 +215,17 @@ class ControllerUser {
                 res.status(201).json(data)
             })
             .catch(err => {
-                next(err)
+                // next(err)
+                console.log(err);
+                // res.status(500).json(err)
             })
     }
 
     static deleteWishList(req, res, next) {
+        // console.log("test");
         const id = req.params.id
+        // // const CustomerId = req.dataUser
+        // console.log(id);
 
         Wishlist.destroy({
             where: {
