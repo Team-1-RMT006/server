@@ -81,7 +81,7 @@ class ControllerUser {
                     price: req.body.price
             }
 
-            console.log(newInputData);
+            // console.log(newInputData);
 
             const newData = await Ticket.create(newInputData)
             
@@ -133,7 +133,7 @@ class ControllerUser {
 
     static paymentTicket(req, res, next) {
         const inputData = {
-            status: "Paid"
+            status: req.body.status
         }
         const id = req.params.id // ini nanti di dapet dari fornt end
         Ticket.update(inputData, {
@@ -148,6 +148,23 @@ class ControllerUser {
             })
             .catch(err => {
                 next(err)
+            })
+    }
+
+    static getAllDataWishlist(req, res, next) {
+        const CustomerId = req.dataUser.id
+
+        Wishlist.findAll({
+            where: {
+                CustomerId
+            },
+            include: Ticket
+        })
+            .then(data => {
+                res.status(200).json(data)
+            })
+            .catch(err => {
+                res.status(500).json(err)
             })
     }
 
@@ -184,7 +201,20 @@ class ControllerUser {
     }
 
     static getDataHistoryPayment(req, res) {
+        const CustomerId = req.dataUser.id
 
+        Ticket.findAll({
+            where: {
+                CustomerId,
+                status: "Paid"
+            }
+        })
+            .then(data => {
+                res.status(200).json(data)
+            })
+            .catch(err => {
+                res.status(500).json(err)
+            })
     }
 
 }
