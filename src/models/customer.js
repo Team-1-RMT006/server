@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
   Customer.init({
     first_name: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notNull: {
           args: true,
@@ -38,6 +39,7 @@ module.exports = (sequelize, DataTypes) => {
     last_name: DataTypes.STRING,
     email: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notNull: {
           args: true,
@@ -55,6 +57,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     password: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notNull: {
           args: true,
