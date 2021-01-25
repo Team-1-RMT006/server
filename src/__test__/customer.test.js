@@ -682,7 +682,6 @@ describe("Post Data to Wishlist /customer/wishlist", () => {
   })
 })
 
-
 // DELETE WISHLIST BY ID WISHLIST
 describe("Delete by Id /customer/delete/:id", () => {
   test("Delete data wishlist", (done) => {
@@ -700,7 +699,6 @@ describe("Delete by Id /customer/delete/:id", () => {
     })
   })
 })
-
 
 describe("Get All Data From Ticket Where Status = paid", () => {
   const temp = [
@@ -721,6 +719,24 @@ describe("Get All Data From Ticket Where Status = paid", () => {
           name: "History"
         })
       ]))
+      done()
+    })
+  })
+  test("Not use access token", (done) => {
+    request(app)
+    .get("/customer/history")
+    .end((err, res) => {
+      const { status, body } = res
+      if(err) {
+        return done(err)
+      }
+      expect(status).toBe(401)
+      expect(body).toHaveProperty("error", "You must have account");
+      // expect(temp).toEqual(expect.arrayContaining([
+      //   expect.objectContaining({
+      //     name: "History"
+      //   })
+      // ]))
       done()
     })
   })
