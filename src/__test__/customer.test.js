@@ -3,6 +3,11 @@ const app = require("../app");
 const { sequelize } = require("../models");
 const { queryInterface } = sequelize;
 
+let customerTokenA = ""
+let CustomerIdA = 0
+let customerTokenB = ""
+let CustomerIdB = 0
+
 afterAll((done) => {
   queryInterface.bulkDelete("Customers")
     .then((response) => {
@@ -13,8 +18,10 @@ afterAll((done) => {
     });
 });
 
+// Register
 describe("Customer register POST /customer/register", () => {
   describe("success, Customer registered", () => {
+    // Register Customer A
     test.only("response Customer data", (done) => {
       request(app)
       .post("/customer/register")
@@ -22,18 +29,44 @@ describe("Customer register POST /customer/register", () => {
         first_name: "febrian",
         last_name: "aditya",
         email: "test@mail.com",
-        password: "1234567"
+        password: "12345678"
       })
       .end((err, res) => {
         const { body, status } = res;
+        CustomerIdA = body.id
         if (err) {
           return done(err);
         }
         expect(status).toBe(201);
-        expect(body).toHaveProperty("id", expect.any(Number));
+        expect(body).toHaveProperty("id", CustomerIdA);
         expect(body).toHaveProperty("first_name", "febrian")
         expect(body).toHaveProperty("last_name", "aditya")
         expect(body).toHaveProperty("email", "test@mail.com");
+        done();
+      });
+    });
+
+    // Register Customer B
+    test.only("response Customer data", (done) => {
+      request(app)
+      .post("/customer/register")
+      .send({
+        first_name: "customer",
+        last_name: "customer",
+        email: "customer@mail.com",
+        password: "12345678"
+      })
+      .end((err, res) => {
+        const { body, status } = res;
+        CustomerIdB = body.id
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(201);
+        expect(body).toHaveProperty("id", CustomerIdB);
+        expect(body).toHaveProperty("first_name", "customer")
+        expect(body).toHaveProperty("last_name", "customer")
+        expect(body).toHaveProperty("email", "customer@mail.com");
         done();
       });
     });
@@ -61,6 +94,7 @@ describe("Customer register POST /customer/register", () => {
         done();
       });
     });
+
     test("cannot register Customer, last_name is not provided", (done) => {
       request(app)
       .post("/customer/register")
@@ -167,7 +201,7 @@ describe("Customer register POST /customer/register", () => {
 
 describe("Customer login POST /customer/login", () => {
   describe("success, Customer logged in", () => {
-    test.only("response with access_token", (done) => {
+    test("response with access_token", (done) => {
       request(app)
       .post("/customer/login")
       .send({ email: "test@mail.com", password: "1234567" })
