@@ -9,6 +9,7 @@ let eventTypeId
 let eventId
 let bannerId
 let adminId
+let typeBefore
 
 beforeAll((done) => {
   queryInterface.bulkInsert("Organizers", [{
@@ -37,6 +38,7 @@ beforeAll((done) => {
   }], {returning: true})
     .then(response => {
       eventTypeId = response[0].id
+      typeBefore = response[0].id
       done()
     })
     .catch(error => {
@@ -76,6 +78,16 @@ afterAll((done) => {
 
 afterAll((done) => {
   queryInterface.bulkDelete("Organizers", {}, { logging: false })
+    .then(response => {
+      done()
+    })
+    .catch(error => {
+      done(error)
+    })
+})
+
+afterAll((done) => {
+  queryInterface.bulkDelete("Banners", {}, { logging: false })
     .then(response => {
       done()
     })
@@ -428,22 +440,6 @@ describe("Get event", () => {
         ]))
         done()
       })
-    request(app)
-      .get("/admin/event")
-      .set("access_token", access_token)
-      .end((err, res) => {
-        const { status, body } = res
-        if (err) {
-          return done(err)
-        }
-        expect(status).toBe(200)
-        expect(temp).toEqual(expect.arrayContaining([
-          expect.objectContaining({
-            title: 'Ketoprak'
-          })
-        ]))
-        done()
-      })
   }),
   test("response with unauthorized", (done) => {
     request(app)
@@ -526,6 +522,34 @@ describe("delete event", () => {
           return done(err)
         }
         expect(status).toBe(400)
+        expect(body).toHaveProperty("message", "Data not found")
+        done()
+      })
+  }),
+  test("response with data not found", (done) => {
+    request(app)
+      .get("/admin/event")
+      .set("access_token", access_token)
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(404)
+        expect(body).toHaveProperty("message", "Data not found")
+        done()
+      })
+  }),
+  test("response with data event by ID not found", (done) => {
+    request(app)
+      .get("/admin/event/" + eventId)
+      .set("access_token", access_token)
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(404)
         expect(body).toHaveProperty("message", "Data not found")
         done()
       })
@@ -750,6 +774,34 @@ describe("Delete Banner", () => {
         expect(body).toHaveProperty("message", "Data not found")
         done()
       })
+  }),
+  test("response with data not found", (done) => {
+    request(app)
+      .get("/admin/banner")
+      .set("access_token", access_token)
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(404)
+        expect(body).toHaveProperty("message", "Data not found")
+        done()
+      })
+  }),
+  test("response with data banner by ID not found", (done) => {
+    request(app)
+      .get("/admin/banner/" + bannerId)
+      .set("access_token", access_token)
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(404)
+        expect(body).toHaveProperty("message", "Data not found")
+        done()
+      })
   })
 })
 
@@ -885,6 +937,48 @@ describe("Delete Event Type", () => {
           return done(err)
         }
         expect(status).toBe(400)
+        expect(body).toHaveProperty("message", "Data not found")
+        done()
+      })
+  }),
+  test("response with data deleted successful", (done) => {
+    request(app)
+      .delete("/admin/eventType/" + typeBefore)
+      .set("access_token", access_token)
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(200)
+        expect(body).toHaveProperty("message", "Data deleted successful")
+        done()
+      })
+  }),
+  test("response with data not found", (done) => {
+    request(app)
+      .get("/admin/eventType")
+      .set("access_token", access_token)
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(404)
+        expect(body).toHaveProperty("message", "Data not found")
+        done()
+      })
+  }),
+  test("response with data detail event type by ID not found", (done) => {
+    request(app)
+      .get("/admin/eventType/" + eventTypeId)
+      .set("access_token", access_token)
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(404)
         expect(body).toHaveProperty("message", "Data not found")
         done()
       })
