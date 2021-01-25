@@ -74,17 +74,17 @@ class ControllerUser {
             const newInputData = {
                     class: req.body.class,
                     CustomerId: req.dataUser.id,
-                    EventTypeId: req.body.EventId,
+                    EventTypeId: Number(req.body.EventId),
                     ticketCode: data, // GIMANA HAYOOOOO
                     seat: req.body.seat, 
-                    status: "Unpaid",
+                    status: "unpaid",
                     price: req.body.price,
                     event_preview: req.body.event_preview
                     // event_preview: req.body.event_preview
             }
 
             
-            // console.log(newInputData);
+            console.log(newInputData);
             
             const newData = await Ticket.create(newInputData)
             

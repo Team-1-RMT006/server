@@ -19,11 +19,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notEmpty: {
+        notNull: {
           args: true,
           msg: 'Status name is required'
         },
-        notNull: {
+        notEmpty: {
           args: true,
           msg: 'Status name is required'
         }

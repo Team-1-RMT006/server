@@ -7,7 +7,7 @@ module.exports = async (req, res, next) => {
     if (!access_token) {
       throw {
         status: 401,
-        message: 'You are not authorized'
+        message: 'Please login first'
       }
     } else {
       const dataVerified = verify(access_token)

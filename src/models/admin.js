@@ -20,18 +20,40 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: {
         args: true,
-        msg: 'Email has already use'
+        msg: 'Email has already been registered'
       },
       validate: {
+        notNull: {
+          args: true,
+          msg: 'Email is required'
+        },
+        notEmpty: {
+          args: true,
+          msg: 'Email is required'
+        },
         isEmail: {
           args: true,
-          msg: 'Format email is required'
+          msg: 'Email is invalid'
         }
       }
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: 'Password is required'
+        },
+        notEmpty: {
+          args: true,
+          msg: 'Password is required'
+        },
+        len: {
+          args: [7, 128],
+          msg: 'Password must contain at least 7 characters and maximum 128 characters'
+        }
+      }
     }
   }, {
     sequelize,

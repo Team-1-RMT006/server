@@ -12,6 +12,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      event_preview: {
+        type: Sequelize.TEXT
+      },
       date: {
         type: Sequelize.DATEONLY
       },
