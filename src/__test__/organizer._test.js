@@ -265,6 +265,7 @@ describe("Organizer login POST /organizers/login", () => {
       });
     });
   });
+  
   describe("error, login ", () => {
     test("cannot log Organizer in, password is wrong", (done) => {
       request(app)

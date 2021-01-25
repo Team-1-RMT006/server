@@ -1,14 +1,16 @@
 function errorHandler(err, req, res, next) {
+  // console.log(err);
   if (err.status) {
       res.status(err.status).json({ message: err.message });
   } else if (err.name === "SequelizeValidationError" || err.name === "SequelizeUniqueConstraintError" ) {
       let errors = [];
+      const modelName = err.errors[0].instance.constructor.name
       for (let i = 0; i < err.errors.length; i++) {
         if (err.name === "SequelizeUniqueConstraintError") {
           errors.push("The email has already been registered");
 
         //Admins
-        } else if (err.parent.table === "Admins") {
+        } else if (modelName === "Admin") {
             if (err.errors[i].message === "Email is required") {
               if (!errors.includes("Email is required")) {
                   errors.push(err.errors[i].message);
@@ -28,7 +30,7 @@ function errorHandler(err, req, res, next) {
             }
 
         //Organizers   
-        } else if (err.parent.table === "Organizers") {
+        } else if (modelName === "Organizer") {
             if (err.errors[i].message === "Name is required") {
               if (!errors.includes("Name is required")) {
                   errors.push(err.errors[i].message);
@@ -60,7 +62,7 @@ function errorHandler(err, req, res, next) {
             }
 
         //Customers
-        } else if (err.parent.table === "Customers") {
+        } else if (modelName === "Customer") {
             if (err.errors[i].message === "First name is required") {
               if (!errors.includes("First name is required")) {
                   errors.push(err.errors[i].message);
@@ -84,7 +86,7 @@ function errorHandler(err, req, res, next) {
             }
 
         //Events
-        } else if (err.parent.table === "Events") {
+        } else if (modelName === "Event") {
             if (err.errors[i].message === "Title is required") {
               if (!errors.includes("Title is required")) {
                 errors.push(err.errors[i].message);
@@ -148,7 +150,7 @@ function errorHandler(err, req, res, next) {
             }
           
         //Tickets
-        } else if (err.parent.table === "Tickets") {
+        } else if (modelName === "Ticket") {
             if (err.errors[i].message === "Class is required") {
               if (!errors.includes("Class is required")) {
                 errors.push(err.errors[i].message);
@@ -180,7 +182,7 @@ function errorHandler(err, req, res, next) {
             }
 
         //Banners
-        } else if (err.parent.table === "Banners") {
+        } else if (modelName === "Banner") {
             if (err.errors[i].message === "Image url is required") {
               if (!errors.includes("Image url is required")) {
                 errors.push(err.errors[i].message);
@@ -188,7 +190,7 @@ function errorHandler(err, req, res, next) {
             }
 
         //Status
-        } else if (err.parent.table === "Statuses") {
+        } else if (modelName === "Status") {
           if (err.errors[i].message === "Status name is required") {
             if (!errors.includes("Status name is required")) {
               errors.push(err.errors[i].message);
