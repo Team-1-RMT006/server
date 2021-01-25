@@ -1,22 +1,99 @@
 const request = require("supertest");
+const { response } = require("../app");
 const app = require("../app");
 const { sequelize } = require("../models");
 const { queryInterface } = sequelize;
+const QRCode = require("qrcode")
+
 
 let customerTokenA = '';
 let CustomerIdA = 0;
 let customerTokenB = '';
 let CustomerIdB = 0;
 // let EventId = 0;
+let OrganizerId = 0
+let EventTypeId = 0
+let EventId = 0
+let id = 0
+let wishListId = 0
+
+const date = new Date();
+date.setDate(date.getDate() + 1);
+const validDate = date.toISOString().split('T')[0];
+
+
+beforeAll((done) => {
+  queryInterface.bulkInsert("Organizers", [
+    {
+      name: "OrganizerA",
+      email: "organizerA@mail.com",
+      password: "1234567",
+      address: "123 Street",
+      phone: "0123456789",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+  ], { returning: true })
+  .then((data) => {
+    OrganizerId = data[0].id
+    // done();
+    return queryInterface.bulkInsert("EventTypes", [
+      {
+        name: "wedding",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ], { returning: true })
+  })
+  .then(data => {
+    EventTypeId = data[0].id
+
+    return queryInterface.bulkInsert("Events", [
+      {
+        title: "Event A",
+        event_preview: "http://example.com/images/12345",
+        date: validDate,
+        time: "18:00:00",
+        location: "Central Park Jakarta",
+        capacity_regular: 1000,
+        capacity_vip: 100,
+        capacity_vvip: 50,
+        price_regular: 100000,
+        price_vip: 300000,
+        price_vvip: 500000,
+        OrganizerId,
+        EventTypeId,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ], { returning: true })
+  })
+  .then(data => {
+    EventId = data[0].id
+    done()
+  })
+  .catch((err) => {
+    done(err);
+  })
+});
 
 afterAll((done) => {
   queryInterface.bulkDelete("Customers")
-    .then((response) => {
-      done();
-    })
-    .catch((err) => {
-      done(err);
-    });
+  .then((response) => {
+    return queryInterface.bulkDelete("Organizers")
+  })
+  .then((response) => {
+    return queryInterface.bulkDelete("EventTypes")
+  })
+  .then((response) => {
+    return queryInterface.bulkDelete("Tickets")
+  })
+  .then((response) => {
+    done()
+  })
+  .catch((err) => {
+    done(err);
+  });
 });
 
 
@@ -201,7 +278,7 @@ describe("Customer login POST /customer/login", () => {
       .send({ email: "customer@mail.com", password: "1234567" })
       .end((err, res) => {
         const { body, status } = res;
-        customerTokenA = body.access_token
+        customerTokenB = body.access_token
         if (err) {
           return done(err);
         }
@@ -291,7 +368,6 @@ describe("Get All Data Events only active", () => {
   const temp = [
     {name: "Event"}
   ]
-
   test("response with data", (done) => {
     request(app)
     .get("/customer/eventactive")
@@ -313,15 +389,14 @@ describe("Get All Data Events only active", () => {
 
 // BUY TICKET (POST)
 describe("Post buy ticket /customer/book", () => {
-  test("need access_token", (done) => {
+  test("with use access_token", (done) => {
     request(app)
     .post("/customer/book")
     .set("access_token", customerTokenA)
     .send({
       class: "vip",
-      CustomerId: 1,
-      EventTypeId: 1,
-      ticketCode: "http://example.com/images/12345", // GIMANA HAYOOOOO
+      CustomerId: CustomerIdA,
+      EventId, // GIMANA HAYOOOOO
       seat: "a10", 
       status: "unpaid",
       price: 13000
@@ -334,12 +409,153 @@ describe("Post buy ticket /customer/book", () => {
       }
       expect(status).toBe(201);
       expect(body).toHaveProperty("class", "vip")
+      expect(body).toHaveProperty("CustomerId", CustomerIdA)
+      expect(body).toHaveProperty("EventId", EventId)
+      expect(body).toHaveProperty("ticketCode", expect.any(String))
       expect(body).toHaveProperty("seat", "a10")
       expect(body).toHaveProperty("status", "unpaid")
       expect(body).toHaveProperty("price", 13000)
       done();
     });
   });
+
+  test("response with login first", (done) => {
+    request(app)
+    .post("/customer/book")
+    .send({
+      class: "vip",
+      CustomerId: CustomerIdA,
+      EventId, // GIMANA HAYOOOOO
+      seat: "a10", 
+      status: "unpaid",
+      price: 13000
+    })
+    .end((err, res) => {
+      const { status, body } = res
+      if(err) {
+        return done(err)
+      }
+      expect(status).toBe(401)
+      expect(body).toHaveProperty("error", "You must have account")
+      done()
+    })
+  })
+
+  test("response with internal server error", (done) => {
+    request(app)
+      .post("/customer/book")
+      .set("access_token", "asasassas")
+      .send({
+        class: "vip",
+        CustomerId: CustomerIdA,
+        EventId, // GIMANA HAYOOOOO
+        seat: "a10", 
+        status: "unpaid",
+        price: 13000
+      })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(500)
+        expect(body).toHaveProperty("message", "Internal Server Error")
+        done()
+      })
+  })
+
+  test("response with class is required", (done) => {
+    request(app)
+      .post("/customer/book")
+      .set("access_token", customerTokenA)
+      .send({
+        class: "",
+        CustomerId: CustomerIdA,
+        EventId, // GIMANA HAYOOOOO
+        seat: "a10", 
+        status: "unpaid",
+        price: 13000
+      })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(400)
+        expect(body).toHaveProperty("message", ["Class is required", "Class is invalid"])
+        done()
+      })
+  })
+
+  test("response price must more then 0", (done) => {
+    request(app)
+    .post("/customer/book")
+      .set("access_token", customerTokenA)
+      .send({
+        class: "vip",
+        CustomerId: CustomerIdA,
+        EventId, // GIMANA HAYOOOOO
+        seat: "a10", 
+        status: "unpaid",
+        price: -1
+      })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(400)
+        expect(body).toHaveProperty("message", ["Price cannot be less than 0"])
+        done()
+      })
+  })
+
+  test("response not use access token", (done) => {
+    request(app)
+    .post("/customer/book")
+    .send({
+      class: "vip",
+      CustomerId: CustomerIdA,
+      EventId, // GIMANA HAYOOOOO
+      seat: "a10", 
+      status: "unpaid",
+      price: 13000
+    })
+    .end((err, res) => {
+      const { body, status } = res;
+      id = body.id
+      if (err) {
+        return done(err);
+      }
+      expect(status).toBe(401);
+      expect(body).toHaveProperty("error", "You must have account")
+      expect
+      done();
+    });
+  })
+  
+  // test("response status error", (done) => {
+  //   request(app)
+  //   .post("/customer/book")
+  //     .set("access_token", customerTokenA)
+  //     .send({
+  //       class: "vip",
+  //       CustomerId: CustomerIdA,
+  //       EventId, // GIMANA HAYOOOOO
+  //       seat: "a10", 
+  //       status: "unpaidd",
+  //       price: -1
+  //     })
+  //     .end((err, res) => {
+  //       const { status, body } = res
+  //       if (err) {
+  //         return done(err)
+  //       }
+  //       expect(status).toBe(400)
+  //       expect(body).toHaveProperty("message", ["Price cannot be less than 0"])
+  //       done()
+  //     })
+  // })
 })
 
 // GET ALL TICKET
@@ -365,17 +581,32 @@ describe("Get All Ticket /customer/ticket", () => {
       done()
     })
   })
+
+  test("response error not use access_token", (done) => {
+    request(app)
+    .get("/customer/ticket")
+    .end((err, res) => {
+      const { status, body } = res
+      if(err) {
+        return done(err)
+      }
+      expect(status).toBe(401)
+      expect(body).toHaveProperty("error", "You must have account");
+      // expect.status(500)
+      done()
+    })
+  })
 })
 
 // PATCH PAYMENT TICKET
 describe("Edit Status Payment /customer/buy/:id", () => {
   test("need access_token", (done) => {
     request(app)
-    .patch("/customer/buy")
+    .patch(`/customer/buy/${id}`)
     .set("access_token", customerTokenA)
     .send({
       status: "paid",
-      idTicket: 1
+      CustomerId: CustomerIdA
     })
     .end((err, res) => {
       const{ status, body } = res
@@ -383,13 +614,14 @@ describe("Edit Status Payment /customer/buy/:id", () => {
         return done(err)
       }
       // expect(status).toBe(200)
+      // expect(body).t
       // console.log(res.body, "00000000");
       done()
     })
   })
 })
 
-// GET ALL DATA WISHLIST
+// // GET ALL DATA WISHLIST
 describe("Get All Data Wishlist /customer/wishlist", () => {
   const temp = [
     { name: "Wishlist" }
@@ -412,33 +644,50 @@ describe("Get All Data Wishlist /customer/wishlist", () => {
       done()
     })
   })
+
+  test("response error not use access_token", (done) => {
+    request(app)
+    .get("/customer/wishlist")
+    .end((err, res) => {
+      const { status, body } = res
+      if(err) {
+        return done(err)
+      }
+      expect(status).toBe(401)
+      expect(body).toHaveProperty("error", "You must have account");
+      // expect.status(500)
+      done()
+    })
+  })
 })
 
-// POST ADD WISHLIST
-// describe("Post Data to Wishlist /customer/wishlist", () => {
-//   test("response wishlist data", (done) => {
-//     request(app)
-//     .post("/customer/wishlist")
-//     .set("access_token", customerTokenA)
-//     .send({
-//       EventId: 1
-//     })
-//     .end((err, res) => {
-//       const { status, body } = res
-//       if(err) {
-//         return done(err)
-//       }
-//       expect(status).toBe(201)
-//       done()
-//     })
-//   })
-// })
+// // POST ADD WISHLIST
+describe("Post Data to Wishlist /customer/wishlist", () => {
+  test("response wishlist data", (done) => {
+    request(app)
+    .post("/customer/wishlist")
+    .set("access_token", customerTokenA)
+    .send({
+      EventId
+    })
+    .end((err, res) => {
+      const { status, body } = res
+      wishListId = body.id
+      if(err) {
+        return done(err)
+      }
+      expect(status).toBe(201)
+      done()
+    })
+  })
+})
+
 
 // DELETE WISHLIST BY ID WISHLIST
 describe("Delete by Id /customer/delete/:id", () => {
   test("Delete data wishlist", (done) => {
     request(app)
-    .delete(`/customer/wishlist/${id}`)
+    .delete(`/customer/wishlist/${wishListId}`)
     .set("access_token", customerTokenA)
     .end((err, res) => {
       const { body, status } = res

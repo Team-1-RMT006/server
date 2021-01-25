@@ -45,13 +45,7 @@ class ControllerUser {
                     email
                 }
             })
-                .then(data => {
-                    // console.log(data);
-                    // let salt = bcrypt.genSaltSync(9)
-                    // let hash = bcrypt.hashSync(data.password, salt)
-                    // console.log(data.password, "----");
-                    // console.log(bcrypt.compareSync(data.password, hash));
-    
+                .then(data => {    
                     if(!data) {
                         res.status(401).json({ message: "Invalid email/password"})
                     }else {
@@ -65,7 +59,7 @@ class ControllerUser {
                     }
                 })
                 .catch(err => {
-                    console.log(err);
+                    // console.log(err);
                     next(err)
                 })
 
@@ -81,80 +75,32 @@ class ControllerUser {
                 res.status(200).json(data) // masih belum di filter, belum tau dapetnya
             })
             .catch(err => {
-                console.log((err));
+                // console.log((err));
                 next(err)
             })
     }
 
     static async buyTicketEvent(req, res, next) {
-        // console.log(JSON.stringify(req.dataUser));
-        // console.log(req.tokenForTicket, "-0-0-0-0-");
         const forTicket = JSON.stringify(req.dataUser)
 
         try {
             const data = await QRCode.toDataURL(forTicket)
-            // console.log(data);
             const newInputData = {
                     class: req.body.class,
                     CustomerId: req.dataUser.id,
-                    EventTypeId: req.body.EventId,
+                    EventId: req.body.EventId,
                     ticketCode: data, // GIMANA HAYOOOOO
                     seat: req.body.seat, 
                     status: "unpaid",
                     price: req.body.price
-                    // event_preview: req.body.event_preview
             }
 
-            
-            // console.log(newInputData);
-            
             const newData = await Ticket.create(newInputData)
-            
             res.status(201).json(newData)
             
         } catch (err) {
-            // console.log(req.body);
-            console.error(err, "---------")
-          }
-
-        // QRCode.toDataURL(forTicket, function(err, url) {
-        //         // console.log(typeof(url));
-        //     // migrateToQRCode = url
-        //         // console.log(migrateToQRCode);
-        //     // console.log(inputData);
-        //     inputData = newInputData
-        // })
-        // console.log(inputData, "---");
-        // Ticket.create(inputData)
-        //     .then(data => {
-        //         console.log("masuk ga sih?======");
-        //             req.status(201).josn(data)
-        //         })
-        //         .catch(err => {
-        //                 next(err)
-        //             })
-                    
-        // let migrateToQRCode = null
-        // QRCode.toDataURL(forTicket)
-        //     .then(url => {
-        //         migrateToQRCode = url
-        //         console.log(url);
-        //         console.log("ini pertama");
-                
-        //     })
-        //     .catch(err => {
-        //         console.log("ini eror");
-        //     })
-        //     const inputData = {
-        //         class: req.body.class,
-        //         CustomerId: req.dataUser.id,
-        //         EventId: req.body.EventId,
-        //         ticketCode: url, // GIMANA HAYOOOOO
-        //         seat: req.body.seat, 
-        //         status: "Unpaid",
-        //         price: req.body.price
-        //     }
-            
+            next(err)
+          } 
     }
 
     static getAllTicketByCustomer(req, res) {
@@ -174,33 +120,54 @@ class ControllerUser {
     }
 
     static paymentTicket(req, res, next) {
-        // console.log('sampai');
-        let idTicket = Number(req.body.idTicket)
+
+        // let idTicket = Number(req.body.idTicket)
         const inputData = {
             status: req.body.status,
             CustomerId: req.dataUser.id
         }
         const id = req.params.id // ini nanti di dapet dari fornt end
+              
+        // console.log(id, 'sampai');
         Ticket.update(inputData, {
             where: {
-                id: idTicket
+                id
             },
             returning: true
         })
             .then(data => {
-                console.log(data, "ini data");
+                // console.log(data, "ini data");
                 res.status(200).json(data[1][0])
             })
             .catch(err => {
-                console.log(err, "---------");
+                // console.log(err, "---------");
+                next(err)
+            })
+    }
+
+    static changeStatusTicketEvent(req, res, next) {
+        const inputData = {
+            status: "close",
+            CustomerId: req.dataUser.id
+        }
+        const id = req.params.id
+
+        Ticket.update(inputData, {
+            where: {
+                id
+            },
+            returning: true
+        })
+            .then(data => {
+                res.status(200).json(data[1][0])
+            })
+            .catch(err => {
                 next(err)
             })
     }
 
     static getAllDataWishlist(req, res, next) {
         const CustomerId = req.dataUser.id
-        // console.log(CustomerId);
-        // let dataWishlist = null
 
         Wishlist.findAll({
             where: {
@@ -208,23 +175,13 @@ class ControllerUser {
             }
         })
             .then(data => {
-                // dataWishlist = data
-                // res.status(200).json(data)
-                // return Ticket.findAll({
-                //     where: {
-                //         CustomerId
-                //     }
-                // })
+
                 res.status(200).json(data)
             })
-            // .then(data => {
-            //     // console.log(dataWishlist, "----");
-            //     // console.log(data, "0000");
-            //     res.status(200).json(dataWishlist)
-            // })
             .catch(err => {
                 // console.log(err);
-                res.status(500).json(err)
+                // res.status(500).json(err)
+                next(err)
             })
     }
 
@@ -233,7 +190,7 @@ class ControllerUser {
             CustomerId: req.dataUser.id,
             EventId: Number(req.body.EventId) || null
         }
-        console.log(inputData);
+        // console.log(inputData);
 
         Wishlist.create(inputData)
             .then(data => {
@@ -241,8 +198,8 @@ class ControllerUser {
                 res.status(201).json(data)
             })
             .catch(err => {
-                // next(err)
-                console.log(err);
+                next(err)
+                // console.log(err);
                 // res.status(500).json(err)
             })
     }
@@ -251,8 +208,6 @@ class ControllerUser {
         // console.log("test");
         const id = req.params.id
         // // const CustomerId = req.dataUser
-        // console.log(id);
-
         Wishlist.destroy({
             where: {
                 id
