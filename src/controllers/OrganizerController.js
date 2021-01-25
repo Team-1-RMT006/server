@@ -15,20 +15,6 @@ class OrganizerController {
     try {
       const data = await Organizer.create(obj);
       res.status(201).json({ id: data.id, email: data.email });
-      // if (!obj.email) {
-      //   throw {
-      //     status: 400,
-      //     message: 'Email / password is required'
-      //   }
-      // } else if (!obj.password) {
-      //   throw {
-      //     status: 400,
-      //     message: 'Password is required'
-      //   }
-      // } else {
-      //   const data = await Organizer.create(obj);
-      //   res.status(201).json({ id: data.id, email: data.email });
-      // }
     } catch (error) {
       next(error);
     }

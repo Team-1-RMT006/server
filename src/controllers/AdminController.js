@@ -153,8 +153,8 @@ class AdminController {
       detail: req.body.detail
     }
     try {
-      const data = await Banner.update(obj, { where: { id: obj.id }})
-      res.status(200).json(data)
+      const data = await Banner.update(obj, { where: { id: obj.id }, returning: true})
+      res.status(200).json(data[1][0])
     } catch (error) {
       next(error)
     }
@@ -204,7 +204,7 @@ class AdminController {
 
   static async getEventType (req, res, next) {
     try {
-      const data = await EventType.find()
+      const data = await EventType.findAll()
       res.status(200).json(data)
     } catch (error) {
       next(error)
