@@ -112,19 +112,19 @@ function errorHandler(err, req, res, next) {
               }
             } else if (err.errors[i].message === "Regular capacity must be numeric") {
                 errors.push(err.errors[i].message);
-            } else if (err.errors[i].message === "Regular capacity cannot be less than 0") {
+            } else if (err.errors[i].message === "Regular capacity must be greater than 0") {
               if (!errors.includes("Regular capacity must be numeric")) {
                 errors.push(err.errors[i].message);
               }
             } else if (err.errors[i].message === "VIP capacity must be numeric") {
                 errors.push(err.errors[i].message);
-            } else if (err.errors[i].message === "VIP capacity cannot be less than 0") {
+            } else if (err.errors[i].message === "VIP capacity must be greater than 0") {
               if (!errors.includes("VIP capacity must be numeric")) {
                 errors.push(err.errors[i].message);
               }
             } else if (err.errors[i].message === "VVIP capacity must be numeric") {
                 errors.push(err.errors[i].message);
-            } else if (err.errors[i].message === "VVIP capacity cannot be less than 0") {
+            } else if (err.errors[i].message === "VVIP capacity must be greater than 0") {
               if (!errors.includes("VVIP, capacity must be numeric")) {
                 errors.push(err.errors[i].message);
               }

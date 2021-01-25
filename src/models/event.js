@@ -69,8 +69,8 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Regular capacity must be numeric'
         },
         min: {
-          args: [0],
-          msg: 'Regular capacity cannot be less than 0'
+          args: [1],
+          msg: 'Regular capacity must be greater than 0'
         }
       }
     },
@@ -83,8 +83,8 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'VIP capacity must be numeric'
         },
         min: {
-          args: [0],
-          msg: 'VIP capacity cannot be less than 0'
+          args: [1],
+          msg: 'VIP capacity must be greater than 0'
         }
       }
     },
@@ -97,8 +97,8 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'VVIP capacity must be numeric'
         },
         min: {
-          args: [0],
-          msg: 'VVIP capacity cannot be less than 0'
+          args: [1],
+          msg: 'VVIP capacity must be greater than 0'
         }
       }
     },
