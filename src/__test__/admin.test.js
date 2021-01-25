@@ -8,42 +8,41 @@ let organizerId
 let eventTypeId
 let eventId
 let bannerId
+let adminId
 
-// beforeAll((done) => {
-//   queryInterface.bulkInsert("Organizers", [{
-//     name: "Organizer",
-//     email: "organizer1@mail.com",
-//     password: "1234567",
-//     address: "123 Street",
-//     phone: "0123456789",
-//     createdAt: new Date(),
-//     updatedAt: new Date()
-//   }])
-//     .then(response => {
-//       organizerId = response.id
-//       console.log('organizer >>>', response)
-//       done()
-//     })
-//     .catch(error => {
-//       done(error)
-//     })
-// })
+beforeAll((done) => {
+  queryInterface.bulkInsert("Organizers", [{
+    name: "Organizer",
+    email: "organizer2@mail.com",
+    password: "1234567",
+    address: "123 Street",
+    phone: "0123456789",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }], {returning: true})
+    .then(response => {
+      organizerId = response[0].id
+      done()
+    })
+    .catch(error => {
+      done(error)
+    })
+})
 
-// beforeAll((done) => {
-//   queryInterface.bulkInsert("EventTypes", [{
-//     name: "Movie",
-//     createdAt: new Date(),
-//     updatedAt: new Date()
-//   }])
-//     .then(response => {
-//       console.log('event type >>>>', response)
-//       eventTypeId = response.id
-//       done()
-//     })
-//     .catch(error => {
-//       done(error)
-//     })
-// })
+beforeAll((done) => {
+  queryInterface.bulkInsert("EventTypes", [{
+    name: "Movie",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }], {returning: true})
+    .then(response => {
+      eventTypeId = response[0].id
+      done()
+    })
+    .catch(error => {
+      done(error)
+    })
+})
 
 afterAll((done) => {
   queryInterface.bulkDelete("Admins", {}, { logging: false })
@@ -89,7 +88,7 @@ describe("Register Admin", () => {
   test("response with data", (done) => {
     request(app)
       .post("/admin/register")
-      .send({ email: "admin@mail.com", password: "123456" })
+      .send({ email: "admin@mail.com", password: "12345678" })
       .end((err, res) => {
         const { status, body } = res
         if (err) {
@@ -110,28 +109,28 @@ describe("Register Admin", () => {
           return done(err)
         }
         expect(status).toBe(400)
-        expect(body).toHaveProperty("message", "Email and password are required")
+        expect(body).toHaveProperty("message", ["Email is required", "Password is required"])
         done()
       })
   }),
   test("response with email is required", (done) => {
     request(app)
       .post("/admin/register")
-      .send({ email: "", password: "123456" })
+      .send({ email: "", password: "12345678" })
       .end((err, res) => {
         const { status, body } = res
         if (err) {
           return done(err)
         }
         expect(status).toBe(400)
-        expect(body).toHaveProperty("message", "Email is required")
+        expect(body).toHaveProperty("message", ["Email is required"])
         done()
       })
   }),
   test("response with email is required", (done) => {
     request(app)
       .post("/admin/register")
-      .send({ email: "admin1@mail.com", password: "" })
+      .send({ email: "admin@mail.com", password: "" })
       .end((err, res) => {
         const { status, body } = res
         if (err) {
@@ -145,14 +144,14 @@ describe("Register Admin", () => {
   test("response with email is unique", (done) => {
     request(app)
       .post("/admin/register")
-      .send({ email: "admin@mail.com", password: "123456" })
+      .send({ email: "admin@mail.com", password: "12345678" })
       .end((err, res) => {
         const { status, body } = res
         if (err) {
           return done(err)
         }
         expect(status).toBe(400)
-        expect(body).toHaveProperty("message", "Email has already use")
+        expect(body).toHaveProperty("message", ["The email has already been registered"])
         done()
       })
   })
@@ -162,7 +161,7 @@ describe("Login Admin", () => {
   test("response with access token", (done) => {
     request(app)
       .post("/admin/login")
-      .send({ email: "admin@mail.com", password: "123456" })
+      .send({ email: "admin@mail.com", password: "12345678" })
       .end((err, res) => {
         const { status, body } = res
         if (err) {
@@ -328,21 +327,6 @@ describe("Add Event", () => {
         done()
       })
   }),
-  test("response with time required", (done) => {
-    request(app)
-      .post("/admin/event")
-      .set("access_token", access_token)
-      .send({ title: "Kunjungan Menteri", date: '2021-02-13', time: '', location: "Balai Kota Yogyakarta", capacity_regular: 40, price_regular: 10000, price_vip: 20000, price_vvip: 40000, EventTypeId: eventTypeId, OrganizerId: organizerId })
-      .end((err, res) => {
-        const { status, body } = res
-        if (err) {
-          return done(err)
-        }
-        expect(status).toBe(400)
-        expect(body).toHaveProperty("message", ["Time is required"])
-        done()
-      })
-  }),
   test("response with location required", (done) => {
     request(app)
       .post("/admin/event")
@@ -406,7 +390,7 @@ describe("Edit Event", () => {
         done()
       })
   }),
-  test("response with data", (done) => {
+  test("response with title required", (done) => {
     request(app)
       .put("/admin/event/" + eventId)
       .set("access_token", access_token)
@@ -444,6 +428,22 @@ describe("Get event", () => {
         ]))
         done()
       })
+    request(app)
+      .get("/admin/event")
+      .set("access_token", access_token)
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(200)
+        expect(temp).toEqual(expect.arrayContaining([
+          expect.objectContaining({
+            title: 'Ketoprak'
+          })
+        ]))
+        done()
+      })
   }),
   test("response with unauthorized", (done) => {
     request(app)
@@ -455,6 +455,20 @@ describe("Get event", () => {
         }
         expect(status).toBe(401)
         expect(body).toHaveProperty("message", "Please login first")
+        done()
+      })
+  }),
+  test("response with internal server error", (done) => {
+    request(app)
+      .get("/admin/event")
+      .set("access_token", "access_token")
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(500)
+        expect(body).toHaveProperty("message", "Internal Server Error")
         done()
       })
   })
@@ -475,7 +489,7 @@ describe("delete event", () => {
         done()
       })
   }),
-  test("response with data", (done) => {
+  test("response with login first", (done) => {
     request(app)
       .delete("/admin/event/" + eventId)
       .end((err, res) => {
@@ -485,6 +499,34 @@ describe("delete event", () => {
         }
         expect(status).toBe(401)
         expect(body).toHaveProperty("message", "Please login first")
+        done()
+      })
+  }),
+  test("response with internal server error", (done) => {
+    request(app)
+      .delete("/admin/event/" + eventId)
+      .set("access_token", "access_token")
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(500)
+        expect(body).toHaveProperty("message", "Internal Server Error")
+        done()
+      })
+  }),
+  test("response with data not found", (done) => {
+    request(app)
+      .delete("/admin/event/" + eventId)
+      .set("access_token", access_token)
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(400)
+        expect(body).toHaveProperty("message", "Data not found")
         done()
       })
   })
@@ -521,7 +563,7 @@ describe("Create Banner", () => {
         done()
       })
   }),
-  test("response with data", (done) => {
+  test("response with internal server error", (done) => {
     request(app)
       .post("/admin/banner")
       .set("access_token", "asasassas")
@@ -532,7 +574,22 @@ describe("Create Banner", () => {
           return done(err)
         }
         expect(status).toBe(500)
-        expect(body).toHaveProperty("message", "Internal server error")
+        expect(body).toHaveProperty("message", "Internal Server Error")
+        done()
+      })
+  }),
+  test("response with image URL is required", (done) => {
+    request(app)
+      .post("/admin/banner")
+      .set("access_token", access_token)
+      .send({ image_url: "", detail: "ini detail" })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(400)
+        expect(body).toHaveProperty("message", ["Image URL is required"])
         done()
       })
   })
@@ -634,10 +691,25 @@ describe("Edit Banner", () => {
         expect(body).toHaveProperty("message", "Please login first")
         done()
       })
+  }),
+  test("response with image required", (done) => {
+    request(app)
+      .put("/admin/banner/" + bannerId)
+      .set("access_token", access_token)
+      .send({ image_url: "", detail: "ini detail" })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(400)
+        expect(body).toHaveProperty("message", ["Image URL is required"])
+        done()
+      })
   })
 })
 
-describe("delete banner", () => {
+describe("Delete Banner", () => {
   test("response with data", (done) => {
     request(app)
       .delete("/admin/banner/" + bannerId)
@@ -664,10 +736,43 @@ describe("delete banner", () => {
         expect(body).toHaveProperty("message", "Please login first")
         done()
       })
+  }),
+  test("response with data not found", (done) => {
+    request(app)
+      .delete("/admin/banner/" + bannerId)
+      .set("access_token", access_token)
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(400)
+        expect(body).toHaveProperty("message", "Data not found")
+        done()
+      })
   })
 })
 
-describe("Get Event", () => {
+describe("Create Event Type", () => {
+  test("response with data", (done) => {
+    request(app)
+      .post("/admin/eventType")
+      .set("access_token", access_token)
+      .send({ name: "Music" })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        eventTypeId = res.body.id
+        expect(status).toBe(201)
+        expect(body).toHaveProperty("name", "Music")
+        done()
+      })
+  })
+})
+
+describe("Get Event Type", () => {
   const temp = [
     { name: "Movie" }
   ]
@@ -699,6 +804,88 @@ describe("Get Event", () => {
         }
         expect(status).toBe(401)
         expect(body).toHaveProperty("message", "Please login first")
+        done()
+      })
+  })
+})
+
+describe("Edit Event Type", () => {
+  test("response with data", (done) => {
+    request(app)
+      .put("/admin/eventType/" + eventTypeId)
+      .set("access_token", access_token)
+      .send({ name: "Game" })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        eventTypeId = res.body.id
+        expect(status).toBe(200)
+        expect(body).toHaveProperty("name", "Game")
+        done()
+      })
+  }),
+  test("response with no data change", (done) => {
+    request(app)
+      .put("/admin/eventType/" + eventTypeId)
+      .set("access_token", access_token)
+      .send({ name: "Game" })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(400)
+        expect(body).toHaveProperty("message", "There is no data change")
+        done()
+      })
+  })
+})
+
+describe("Get Event Type by ID", () => {
+  test("response with data", (done) => {
+    request(app)
+      .get("/admin/eventType/" + eventTypeId)
+      .set("access_token", access_token)
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(200)
+        expect(body).toHaveProperty("name", "Game")
+        done()
+      })
+  })
+})
+
+describe("Delete Event Type", () => {
+  test("response with data", (done) => {
+    request(app)
+      .delete("/admin/eventType/" + eventTypeId)
+      .set("access_token", access_token)
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(200)
+        expect(body).toHaveProperty("message", "Data deleted successful")
+        done()
+      })
+  }),
+  test("response with data not found", (done) => {
+    request(app)
+      .delete("/admin/eventType/" + eventTypeId)
+      .set("access_token", access_token)
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(400)
+        expect(body).toHaveProperty("message", "Data not found")
         done()
       })
   })

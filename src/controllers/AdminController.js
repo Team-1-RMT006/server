@@ -127,7 +127,14 @@ class AdminController {
     const id = req.params.id
     try {
       const data = await Event.destroy({ where: { id }})
-      res.status(200).json({ message: 'Data deleted successful' })
+      if (data > 0) {
+        res.status(200).json({ message: 'Data deleted successful' })
+      } else {
+        throw {
+          status: 400,
+          message: 'Data not found'
+        }
+      }
     } catch (error) {
       next(error)
     }
@@ -173,7 +180,14 @@ class AdminController {
     const id = req.params.id
     try {
       const data = await Banner.destroy({ where: { id }})
-      res.status(200).json({ message: 'Data deleted successful' })
+      if (data > 0) {
+        res.status(200).json({ message: 'Data deleted successful' })
+      } else {
+        throw {
+          status: 400,
+          message: 'Data not found'
+        }
+      }
     } catch (error) {
       next(error)
     }
@@ -226,8 +240,15 @@ class AdminController {
       name: req.body.name
     }
     try {
-      const data = await EventType.update(obj, { where: { id: obj.id }})
-      res.status(200).json(data)
+      const current = await EventType.findByPk(obj.id)
+      if (current.name === obj.name) {
+        throw {
+          status: 400,
+          message: 'There is no data change'
+        }
+      }
+      const data = await EventType.update(obj, { where: { id: obj.id }, returning: true })
+      res.status(200).json(data[1][0])
     } catch (error) {
       next(error)
     }
@@ -237,7 +258,14 @@ class AdminController {
     const id = req.params.id
     try {
       const data = await EventType.destroy({ where: { id }})
-      res.status(200).json({ message: 'Data deleted successful' })
+      if (data > 0) {
+        res.status(200).json({ message: 'Data deleted successful' })
+      } else {
+        throw {
+          status: 400,
+          message: 'Data not found'
+        }
+      }
     } catch (error) {
       next(error)
     }
