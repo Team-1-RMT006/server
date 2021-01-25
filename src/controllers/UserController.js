@@ -32,7 +32,7 @@ class ControllerUser {
             .then(data => {
                 // console.log(data);
                 if(!data) {
-                    res.status(400).json({ message: "Invali email/password"})
+                    res.status(400).json({ message: "Invalid email/password"})
                 }else {
                     let passwordInDataBase = data.password
                     if(bcrypt.compareSync(password, passwordInDataBase)) {
@@ -77,7 +77,7 @@ class ControllerUser {
                     EventTypeId: req.body.EventId,
                     ticketCode: data, // GIMANA HAYOOOOO
                     seat: req.body.seat, 
-                    status: "Unpaid",
+                    status: "unpaid",
                     price: req.body.price,
                     event_preview: req.body.event_preview
                     // event_preview: req.body.event_preview
