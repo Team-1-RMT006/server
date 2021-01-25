@@ -15,20 +15,6 @@ class OrganizerController {
     try {
       const data = await Organizer.create(obj);
       res.status(201).json({ id: data.id, email: data.email });
-      // if (!obj.email) {
-      //   throw {
-      //     status: 400,
-      //     message: 'Email / password is required'
-      //   }
-      // } else if (!obj.password) {
-      //   throw {
-      //     status: 400,
-      //     message: 'Password is required'
-      //   }
-      // } else {
-      //   const data = await Organizer.create(obj);
-      //   res.status(201).json({ id: data.id, email: data.email });
-      // }
     } catch (error) {
       next(error);
     }
@@ -40,11 +26,20 @@ class OrganizerController {
 
     try {
       if (isEmailEmpty && isPasswordEmpty) {
-        res.status(400).json({ message: 'Email and password are required' });
+        throw {
+          status: 400,
+          message: 'Email and password are required'
+        }
       } else if (isEmailEmpty) {
-        res.status(400).json({ message: 'Email is required' });
+        throw {
+          status: 400,
+          message: 'Email is required'
+        }
       } else if (isPasswordEmpty) {
-        res.status(400).json({ message: 'Password is required' });
+        throw {
+          status: 400,
+          message: 'Password is required'
+        }
       } else {
         const data = await Organizer.findOne({
           where: {

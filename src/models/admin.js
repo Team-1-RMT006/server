@@ -20,20 +20,20 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: {
         args: true,
-        msg: 'Email has already use'
+        msg: 'Email has already been registered'
       },
       validate: {
-        isEmail: {
+        notNull: {
           args: true,
-          msg: 'Format email is required'
+          msg: 'Email is required'
         },
         notEmpty: {
           args: true,
           msg: 'Email is required'
         },
-        notNull: {
+        isEmail: {
           args: true,
-          msg: 'Email is required'
+          msg: 'Email is invalid'
         }
       }
     },
@@ -41,13 +41,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
+        notNull: {
+          args: true,
+          msg: 'Password is required'
+        },
         notEmpty: {
           args: true,
           msg: 'Password is required'
         },
-        notNull: {
-          args: true,
-          msg: 'Password is required'
+        len: {
+          args: [7, 128],
+          msg: 'Password must contain at least 7 characters and maximum 128 characters'
         }
       }
     }

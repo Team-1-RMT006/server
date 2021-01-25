@@ -18,11 +18,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false,
       validate: {
-        notEmpty: {
+        notNull: {
           args: true,
           msg: 'Image URL is required'
         },
-        notNull: {
+        notEmpty: {
           args: true,
           msg: 'Image URL is required'
         }

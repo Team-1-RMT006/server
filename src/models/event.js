@@ -23,15 +23,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notEmpty: {
-          args: true,
-          msg: 'Title is required'
-        },
         notNull: {
           args: true,
           msg: 'Title is required'
+        },
+        notEmpty: {
+          args: true,
+          msg: 'Title is required'
         }
-      }},
+      }
+    },
     event_preview: {
       type: DataTypes.TEXT
     },
@@ -44,52 +45,60 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    time: {
-      type: DataTypes.TIME,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: 'Time is required'
-        }
-      }
-    },
+    time: DataTypes.TIME,
     location: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notEmpty: {
-          args: true,
-          msg: 'Location is required'
-        },
         notNull: {
           args: true,
           msg: 'Location is required'
+        },
+        notEmpty: {
+          args: true,
+          msg: 'Location is required'
         }
-      }},
+      }
+    },
     capacity_regular: {
       type: DataTypes.INTEGER,
+      allowNull: true,
       validate: {
         isNumeric: {
           args: true,
-          msg: 'Capacity must be numeric'
+          msg: 'Regular capacity must be numeric'
+        },
+        min: {
+          args: [0],
+          msg: 'Regular capacity cannot be less than 0'
         }
       }
     },
     capacity_vip: {
       type: DataTypes.INTEGER,
+      allowNull: true,
       validate: {
         isNumeric: {
           args: true,
-          msg: 'Capacity must be numeric'
+          msg: 'VIP capacity must be numeric'
+        },
+        min: {
+          args: [0],
+          msg: 'VIP capacity cannot be less than 0'
         }
       }
     },
     capacity_vvip: {
       type: DataTypes.INTEGER,
+      allowNull: true,
       validate: {
         isNumeric: {
           args: true,
-          msg: 'Capacity must be numeric'
+          msg: 'VVIP capacity must be numeric'
+        },
+        min: {
+          args: [0],
+          msg: 'VVIP capacity cannot be less than 0'
         }
       }
     },
@@ -100,6 +109,10 @@ module.exports = (sequelize, DataTypes) => {
         isNumeric: {
           args: true,
           msg: "Regular price must be numeric"
+        },
+        min: {
+          args: [0],
+          msg: 'Regular price cannot be less than 0'
         }
       }
     },
@@ -110,6 +123,10 @@ module.exports = (sequelize, DataTypes) => {
         isNumeric: {
           args: true,
           msg: "VIP price must be numeric"
+        },
+        min: {
+          args: [0],
+          msg: 'VIP price cannot be less than 0'
         }
       }
     },
@@ -120,12 +137,16 @@ module.exports = (sequelize, DataTypes) => {
         isNumeric: {
           args: true,
           msg: "VVIP price must be numeric"
+        },
+        min: {
+          args: [0],
+          msg: 'VVIP price cannot be less than 0'
         }
       }
     }
   }, {
     sequelize,
-    modelName: 'Event',
+    modelName: 'Event'
   });
 
   Event.beforeCreate((instance, option) => {

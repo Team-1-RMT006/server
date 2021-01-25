@@ -23,11 +23,20 @@ class AdminController {
     }
     try {
       if (!obj.email && !obj.password) {
-        res.status(400).json({ message: 'Email and password are required' })
+        throw {
+          status: 400,
+          message: 'Email and password are required'
+        }
       } else if (!obj.email) {
-        res.status(400).json({ message: 'Email is required' })
+        throw {
+          status: 400,
+          message: 'Email is required'
+        }
       } else if (!obj.password) {
-        res.status(400).json({ message: 'Password is required' })
+        throw {
+          status: 400,
+          message: 'Password is required'
+        }
       } else {
         const dataUser = await Admin.findOne({ where: { email: obj.email }})
         if (dataUser) {
