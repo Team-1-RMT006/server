@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
   Organizer.init({
     name: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notNull: {
           args: true,
@@ -31,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notNull: {
           args: true,
@@ -48,6 +50,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     password: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notNull: {
           args: true,
@@ -65,6 +68,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     address: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notNull: {
           args: true,
@@ -78,6 +82,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     phone: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notNull: {
           args: true,
