@@ -351,10 +351,13 @@ describe("create Event POST /organizers/events", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "Event A",
+        event_preview: "http://example.com/images/12345",
         date: validDate,
         time: "18:00:00",
         location: "Central Park Jakarta",
-        capacity: 1000,
+        capacity_regular: 1000,
+        capacity_vip: 100,
+        capacity_vvip: 50,
         price_regular: 100000,
         price_vip: 300000,
         price_vvip: 500000,
@@ -389,10 +392,13 @@ describe("create Event POST /organizers/events", () => {
       .post("/organizers/events")
       .send({
         title: "Event A",
+        event_preview: "http://example.com/images/12345",
         date: validDate,
         time: "18:00:00",
         location: "Central Park Jakarta",
-        capacity: 1000,
+        capacity_regular: 1000,
+        capacity_vip: 100,
+        capacity_vvip: 50,
         price_regular: 100000,
         price_vip: 300000,
         price_vvip: 500000,
@@ -415,10 +421,13 @@ describe("create Event POST /organizers/events", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "",
+        event_preview: "http://example.com/images/12345",
         date: validDate,
         time: "18:00:00",
         location: "Central Park Jakarta",
-        capacity: 1000,
+        capacity_regular: 1000,
+        capacity_vip: 100,
+        capacity_vvip: 50,
         price_regular: 100000,
         price_vip: 300000,
         price_vvip: 500000,
@@ -442,10 +451,13 @@ describe("create Event POST /organizers/events", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "Event A",
+        event_preview: "http://example.com/images/12345",
         date: "",
         time: "18:00:00",
         location: "Central Park Jakarta",
-        capacity: 1000,
+        capacity_regular: 1000,
+        capacity_vip: 100,
+        capacity_vvip: 50,
         price_regular: 100000,
         price_vip: 300000,
         price_vvip: 500000,
@@ -469,10 +481,13 @@ describe("create Event POST /organizers/events", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "Event A",
+        event_preview: "http://example.com/images/12345",
         date: "2020-12-31",
         time: "18:00:00",
         location: "Central Park Jakarta",
-        capacity: 1000,
+        capacity_regular: 1000,
+        capacity_vip: 100,
+        capacity_vvip: 50,
         price_regular: 100000,
         price_vip: 300000,
         price_vvip: 500000,
@@ -496,10 +511,13 @@ describe("create Event POST /organizers/events", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "Event A",
+        event_preview: "http://example.com/images/12345",
         date:  validDate,
         time: "",
         location: "Central Park Jakarta",
-        capacity: 1000,
+        capacity_regular: 1000,
+        capacity_vip: 100,
+        capacity_vvip: 50,
         price_regular: 100000,
         price_vip: 300000,
         price_vvip: 500000,
@@ -523,10 +541,13 @@ describe("create Event POST /organizers/events", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "Event A",
+        event_preview: "http://example.com/images/12345",
         date: validDate,
         time: "18:00:00",
         location: "",
-        capacity: 1000,
+        capacity_regular: 1000,
+        capacity_vip: 100,
+        capacity_vvip: 50,
         price_regular: 100000,
         price_vip: 300000,
         price_vvip: 500000,
@@ -544,16 +565,19 @@ describe("create Event POST /organizers/events", () => {
         done();
       });
     });
-    test("cannot create Event, capacity must be greater than 0", (done) => {
+    test("cannot create Event, regular capacity must be greater than 0", (done) => {
       request(app)
       .post("/organizers/events")
       .set("access_token", organizerTokenA)
       .send({ 
         title: "Event A",
+        event_preview: "http://example.com/images/12345",
         date: validDate,
         time: "18:00:00",
         location: "Central Park Jakarta",
-        capacity: 0,
+        capacity_regular: -1000,
+        capacity_vip: 100,
+        capacity_vvip: 50,
         price_regular: 100000,
         price_vip: 300000,
         price_vvip: 500000,
@@ -567,7 +591,7 @@ describe("create Event POST /organizers/events", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "Capacity must be greater than 0");
+        expect(body).toHaveProperty("message", "Regular capacity must be greater than 0");
         done();
       });
     });
@@ -577,10 +601,13 @@ describe("create Event POST /organizers/events", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "Event A",
+        event_preview: "http://example.com/images/12345",
         date: validDate,
         time: "18:00:00",
         location: "Central Park Jakarta",
-        capacity: 1000,
+        capacity_regular: 1000,
+        capacity_vip: 100,
+        capacity_vvip: 50,
         price_regular: -100000,
         price_vip: 300000,
         price_vvip: 500000,
@@ -604,10 +631,13 @@ describe("create Event POST /organizers/events", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "Event A",
+        event_preview: "http://example.com/images/12345",
         date: validDate,
         time: "18:00:00",
         location: "Central Park Jakarta",
-        capacity: 1000,
+        capacity_regular: 1000,
+        capacity_vip: 100,
+        capacity_vvip: 50,
         price_regular: 100000,
         price_vip: -300000,
         price_vvip: 500000,
@@ -631,10 +661,13 @@ describe("create Event POST /organizers/events", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "Event A",
+        event_preview: "http://example.com/images/12345",
         date: validDate,
         time: "18:00:00",
         location: "Central Park Jakarta",
-        capacity: 1000,
+        capacity_regular: 1000,
+        capacity_vip: 100,
+        capacity_vvip: 50,
         price_regular: 100000,
         price_vip: 300000,
         price_vvip: -500000,
@@ -665,6 +698,7 @@ describe("edit Event PUT /organizers/events/:id", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "Event B",
+        event_preview: "http://example.com/images/12345",
         date: validDate,
         time: "19:00:00",
         location: "Central Park Jakarta",
@@ -703,6 +737,7 @@ describe("edit Event PUT /organizers/events/:id", () => {
       put(`/organizers/events/${EventId}`)
       .send({ 
         title: "Event B",
+        event_preview: "http://example.com/images/12345",
         date: validDate,
         time: "19:00:00",
         location: "Central Park Jakarta",
@@ -729,6 +764,7 @@ describe("edit Event PUT /organizers/events/:id", () => {
       .set("access_token", organizerTokenB)
       .send({ 
         title: "Event B",
+        event_preview: "http://example.com/images/12345",
         date: validDate,
         time: "19:00:00",
         location: "Central Park Jakarta",
@@ -756,6 +792,7 @@ describe("edit Event PUT /organizers/events/:id", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "",
+        event_preview: "http://example.com/images/12345",
         date: validDate,
         time: "19:00:00",
         location: "Central Park Jakarta",
@@ -783,6 +820,7 @@ describe("edit Event PUT /organizers/events/:id", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "Event B",
+        event_preview: "http://example.com/images/12345",
         date: "",
         time: "19:00:00",
         location: "Central Park Jakarta",
@@ -810,6 +848,7 @@ describe("edit Event PUT /organizers/events/:id", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "Event B",
+        event_preview: "http://example.com/images/12345",
         date: "2020-12-31",
         time: "19:00:00",
         location: "Central Park Jakarta",
@@ -837,6 +876,7 @@ describe("edit Event PUT /organizers/events/:id", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "Event B",
+        event_preview: "http://example.com/images/12345",
         date: validDate,
         time: "",
         location: "Central Park Jakarta",
@@ -864,6 +904,7 @@ describe("edit Event PUT /organizers/events/:id", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "Event B",
+        event_preview: "http://example.com/images/12345",
         date: validDate,
         time: "19:00:00",
         location: "",
@@ -891,6 +932,7 @@ describe("edit Event PUT /organizers/events/:id", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "Event B",
+        event_preview: "http://example.com/images/12345",
         date: validDate,
         time: "19:00:00",
         location: "Central Park Jakarta",
@@ -918,6 +960,7 @@ describe("edit Event PUT /organizers/events/:id", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "Event B",
+        event_preview: "http://example.com/images/12345",
         date: validDate,
         time: "19:00:00",
         location: "Central Park Jakarta",
@@ -945,6 +988,7 @@ describe("edit Event PUT /organizers/events/:id", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "Event B",
+        event_preview: "http://example.com/images/12345",
         date: validDate,
         time: "19:00:00",
         location: "Central Park Jakarta",
@@ -972,6 +1016,7 @@ describe("edit Event PUT /organizers/events/:id", () => {
       .set("access_token", organizerTokenA)
       .send({ 
         title: "Event B",
+        event_preview: "http://example.com/images/12345",
         date: validDate,
         time: "19:00:00",
         location: "Central Park Jakarta",
