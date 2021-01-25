@@ -117,7 +117,15 @@ class AdminController {
       const data = await Status.findAll({include: {
         model: Event,
         include: [Ticket]}})
-      res.status(200).json(data)
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].Events.length > 0) {
+          res.status(200).json(data)
+        }
+      }
+      throw {
+        status: 404,
+        message: 'Data not found'
+      }
     } catch (error) {
       next(error)
     }
@@ -156,7 +164,14 @@ class AdminController {
   static async getBanner (req, res, next) {
     try {
       const data = await Banner.findAll()
-      res.status(200).json(data)
+      if (data.length > 0) {
+        res.status(200).json(data)
+      } else {
+        throw {
+          status: 404,
+          message: 'Data not found'
+        }
+      }
     } catch (error) {
       next(error)
     }
@@ -197,7 +212,14 @@ class AdminController {
     const id = req.params.id
     try {
       const data = await Event.findByPk(id)
-      res.status(200).json(data)
+      if (data) {
+        res.status(200).json(data)
+      } else {
+        throw {
+          status: 404,
+          message: "Data not found"
+        }
+      }
     } catch (error) {
       next(error)
     }
@@ -207,7 +229,14 @@ class AdminController {
     const id = req.params.id
     try {
       const data = await Banner.findByPk(id)
-      res.status(200).json(data)
+      if (data) {
+        res.status(200).json(data)
+      } else {
+        throw {
+          status: 404,
+          message: "Data not found"
+        }
+      }
     } catch (error) {
       next(error)
     }
@@ -228,7 +257,14 @@ class AdminController {
   static async getEventType (req, res, next) {
     try {
       const data = await EventType.findAll()
-      res.status(200).json(data)
+      if (data.length > 0) {
+        res.status(200).json(data)
+      } else {
+        throw {
+          status: 404,
+          message: "Data not found"
+        }
+      }
     } catch (error) {
       next(error)
     }
@@ -275,7 +311,14 @@ class AdminController {
     const id = req.params.id
     try {
       const data = await EventType.findByPk(id)
-      res.status(200).json(data)
+      if (data) {
+        res.status(200).json(data)
+      } else {
+        throw {
+          status: 404,
+          message: "Data not found"
+        }
+      }
     } catch (error) {
       next(error)
     }
