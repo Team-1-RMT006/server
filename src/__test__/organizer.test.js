@@ -39,12 +39,18 @@ beforeAll((done) => {
 });
 
 afterAll((done) => {
-  queryInterface.bulkDelete("Organizers")
+    queryInterface.bulkDelete("Customers")
+    .then((response) => {
+      return queryInterface.bulkDelete("Organizers")
+    })
     .then((response) => {
       return queryInterface.bulkDelete("EventTypes")
     })
     .then((response) => {
-      done();
+      return queryInterface.bulkDelete("Tickets")
+    })
+    .then((response) => {
+      done()
     })
     .catch((err) => {
       done(err);
@@ -876,6 +882,7 @@ describe("edit Event PUT /organizers/events/:id", () => {
       });
     });
   });
+  
   describe("error, edit Event", () => {
     test("cannot edit Event, no access_token", (done) => {
       request(app)
