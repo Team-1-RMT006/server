@@ -91,7 +91,7 @@ describe("Organizer register POST /organizers/register", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("messages", [
+        expect(body).toHaveProperty("message", [
                       "Name is required"
         ]);
         done();
@@ -113,7 +113,7 @@ describe("Organizer register POST /organizers/register", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "Email is required");
+        expect(body).toHaveProperty("message", ["Email is required"]);
         done();
       });
     });
@@ -133,7 +133,7 @@ describe("Organizer register POST /organizers/register", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("messages", [
+        expect(body).toHaveProperty("message", [
                       "Email is invalid"
         ]);
         done();
@@ -155,7 +155,7 @@ describe("Organizer register POST /organizers/register", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "Password is required");
+        expect(body).toHaveProperty("message", ["Password is required"]);
         done();
       });
     });
@@ -175,7 +175,7 @@ describe("Organizer register POST /organizers/register", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("messages", [
+        expect(body).toHaveProperty("message", [
                       "Password must contain at least 7 characters and maximum 128 characters"
         ]);
         done();
@@ -197,7 +197,7 @@ describe("Organizer register POST /organizers/register", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("messages", [
+        expect(body).toHaveProperty("message", [
                       "Address is required"
         ]);
         done();
@@ -219,7 +219,7 @@ describe("Organizer register POST /organizers/register", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("messages", [
+        expect(body).toHaveProperty("message", [
                       "Phone is required"
         ]);
         done();
@@ -354,12 +354,14 @@ describe("create Event POST /organizers/events", () => {
         date: validDate,
         time: "18:00:00",
         location: "Central Park Jakarta",
-        capacity: 1000,
+        capacity_regular: 1000,
+        capacity_vip: 500,
+        capacity_vvip: 100,
         price_regular: 100000,
         price_vip: 300000,
         price_vvip: 500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: 1
+        EventTypeId: eventTypeId
       })
       .end((err, res) => {
         const { body, status } = res;
@@ -373,12 +375,12 @@ describe("create Event POST /organizers/events", () => {
         expect(body).toHaveProperty("date", validDate);
         expect(body).toHaveProperty("time", "18:00:00");
         expect(body).toHaveProperty("location", "Central Park Jakarta");
-        expect(body).toHaveProperty("capacity", 1000);
+        expect(body).toHaveProperty("capacity_regular", 1000);
         expect(body).toHaveProperty("price_regular", 100000);
         expect(body).toHaveProperty("price_vip", 300000);
         expect(body).toHaveProperty("price_vvip", 500000);
         expect(body).toHaveProperty("OrganizerId", OrganizerIdA);
-        expect(body).toHaveProperty("EventTypeId", 1);
+        expect(body).toHaveProperty("EventTypeId", eventTypeId);
         done();
       });
     });
@@ -432,7 +434,7 @@ describe("create Event POST /organizers/events", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "Title is required");
+        expect(body).toHaveProperty("message", ["Title is required"]);
         done();
       });
     });
@@ -459,7 +461,7 @@ describe("create Event POST /organizers/events", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "Date is required");
+        expect(body).toHaveProperty("message", ["Date must be greater than today"]);
         done();
       });
     });
@@ -486,7 +488,7 @@ describe("create Event POST /organizers/events", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "Date must be greater than today");
+        expect(body).toHaveProperty("message", ["Date must be greater than today"]);
         done();
       });
     });
@@ -540,7 +542,7 @@ describe("create Event POST /organizers/events", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "Location is required");
+        expect(body).toHaveProperty("message", ["Location is required"]);
         done();
       });
     });
@@ -594,7 +596,7 @@ describe("create Event POST /organizers/events", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "Regular price is invalid");
+        expect(body).toHaveProperty("message", ["Regular price cannot be less than 0"]);
         done();
       });
     });
@@ -621,7 +623,7 @@ describe("create Event POST /organizers/events", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "VIP price is invalid");
+        expect(body).toHaveProperty("message", ["VIP price cannot be less than 0"]);
         done();
       });
     });
@@ -648,7 +650,7 @@ describe("create Event POST /organizers/events", () => {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "VVIP price is invalid");
+        expect(body).toHaveProperty("message", ["VVIP price cannot be less than 0"]);
         done();
       });
     });
@@ -700,7 +702,7 @@ describe("edit Event PUT /organizers/events/:id", () => {
   describe("error, edit Event", () => {
     test("cannot edit Event, no access_token", (done) => {
       request(app)
-      put(`/organizers/events/${EventId}`)
+      .put(`/organizers/events/${EventId}`)
       .send({ 
         title: "Event B",
         date: validDate,
@@ -725,7 +727,7 @@ describe("edit Event PUT /organizers/events/:id", () => {
     });
     test("cannot edit Event, organizer cannot edit other organizers' events", (done) => {
       request(app)
-      put(`/organizers/events/${EventId}`)
+      .put(`/organizers/events/${EventId}`)
       .set("access_token", organizerTokenB)
       .send({ 
         title: "Event B",
