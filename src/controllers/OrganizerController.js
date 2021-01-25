@@ -76,7 +76,6 @@ class OrganizerController {
       res.status(200).json({ name: data.name, email: data.email, address: data.address, phone: data.phone });
     })
     .catch((error) => {
-        console.log(error);
         next(error);
     });
   }
@@ -105,7 +104,6 @@ class OrganizerController {
         res.status(201).json(data);
       })
       .catch((error) => {
-        console.log(error)
         next(error);
       });
   } 
@@ -124,6 +122,7 @@ class OrganizerController {
         res.status(200).json(data[1][0]);
       })
       .catch((error) => {
+        console.log(error);
         next(error);
       });
   } 
