@@ -1,5 +1,4 @@
-const { Organizer, EventType } = require('../models');
-const { Event } = require('../models');
+const { Organizer, EventType, Event, Ticket, Status } = require('../models');
 const { compare } = require("../organizerHelpers/bcrypt");
 const { sign } = require("../organizerHelpers/jwt");
 
@@ -97,7 +96,6 @@ class OrganizerController {
         message: 'Data not found'
       }
     } catch (error) {
-      console.log(error);
       next(error)
     }
   }
@@ -146,6 +144,20 @@ class OrganizerController {
         next(error);
       });
   }
+
+  static getEventById(req, res, next) {
+    const id = req.params.id
+
+    Event.findByPk(id, {
+        include: [Ticket, Organizer, EventType, Status]
+    })
+        .then(data => {
+            res.status(200).json(data)
+        })
+        .catch(err => {
+            next(err)
+        })
+    }
 }
 
 module.exports = OrganizerController;

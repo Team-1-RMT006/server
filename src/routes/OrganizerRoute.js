@@ -12,6 +12,7 @@ routeOrganizer.get("/events", OrganizerController.showEvents);
 routeOrganizer.post("/events", OrganizerController.createEvent);
 
 routeOrganizer.use("/events/:id", eventAuthorization);
+routeOrganizer.get("/events/:id", OrganizerController.getEventById);
 routeOrganizer.put("/events/:id", OrganizerController.updateEvent);
 routeOrganizer.delete("/events/:id", OrganizerController.deleteEvent);
 
