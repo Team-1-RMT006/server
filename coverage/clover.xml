@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1611637571936" clover="3.2.0">
-  <project timestamp="1611637571937" name="All files">
-    <metrics statements="620" coveredstatements="599" conditionals="259" coveredconditionals="213" methods="115" coveredmethods="105" elements="994" coveredelements="917" complexity="0" loc="620" ncloc="620" packages="8" files="29" classes="29"/>
+<coverage generated="1611674247046" clover="3.2.0">
+  <project timestamp="1611674247046" name="All files">
+    <metrics statements="622" coveredstatements="601" conditionals="259" coveredconditionals="213" methods="115" coveredmethods="105" elements="996" coveredelements="919" complexity="0" loc="622" ncloc="622" packages="8" files="29" classes="29"/>
     <package name="src">
-      <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <file name="app.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/app.js">
-        <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <metrics statements="12" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="app.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/app.js">
+        <metrics statements="12" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
         <line num="3" count="3" type="stmt"/>
         <line num="4" count="3" type="stmt"/>
         <line num="5" count="3" type="stmt"/>
-        <line num="7" count="3" type="stmt"/>
+        <line num="6" count="3" type="stmt"/>
         <line num="8" count="3" type="stmt"/>
         <line num="9" count="3" type="stmt"/>
         <line num="10" count="3" type="stmt"/>
+        <line num="11" count="3" type="stmt"/>
         <line num="12" count="3" type="stmt"/>
+        <line num="14" count="3" type="stmt"/>
       </file>
     </package>
     <package name="src.controllers">
       <metrics statements="243" coveredstatements="235" conditionals="70" coveredconditionals="69" methods="65" coveredmethods="57"/>
-      <file name="AdminController.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/controllers/AdminController.js">
+      <file name="AdminController.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/controllers/AdminController.js">
         <metrics statements="121" coveredstatements="121" conditionals="32" coveredconditionals="32" methods="17" coveredmethods="17"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
@@ -144,7 +146,7 @@
         <line num="323" count="1" type="stmt"/>
         <line num="328" count="3" type="stmt"/>
       </file>
-      <file name="OrganizerController.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/controllers/OrganizerController.js">
+      <file name="OrganizerController.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/controllers/OrganizerController.js">
         <metrics statements="50" coveredstatements="48" conditionals="18" coveredconditionals="18" methods="17" coveredmethods="15"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
@@ -197,7 +199,7 @@
         <line num="147" count="0" type="stmt"/>
         <line num="152" count="3" type="stmt"/>
       </file>
-      <file name="UserController.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/controllers/UserController.js">
+      <file name="UserController.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/controllers/UserController.js">
         <metrics statements="72" coveredstatements="66" conditionals="20" coveredconditionals="19" methods="31" coveredmethods="25"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
@@ -275,14 +277,14 @@
     </package>
     <package name="src.helpers">
       <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
-      <file name="bcrypt.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/helpers/bcrypt.js">
+      <file name="bcrypt.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/helpers/bcrypt.js">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="1" count="3" type="stmt"/>
         <line num="4" count="2" type="stmt"/>
         <line num="8" count="2" type="stmt"/>
         <line num="11" count="3" type="stmt"/>
       </file>
-      <file name="jwt.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/helpers/jwt.js">
+      <file name="jwt.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/helpers/jwt.js">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="1" count="3" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
@@ -292,7 +294,7 @@
     </package>
     <package name="src.middlewares">
       <metrics statements="196" coveredstatements="185" conditionals="178" coveredconditionals="137" methods="13" coveredmethods="11"/>
-      <file name="authentication.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/middlewares/authentication.js">
+      <file name="authentication.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/middlewares/authentication.js">
         <metrics statements="14" coveredstatements="13" conditionals="4" coveredconditionals="3" methods="1" coveredmethods="1"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
@@ -309,7 +311,7 @@
         <line num="19" count="0" type="stmt"/>
         <line num="26" count="12" type="stmt"/>
       </file>
-      <file name="errorhandler.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/middlewares/errorhandler.js">
+      <file name="errorhandler.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/middlewares/errorhandler.js">
         <metrics statements="124" coveredstatements="120" conditionals="158" coveredconditionals="122" methods="1" coveredmethods="1"/>
         <line num="2" count="102" type="cond" truecount="2" falsecount="0"/>
         <line num="3" count="43" type="stmt"/>
@@ -436,7 +438,7 @@
         <line num="176" count="4" type="stmt"/>
         <line num="180" count="3" type="stmt"/>
       </file>
-      <file name="eventAuthorization.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/middlewares/eventAuthorization.js">
+      <file name="eventAuthorization.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/middlewares/eventAuthorization.js">
         <metrics statements="10" coveredstatements="10" conditionals="4" coveredconditionals="4" methods="1" coveredmethods="1"/>
         <line num="1" count="3" type="stmt"/>
         <line num="3" count="3" type="stmt"/>
@@ -449,7 +451,7 @@
         <line num="18" count="2" type="stmt"/>
         <line num="24" count="3" type="stmt"/>
       </file>
-      <file name="organizerAuthentication.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/middlewares/organizerAuthentication.js">
+      <file name="organizerAuthentication.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/middlewares/organizerAuthentication.js">
         <metrics statements="14" coveredstatements="13" conditionals="4" coveredconditionals="3" methods="1" coveredmethods="1"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
@@ -466,7 +468,7 @@
         <line num="24" count="0" type="stmt"/>
         <line num="31" count="3" type="stmt"/>
       </file>
-      <file name="userAuthentication.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/middlewares/userAuthentication.js">
+      <file name="userAuthentication.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/middlewares/userAuthentication.js">
         <metrics statements="18" coveredstatements="16" conditionals="4" coveredconditionals="3" methods="3" coveredmethods="2"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
@@ -487,7 +489,7 @@
         <line num="37" count="1" type="stmt"/>
         <line num="41" count="3" type="stmt"/>
       </file>
-      <file name="userAuthorization.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/middlewares/userAuthorization.js">
+      <file name="userAuthorization.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/middlewares/userAuthorization.js">
         <metrics statements="16" coveredstatements="13" conditionals="4" coveredconditionals="2" methods="6" coveredmethods="5"/>
         <line num="1" count="3" type="stmt"/>
         <line num="5" count="2" type="stmt"/>
@@ -509,7 +511,7 @@
     </package>
     <package name="src.models">
       <metrics statements="88" coveredstatements="86" conditionals="11" coveredconditionals="7" methods="27" coveredmethods="27"/>
-      <file name="admin.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/models/admin.js">
+      <file name="admin.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/models/admin.js">
         <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
         <line num="2" count="3" type="stmt"/>
         <line num="5" count="3" type="stmt"/>
@@ -519,14 +521,14 @@
         <line num="64" count="2" type="stmt"/>
         <line num="67" count="3" type="stmt"/>
       </file>
-      <file name="banner.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/models/banner.js">
+      <file name="banner.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/models/banner.js">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="4" count="3" type="stmt"/>
         <line num="5" count="3" type="stmt"/>
         <line num="16" count="3" type="stmt"/>
         <line num="35" count="3" type="stmt"/>
       </file>
-      <file name="customer.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/models/customer.js">
+      <file name="customer.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/models/customer.js">
         <metrics statements="15" coveredstatements="14" conditionals="2" coveredconditionals="1" methods="5" coveredmethods="5"/>
         <line num="2" count="3" type="stmt"/>
         <line num="5" count="3" type="stmt"/>
@@ -544,7 +546,7 @@
         <line num="90" count="2" type="stmt"/>
         <line num="93" count="3" type="stmt"/>
       </file>
-      <file name="event.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/models/event.js">
+      <file name="event.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/models/event.js">
         <metrics statements="11" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
         <line num="4" count="3" type="stmt"/>
         <line num="5" count="3" type="stmt"/>
@@ -558,7 +560,7 @@
         <line num="153" count="2" type="stmt"/>
         <line num="156" count="3" type="stmt"/>
       </file>
-      <file name="index.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/models/index.js">
+      <file name="index.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/models/index.js">
         <metrics statements="20" coveredstatements="19" conditionals="9" coveredconditionals="6" methods="3" coveredmethods="3"/>
         <line num="3" count="3" type="stmt"/>
         <line num="4" count="3" type="stmt"/>
@@ -581,7 +583,7 @@
         <line num="35" count="3" type="stmt"/>
         <line num="37" count="3" type="stmt"/>
       </file>
-      <file name="organizer.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/models/organizer.js">
+      <file name="organizer.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/models/organizer.js">
         <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
         <line num="2" count="3" type="stmt"/>
         <line num="5" count="3" type="stmt"/>
@@ -593,7 +595,7 @@
         <line num="104" count="3" type="stmt"/>
         <line num="107" count="3" type="stmt"/>
       </file>
-      <file name="status.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/models/status.js">
+      <file name="status.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/models/status.js">
         <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="4" count="3" type="stmt"/>
         <line num="5" count="3" type="stmt"/>
@@ -601,7 +603,7 @@
         <line num="17" count="3" type="stmt"/>
         <line num="35" count="3" type="stmt"/>
       </file>
-      <file name="ticket.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/models/ticket.js">
+      <file name="ticket.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/models/ticket.js">
         <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="4" count="3" type="stmt"/>
         <line num="5" count="3" type="stmt"/>
@@ -610,7 +612,7 @@
         <line num="18" count="3" type="stmt"/>
         <line num="91" count="3" type="stmt"/>
       </file>
-      <file name="type.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/models/type.js">
+      <file name="type.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/models/type.js">
         <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="4" count="3" type="stmt"/>
         <line num="5" count="3" type="stmt"/>
@@ -618,7 +620,7 @@
         <line num="17" count="3" type="stmt"/>
         <line num="23" count="3" type="stmt"/>
       </file>
-      <file name="wishlist.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/models/wishlist.js">
+      <file name="wishlist.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/models/wishlist.js">
         <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="4" count="3" type="stmt"/>
         <line num="5" count="3" type="stmt"/>
@@ -630,7 +632,7 @@
     </package>
     <package name="src.organizerHelpers">
       <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
-      <file name="bcrypt.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/organizerHelpers/bcrypt.js">
+      <file name="bcrypt.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/organizerHelpers/bcrypt.js">
         <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="1" count="3" type="stmt"/>
         <line num="4" count="3" type="stmt"/>
@@ -638,7 +640,7 @@
         <line num="9" count="3" type="stmt"/>
         <line num="12" count="3" type="stmt"/>
       </file>
-      <file name="jwt.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/organizerHelpers/jwt.js">
+      <file name="jwt.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/organizerHelpers/jwt.js">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="1" count="3" type="stmt"/>
         <line num="4" count="2" type="stmt"/>
@@ -648,7 +650,7 @@
     </package>
     <package name="src.routes">
       <metrics statements="62" coveredstatements="62" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <file name="AdminRoute.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/routes/AdminRoute.js">
+      <file name="AdminRoute.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/routes/AdminRoute.js">
         <metrics statements="22" coveredstatements="22" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
@@ -673,7 +675,7 @@
         <line num="22" count="3" type="stmt"/>
         <line num="26" count="3" type="stmt"/>
       </file>
-      <file name="OrganizerRoute.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/routes/OrganizerRoute.js">
+      <file name="OrganizerRoute.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/routes/OrganizerRoute.js">
         <metrics statements="14" coveredstatements="14" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
@@ -690,7 +692,7 @@
         <line num="16" count="3" type="stmt"/>
         <line num="18" count="3" type="stmt"/>
       </file>
-      <file name="UserRoute.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/routes/UserRoute.js">
+      <file name="UserRoute.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/routes/UserRoute.js">
         <metrics statements="18" coveredstatements="18" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
@@ -711,7 +713,7 @@
         <line num="19" count="3" type="stmt"/>
         <line num="22" count="3" type="stmt"/>
       </file>
-      <file name="index.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/routes/index.js">
+      <file name="index.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/routes/index.js">
         <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="3" type="stmt"/>
         <line num="3" count="3" type="stmt"/>
@@ -725,7 +727,7 @@
     </package>
     <package name="src.userHelpers">
       <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
-      <file name="generateAndVerifyToken.js" path="/home/taufiq/Project/Hacktiv8/Phase3/Final Project/rev2/server/src/userHelpers/generateAndVerifyToken.js">
+      <file name="generateAndVerifyToken.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/bismillah/server/src/userHelpers/generateAndVerifyToken.js">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="1" count="3" type="stmt"/>
         <line num="4" count="2" type="stmt"/>
