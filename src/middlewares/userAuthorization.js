@@ -8,7 +8,6 @@ function authorizationPayment(req, res, next) {
 
     Ticket.findByPk(id)
         .then(data => {
-            console.log(data);
             if(CustomerId === data.CustomerId) {
                 next()
             }else {

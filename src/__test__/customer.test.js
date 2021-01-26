@@ -435,7 +435,7 @@ describe("Get All Data Wishlist /customer/wishlist", () => {
 // })
 
 // DELETE WISHLIST BY ID WISHLIST
-describe("Delete by Id /customer/delete/:id", () => {
+describe("Delete by Id /customer/wishlist/:id", () => {
   test("Delete data wishlist", (done) => {
     request(app)
     .delete(`/customer/wishlist/${id}`)

@@ -395,6 +395,28 @@ describe("Organizer login POST /organizers/login", () => {
   });
 });
 
+// GET ORGANIZER PROFILE
+
+describe("Get Organizer's Profile", () => {
+  describe("Success get organizer's profile", () => {
+    test("Response with data", (done) => {
+      request(app)
+        .get("/organizers/profile")
+        .set("access_token", organizerTokenA)
+        .end((err, res) => {
+          const { body, status } = res;
+          EventId = body.id;
+          if (err) {
+            return done(err);
+          }
+          expect(status).toBe(200);
+          expect(body).toHaveProperty("email", "organizerA@mail.com");
+          done();
+        })  
+    })
+  })
+})
+
 /* --------------------------------------CREATE EVENT-------------------------------------- */
 
 describe("create Event POST /organizers/events", () => {
@@ -1303,6 +1325,34 @@ describe("edit Event PUT /organizers/events/:id", () => {
   });
 });
 
+// GET EVENT
+
+describe("Get All Event", () => {
+  describe("Success Get All Event", () => {
+    const temp = [
+      { location: "Central Park Jakarta" }
+    ]
+    test("response with data", (done) => {
+      request(app)
+        .get("/organizers/events")
+        .set("access_token", organizerTokenA)
+        .end((err, res) => {
+          const { status, body } = res
+          if (err) {
+            return done(err)
+          }
+          expect(status).toBe(200)
+          expect(temp).toEqual(expect.arrayContaining([
+            expect.objectContaining({
+              location: "Central Park Jakarta"
+            })
+          ]))
+          done()
+        })
+    })
+  })
+})
+
 /* --------------------------------------DELETE-------------------------------------- */
 describe("delete Event DELETE /organizers/events/:id", () => {
   describe("error, delete Event", () => {
@@ -1333,6 +1383,20 @@ describe("delete Event DELETE /organizers/events/:id", () => {
         done();
       });
     });
+    test("cannot delete Event, data not found", (done) => {
+      request(app)
+      .delete(`/organizers/events/100000`)
+      .set("access_token", organizerTokenA)
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(404);
+        expect(body).toHaveProperty("message", "Data is not found.");
+        done();
+      });
+    });
   });
   describe("success, Event deleted", () => {
     test("delete Event using EventId", (done) => {
@@ -1350,4 +1414,20 @@ describe("delete Event DELETE /organizers/events/:id", () => {
       });
     });
   });
+  describe("Error Get All Event", () => {
+    test("response with data not found", (done) => {
+      request(app)
+        .get("/organizers/events")
+        .set("access_token", organizerTokenA)
+        .end((err, res) => {
+          const { status, body } = res
+          if (err) {
+            return done(err)
+          }
+          expect(status).toBe(404)
+          expect(body).toHaveProperty("message", "Data not found")
+          done()
+        })
+    })
+  })
 });

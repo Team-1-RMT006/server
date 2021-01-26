@@ -262,6 +262,7 @@ class ControllerUser {
                 res.status(200).json({ message: "Wishlist deleted successfully"})
             })
             .catch(err => {
+                console.log('errorrr >>>>', err)
                 next(err)
             })
     }

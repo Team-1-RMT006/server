@@ -8,7 +8,7 @@ routeOrganizer.post('/login', OrganizerController.loginOrganizer);
 
 routeOrganizer.use(organizerAuthentication);
 routeOrganizer.get("/profile", OrganizerController.getProfile);
-// routeOrganizer.get("/events", OrganizerController.showEvents);
+routeOrganizer.get("/events", OrganizerController.showEvents);
 routeOrganizer.post("/events", OrganizerController.createEvent);
 
 routeOrganizer.use("/events/:id", eventAuthorization);
