@@ -90,10 +90,6 @@ function errorHandler(err, req, res, next) {
               if (!errors.includes("Title is required")) {
                 errors.push(err.errors[i].message);
               }
-            } else if (err.errors[i].message === "Event preview is required") {
-              if (!errors.includes("Event preview is required")) {
-                errors.push(err.errors[i].message);
-              }
             } else if (err.errors[i].message === "Date is required") {
               if (!errors.includes("Date is required")) {
                 errors.push(err.errors[i].message);

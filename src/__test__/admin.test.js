@@ -139,7 +139,7 @@ describe("Register Admin", () => {
         done()
       })
   }),
-  test("response with email is required", (done) => {
+  test("response with password is required", (done) => {
     request(app)
       .post("/admin/register")
       .send({ email: "admin@mail.com", password: "" })
@@ -150,6 +150,34 @@ describe("Register Admin", () => {
         }
         expect(status).toBe(400)
         expect(body).toHaveProperty("message", ["Password is required"])
+        done()
+      })
+  }),
+  test("response with password must greater than 7", (done) => {
+    request(app)
+      .post("/admin/register")
+      .send({ email: "admin@mail.com", password: "123" })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(400)
+        expect(body).toHaveProperty("message", ["Password must contain at least 7 characters and maximum 128 characters"])
+        done()
+      })
+  }),
+  test("response with email is invalid", (done) => {
+    request(app)
+      .post("/admin/register")
+      .send({ email: "admin", password: "123456789" })
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(400)
+        expect(body).toHaveProperty("message", ["Email is invalid"])
         done()
       })
   }),

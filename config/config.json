@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "postgres",
-    "password": "GW29224B",
-    "database": "finalProject-part2",
+    "password": "postgres",
+    "database": "final-project",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },

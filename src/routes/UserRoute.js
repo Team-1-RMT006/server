@@ -15,7 +15,8 @@ route.get("/ticket", ControllerUser.getAllTicketByCustomer) // ini yang mau di t
 route.post("/wishlist", ControllerUser.addWishlist)
 route.get("/history", ControllerUser.getDataHistoryPayment)
 route.patch("/buy/:id", authorizationPayment, ControllerUser.paymentTicket)
-route.delete("/wishlist/:idA", authorizationWishlist, ControllerUser.deleteWishList)
+route.patch("/eventclose/:id", authorizationPayment, ControllerUser.changeStatusTicketEvent)
+route.delete("/wishlist/:id", authorizationWishlist, ControllerUser.deleteWishList)
 
 
 module.exports = route

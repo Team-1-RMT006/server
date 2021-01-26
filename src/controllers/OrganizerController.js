@@ -85,11 +85,18 @@ class OrganizerController {
       where: {
         OrganizerId: req.loggedInUser.id
       },
-      order: [["status", "ASC"]],
-      include: [EventType, Organizer]
+      include: [EventType, Organizer],
+      order: [["StatusId", "ASC"]]
     })
       .then((data) => {
-          res.status(200).json(data);
+          if (data.length > 0) {
+            res.status(200).json(data);
+          } else {
+            throw {
+              status: 404,
+              message: "Data not found"
+            }
+          }
       })
       .catch((error) => {
           next(error);
@@ -104,7 +111,6 @@ class OrganizerController {
         res.status(201).json(data);
       })
       .catch((error) => {
-        console.log('erorrrr >>>>>', error)
         next(error);
       });
   } 

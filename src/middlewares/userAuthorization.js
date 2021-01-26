@@ -4,11 +4,9 @@ function authorizationPayment(req, res, next) {
 
     const id = req.params.id
     const CustomerId = req.dataUser.id
-    // console.log(id);
 
     Ticket.findByPk(id)
         .then(data => {
-            console.log(data);
             if(CustomerId === data.CustomerId) {
                 next()
             }else {
@@ -22,20 +20,15 @@ function authorizationPayment(req, res, next) {
 }
 
 function authorizationWishlist(req, res, next) {
-
-    // console.log("test auth");
-
     const id = req.params.id
     const CustomerId = req.dataUser.id
 
     Wishlist.findByPk(id)
         .then(data => {
-            // console.log(data);
-            // console.log(Customer);
             if(CustomerId === data.CustomerId) {
                 next()
             }else {
-                res.status(500).json({ message: "You dont have permission"})
+                res.status(401).json({ message: "You dont have permission"})
             }
         })
         .catch(err => {

@@ -8,15 +8,49 @@ let OrganizerIdA = 0;
 let organizerTokenB = '';
 let OrganizerIdB = 0;
 let EventId = 0;
+let EventTypeIdA = 0;
+let EventTypeIdB = 0;
 
 const date = new Date();
 date.setDate(date.getDate() + 1);
 const validDate = date.toISOString().split('T')[0];
 
+beforeAll((done) => {
+  queryInterface.bulkInsert("EventTypes", [
+    {
+      name: "wedding",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      name: "music",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+  ], { returning: true })
+  .then((eventType) => {
+    EventTypeIdA = eventType[0].id;
+    EventTypeIdB = eventType[1].id;
+    done();
+  })
+  .catch((err) => {
+    done(err);
+  })
+});
+
 afterAll((done) => {
-  queryInterface.bulkDelete("Organizers")
+    queryInterface.bulkDelete("Customers")
     .then((response) => {
-      done();
+      return queryInterface.bulkDelete("Organizers")
+    })
+    .then((response) => {
+      return queryInterface.bulkDelete("EventTypes")
+    })
+    .then((response) => {
+      return queryInterface.bulkDelete("Tickets")
+    })
+    .then((response) => {
+      done()
     })
     .catch((err) => {
       done(err);
@@ -181,7 +215,7 @@ describe("Organizer register POST /organizers/register", () => {
         done();
       });
     });
-    test("cannot register Organizer, address in not provided", (done) => {
+    test("cannot register Organizer, address is not provided", (done) => {
       request(app)
       .post("/organizers/register")
       .send({
@@ -203,7 +237,7 @@ describe("Organizer register POST /organizers/register", () => {
         done();
       });
     });
-    test("cannot register Organizer, phone in not provided", (done) => {
+    test("cannot register Organizer, phone is not provided", (done) => {
       request(app)
       .post("/organizers/register")
       .send({
@@ -225,10 +259,36 @@ describe("Organizer register POST /organizers/register", () => {
         done();
       });
     });
+    test("cannot register Organizer, all required fields are not provided", (done) => {
+      request(app)
+      .post("/organizers/register")
+      .send({
+        name: "",
+        email: "",
+        password: "",
+        address: "",
+        phone: ""
+      })
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(400);
+        expect(body).toHaveProperty("message", [
+                      "Name is required",
+                      "Email is required",
+                      "Password is required",
+                      "Address is required",
+                      "Phone is required"
+        ]);
+        done();
+      });
+    });
   });
 });
 
-/* --------------------------------------LOGIN-------------------------------------- */
+// /* --------------------------------------LOGIN-------------------------------------- */
 
 describe("Organizer login POST /organizers/login", () => {
   describe("success, Organizer logged in", () => {
@@ -341,6 +401,28 @@ describe("Organizer login POST /organizers/login", () => {
   });
 });
 
+// GET ORGANIZER PROFILE
+
+describe("Get Organizer's Profile", () => {
+  describe("Success get organizer's profile", () => {
+    test("Response with data", (done) => {
+      request(app)
+        .get("/organizers/profile")
+        .set("access_token", organizerTokenA)
+        .end((err, res) => {
+          const { body, status } = res;
+          EventId = body.id;
+          if (err) {
+            return done(err);
+          }
+          expect(status).toBe(200);
+          expect(body).toHaveProperty("email", "organizerA@mail.com");
+          done();
+        })  
+    })
+  })
+})
+
 /* --------------------------------------CREATE EVENT-------------------------------------- */
 
 describe("create Event POST /organizers/events", () => {
@@ -362,7 +444,7 @@ describe("create Event POST /organizers/events", () => {
         price_vip: 300000,
         price_vvip: 500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: eventTypeId
+        EventTypeId: EventTypeIdA
       })
       .end((err, res) => {
         const { body, status } = res;
@@ -373,20 +455,198 @@ describe("create Event POST /organizers/events", () => {
         expect(status).toBe(201);
         expect(body).toHaveProperty("id", EventId);
         expect(body).toHaveProperty("title", "Event A");
+        expect(body).toHaveProperty("event_preview", "http://example.com/images/12345");
         expect(body).toHaveProperty("date", validDate);
         expect(body).toHaveProperty("time", "18:00:00");
         expect(body).toHaveProperty("location", "Central Park Jakarta");
         expect(body).toHaveProperty("capacity_regular", 1000);
+        expect(body).toHaveProperty("capacity_vip", 100);
+        expect(body).toHaveProperty("capacity_vvip", 50);
         expect(body).toHaveProperty("price_regular", 100000);
         expect(body).toHaveProperty("price_vip", 300000);
         expect(body).toHaveProperty("price_vvip", 500000);
         expect(body).toHaveProperty("OrganizerId", OrganizerIdA);
-        expect(body).toHaveProperty("EventTypeId", eventTypeId);
+        expect(body).toHaveProperty("EventTypeId", EventTypeIdA);
+        expect(body).toHaveProperty("StatusId", 1);
         done();
       });
     });
   });
   describe("error, create Event", () => {
+    test("VVIP price must be numeric", (done) => {
+      request(app)
+      .post("/organizers/events")
+      .set("access_token", organizerTokenA)
+      .send({ 
+        title: "Event A",
+        event_preview: "http://example.com/images/12345",
+        date: validDate,
+        time: "18:00:00",
+        location: "Central Park Jakarta",
+        capacity_regular: 1000,
+        capacity_vip: 100,
+        capacity_vvip: 50,
+        price_regular: 100000,
+        price_vip: 300000,
+        price_vvip: 'contoh',
+        OrganizerId: OrganizerIdA,
+        EventTypeId: EventTypeIdA
+      })
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(400);
+        expect(body).toHaveProperty("message", ["VVIP price must be numeric"]);
+        done();
+      });
+    });
+    test("VIP price must be numeric", (done) => {
+      request(app)
+      .post("/organizers/events")
+      .set("access_token", organizerTokenA)
+      .send({ 
+        title: "Event A",
+        event_preview: "http://example.com/images/12345",
+        date: validDate,
+        time: "18:00:00",
+        location: "Central Park Jakarta",
+        capacity_regular: 1000,
+        capacity_vip: 100,
+        capacity_vvip: 50,
+        price_regular: 100000,
+        price_vip: 'contoh',
+        price_vvip: 200000,
+        OrganizerId: OrganizerIdA,
+        EventTypeId: EventTypeIdA
+      })
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(400);
+        expect(body).toHaveProperty("message", ["VIP price must be numeric"]);
+        done();
+      });
+    });
+    test("Regular price must be numeric", (done) => {
+      request(app)
+      .post("/organizers/events")
+      .set("access_token", organizerTokenA)
+      .send({ 
+        title: "Event A",
+        event_preview: "http://example.com/images/12345",
+        date: validDate,
+        time: "18:00:00",
+        location: "Central Park Jakarta",
+        capacity_regular: 1000,
+        capacity_vip: 100,
+        capacity_vvip: 50,
+        price_regular: 'contoh',
+        price_vip: 21000,
+        price_vvip: 200000,
+        OrganizerId: OrganizerIdA,
+        EventTypeId: EventTypeIdA
+      })
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(400);
+        expect(body).toHaveProperty("message", ["Regular price must be numeric"]);
+        done();
+      });
+    });
+    test("VVIP capacity must be numeric", (done) => {
+      request(app)
+      .post("/organizers/events")
+      .set("access_token", organizerTokenA)
+      .send({ 
+        title: "Event A",
+        event_preview: "http://example.com/images/12345",
+        date: validDate,
+        time: "18:00:00",
+        location: "Central Park Jakarta",
+        capacity_regular: 1000,
+        capacity_vip: 100,
+        capacity_vvip: 'contoh',
+        price_regular: 100000,
+        price_vip: 21000,
+        price_vvip: 200000,
+        OrganizerId: OrganizerIdA,
+        EventTypeId: EventTypeIdA
+      })
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(400);
+        expect(body).toHaveProperty("message", ["VVIP capacity must be numeric"]);
+        done();
+      });
+    });
+    test("VIP capacity must be numeric", (done) => {
+      request(app)
+      .post("/organizers/events")
+      .set("access_token", organizerTokenA)
+      .send({ 
+        title: "Event A",
+        event_preview: "http://example.com/images/12345",
+        date: validDate,
+        time: "18:00:00",
+        location: "Central Park Jakarta",
+        capacity_regular: 1000,
+        capacity_vip: 'contoh',
+        capacity_vvip: 50,
+        price_regular: 100000,
+        price_vip: 21000,
+        price_vvip: 200000,
+        OrganizerId: OrganizerIdA,
+        EventTypeId: EventTypeIdA
+      })
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(400);
+        expect(body).toHaveProperty("message", ["VIP capacity must be numeric"]);
+        done();
+      });
+    });
+    test("Regular capacity must be numeric", (done) => {
+      request(app)
+      .post("/organizers/events")
+      .set("access_token", organizerTokenA)
+      .send({ 
+        title: "Event A",
+        event_preview: "http://example.com/images/12345",
+        date: validDate,
+        time: "18:00:00",
+        location: "Central Park Jakarta",
+        capacity_regular: 'contoh',
+        capacity_vip: 100,
+        capacity_vvip: 10,
+        price_regular: 100000,
+        price_vip: 21000,
+        price_vvip: 200000,
+        OrganizerId: OrganizerIdA,
+        EventTypeId: EventTypeIdA
+      })
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(400);
+        expect(body).toHaveProperty("message", ["Regular capacity must be numeric"]);
+        done();
+      });
+    });
     test("cannot create Event, no access_token", (done) => {
       request(app)
       .post("/organizers/events")
@@ -403,7 +663,7 @@ describe("create Event POST /organizers/events", () => {
         price_vip: 300000,
         price_vvip: 500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: 1
+        EventTypeId: EventTypeIdA
       })
       .end((err, res) => {
         const { body, status } = res;
@@ -432,11 +692,10 @@ describe("create Event POST /organizers/events", () => {
         price_vip: 300000,
         price_vvip: 500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: 1
+        EventTypeId: EventTypeIdA
       })
       .end((err, res) => {
         const { body, status } = res;
-        EventId = body.id;
         if (err) {
           return done(err);
         }
@@ -445,36 +704,35 @@ describe("create Event POST /organizers/events", () => {
         done();
       });
     });
-    test("cannot create Event, no date", (done) => {
-      request(app)
-      .post("/organizers/events")
-      .set("access_token", organizerTokenA)
-      .send({ 
-        title: "Event A",
-        event_preview: "http://example.com/images/12345",
-        date: "",
-        time: "18:00:00",
-        location: "Central Park Jakarta",
-        capacity_regular: 1000,
-        capacity_vip: 100,
-        capacity_vvip: 50,
-        price_regular: 100000,
-        price_vip: 300000,
-        price_vvip: 500000,
-        OrganizerId: OrganizerIdA,
-        EventTypeId: 1
-      })
-      .end((err, res) => {
-        const { body, status } = res;
-        EventId = body.id;
-        if (err) {
-          return done(err);
-        }
-        expect(status).toBe(400);
-        expect(body).toHaveProperty("message", ["Date must be greater than today"]);
-        done();
-      });
-    });
+    // test("cannot create Event, no title", (done) => {
+    //   request(app)
+    //   .post("/organizers/events")
+    //   .set("access_token", organizerTokenA)
+    //   .send({ 
+    //     title: "",
+    //     event_preview: "http://example.com/images/12345",
+    //     date: "",
+    //     time: "18:00:00",
+    //     location: "Central Park Jakarta",
+    //     capacity_regular: 1000,
+    //     capacity_vip: 100,
+    //     capacity_vvip: 50,
+    //     price_regular: 100000,
+    //     price_vip: 300000,
+    //     price_vvip: 500000,
+    //     OrganizerId: OrganizerIdA,
+    //     EventTypeId: EventTypeIdA
+    //   })
+    //   .end((err, res) => {
+    //     const { body, status } = res;
+    //     if (err) {
+    //       return done(err);
+    //     }
+    //     expect(status).toBe(400);
+    //     expect(body).toHaveProperty("message", ["Date is required"]);
+    //     done();
+    //   });
+    // });
     test("cannot create Event, date is not greater than today", (done) => {
       request(app)
       .post("/organizers/events")
@@ -492,11 +750,10 @@ describe("create Event POST /organizers/events", () => {
         price_vip: 300000,
         price_vvip: 500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: 1
+        EventTypeId: EventTypeIdA
       })
       .end((err, res) => {
         const { body, status } = res;
-        EventId = body.id;
         if (err) {
           return done(err);
         }
@@ -505,36 +762,35 @@ describe("create Event POST /organizers/events", () => {
         done();
       });
     });
-    test("cannot create Event, no time", (done) => {
-      request(app)
-      .post("/organizers/events")
-      .set("access_token", organizerTokenA)
-      .send({ 
-        title: "Event A",
-        event_preview: "http://example.com/images/12345",
-        date:  validDate,
-        time: "",
-        location: "Central Park Jakarta",
-        capacity_regular: 1000,
-        capacity_vip: 100,
-        capacity_vvip: 50,
-        price_regular: 100000,
-        price_vip: 300000,
-        price_vvip: 500000,
-        OrganizerId: OrganizerIdA,
-        EventTypeId: 1
-      })
-      .end((err, res) => {
-        const { body, status } = res;
-        EventId = body.id;
-        if (err) {
-          return done(err);
-        }
-        expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "Time is required");
-        done();
-      });
-    });
+    // test("cannot create Event, no time", (done) => {
+    //   request(app)
+    //   .post("/organizers/events")
+    //   .set("access_token", organizerTokenA)
+    //   .send({ 
+    //     title: "Event A",
+    //     event_preview: "http://example.com/images/12345",
+    //     date:  validDate,
+    //     time: "",
+    //     location: "Central Park Jakarta",
+    //     capacity_regular: 1000,
+    //     capacity_vip: 100,
+    //     capacity_vvip: 50,
+    //     price_regular: 100000,
+    //     price_vip: 300000,
+    //     price_vvip: 500000,
+    //     OrganizerId: OrganizerIdA,
+    //     EventTypeId: EventTypeIdA
+    //   })
+    //   .end((err, res) => {
+    //     const { body, status } = res;
+    //     if (err) {
+    //       return done(err);
+    //     }
+    //     expect(status).toBe(400);
+    //     expect(body).toHaveProperty("message", ["Time is required"]);
+    //     done();
+    //   });
+    // });
     test("cannot create Event, no location", (done) => {
       request(app)
       .post("/organizers/events")
@@ -552,11 +808,10 @@ describe("create Event POST /organizers/events", () => {
         price_vip: 300000,
         price_vvip: 500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: 1
+        EventTypeId: EventTypeIdA
       })
       .end((err, res) => {
         const { body, status } = res;
-        EventId = body.id;
         if (err) {
           return done(err);
         }
@@ -575,23 +830,80 @@ describe("create Event POST /organizers/events", () => {
         date: validDate,
         time: "18:00:00",
         location: "Central Park Jakarta",
-        capacity_regular: -1000,
+        capacity_regular: 0,
         capacity_vip: 100,
         capacity_vvip: 50,
         price_regular: 100000,
         price_vip: 300000,
         price_vvip: 500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: 1
+        EventTypeId: EventTypeIdA
       })
       .end((err, res) => {
         const { body, status } = res;
-        EventId = body.id;
         if (err) {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "Regular capacity must be greater than 0");
+        expect(body).toHaveProperty("message", ["Regular capacity must be greater than 0"]);
+        done();
+      });
+    });
+    test("cannot create Event, VIP capacity must be greater than 0", (done) => {
+      request(app)
+      .post("/organizers/events")
+      .set("access_token", organizerTokenA)
+      .send({ 
+        title: "Event A",
+        event_preview: "http://example.com/images/12345",
+        date: validDate,
+        time: "18:00:00",
+        location: "Central Park Jakarta",
+        capacity_regular: 1000,
+        capacity_vip: 0,
+        capacity_vvip: 50,
+        price_regular: 100000,
+        price_vip: 300000,
+        price_vvip: 500000,
+        OrganizerId: OrganizerIdA,
+        EventTypeId: EventTypeIdA
+      })
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(400);
+        expect(body).toHaveProperty("message", ["VIP capacity must be greater than 0"]);
+        done();
+      });
+    });
+    test("cannot create Event, VVIP capacity must be greater than 0", (done) => {
+      request(app)
+      .post("/organizers/events")
+      .set("access_token", organizerTokenA)
+      .send({ 
+        title: "Event A",
+        event_preview: "http://example.com/images/12345",
+        date: validDate,
+        time: "18:00:00",
+        location: "Central Park Jakarta",
+        capacity_regular: 1000,
+        capacity_vip: 100,
+        capacity_vvip: 0,
+        price_regular: 100000,
+        price_vip: 300000,
+        price_vvip: 500000,
+        OrganizerId: OrganizerIdA,
+        EventTypeId: EventTypeIdA
+      })
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(400);
+        expect(body).toHaveProperty("message", ["VVIP capacity must be greater than 0"]);
         done();
       });
     });
@@ -612,11 +924,10 @@ describe("create Event POST /organizers/events", () => {
         price_vip: 300000,
         price_vvip: 500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: 1
+        EventTypeId: EventTypeIdA
       })
       .end((err, res) => {
         const { body, status } = res;
-        EventId = body.id;
         if (err) {
           return done(err);
         }
@@ -642,11 +953,10 @@ describe("create Event POST /organizers/events", () => {
         price_vip: -300000,
         price_vvip: 500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: 1
+        EventTypeId: EventTypeIdA
       })
       .end((err, res) => {
         const { body, status } = res;
-        EventId = body.id;
         if (err) {
           return done(err);
         }
@@ -672,16 +982,47 @@ describe("create Event POST /organizers/events", () => {
         price_vip: 300000,
         price_vvip: -500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: 1
+        EventTypeId: EventTypeIdA
       })
       .end((err, res) => {
         const { body, status } = res;
-        EventId = body.id;
         if (err) {
           return done(err);
         }
         expect(status).toBe(400);
         expect(body).toHaveProperty("message", ["VVIP price cannot be less than 0"]);
+        done();
+      });
+    });
+    test("cannot create Event, title and location are not provided", (done) => {
+      request(app)
+      .post("/organizers/events")
+      .set("access_token", organizerTokenA)
+      .send({ 
+        title: "",
+        event_preview: "http://example.com/images/12345",
+        date: validDate,
+        time: "18:00:00",
+        location: "",
+        capacity_regular: 1000,
+        capacity_vip: 100,
+        capacity_vvip: 50,
+        price_regular: 100000,
+        price_vip: 300000,
+        price_vvip: 500000,
+        OrganizerId: OrganizerIdA,
+        EventTypeId: EventTypeIdA
+      })
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(400);
+        expect(body).toHaveProperty("message", [
+          "Title is required",
+          "Location is required"
+        ])
         done();
       });
     });
@@ -702,35 +1043,42 @@ describe("edit Event PUT /organizers/events/:id", () => {
         date: validDate,
         time: "19:00:00",
         location: "Central Park Jakarta",
-        capacity: 2000,
+        capacity_regular: 2000,
+        capacity_vip: 200,
+        capacity_vvip: 100,
         price_regular: 200000,
         price_vip: 350000,
         price_vvip: 500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: 2
+        EventTypeId: EventTypeIdB,
+        StatusId: 2
       })
       .end((err, res) => {
         const { body, status } = res;
-        EventId = body.id;
         if (err) {
           return done(err);
         }
         expect(status).toBe(200);
         expect(body).toHaveProperty("id", EventId);
         expect(body).toHaveProperty("title", "Event B");
+        expect(body).toHaveProperty("event_preview", "http://example.com/images/12345");
         expect(body).toHaveProperty("date", validDate);
         expect(body).toHaveProperty("time", "19:00:00");
         expect(body).toHaveProperty("location", "Central Park Jakarta");
-        expect(body).toHaveProperty("capacity", 2000);
+        expect(body).toHaveProperty("capacity_regular", 2000);
+        expect(body).toHaveProperty("capacity_vip", 200);
+        expect(body).toHaveProperty("capacity_vvip", 100);
         expect(body).toHaveProperty("price_regular", 200000);
         expect(body).toHaveProperty("price_vip", 350000);
         expect(body).toHaveProperty("price_vvip", 500000);
         expect(body).toHaveProperty("OrganizerId", OrganizerIdA);
-        expect(body).toHaveProperty("EventTypeId", 2);
+        expect(body).toHaveProperty("EventTypeId", EventTypeIdB);
+        expect(body).toHaveProperty("StatusId", 2);
         done();
       });
     });
   });
+  
   describe("error, edit Event", () => {
     test("cannot edit Event, no access_token", (done) => {
       request(app)
@@ -741,12 +1089,15 @@ describe("edit Event PUT /organizers/events/:id", () => {
         date: validDate,
         time: "19:00:00",
         location: "Central Park Jakarta",
-        capacity: 2000,
+        capacity_regular: 2000,
+        capacity_vip: 200,
+        capacity_vvip: 100,
         price_regular: 200000,
         price_vip: 350000,
         price_vvip: 500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: 2
+        EventTypeId: EventTypeIdB,
+        StatusId: 2
       })
       .end((err, res) => {
         const { body, status } = res;
@@ -768,12 +1119,15 @@ describe("edit Event PUT /organizers/events/:id", () => {
         date: validDate,
         time: "19:00:00",
         location: "Central Park Jakarta",
-        capacity: 2000,
+        capacity_regular: 2000,
+        capacity_vip: 200,
+        capacity_vvip: 100,
         price_regular: 200000,
         price_vip: 350000,
         price_vvip: 500000,
         OrganizerId: OrganizerIdB,
-        EventTypeId: 2
+        EventTypeId: EventTypeIdB,
+        StatusId: 2
       })
       .end((err, res) => {
         const { body, status } = res;
@@ -786,7 +1140,7 @@ describe("edit Event PUT /organizers/events/:id", () => {
       });
     });
 
-    test("cannot create Event, no title", (done) => {
+    test("cannot edit Event, no title", (done) => {
       request(app)
       .put(`/organizers/events/${EventId}`)
       .set("access_token", organizerTokenA)
@@ -796,53 +1150,57 @@ describe("edit Event PUT /organizers/events/:id", () => {
         date: validDate,
         time: "19:00:00",
         location: "Central Park Jakarta",
-        capacity: 2000,
+        capacity_regular: 2000,
+        capacity_vip: 200,
+        capacity_vvip: 100,
         price_regular: 200000,
         price_vip: 350000,
         price_vvip: 500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: 2
+        EventTypeId: EventTypeIdB,
+        StatusId: 2
       })
       .end((err, res) => {
         const { body, status } = res;
-        EventId = body.id;
         if (err) {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "Title is required");
+        expect(body).toHaveProperty("message", ["Title is required"]);
         done();
       });
     });
-    test("cannot create Event, no date", (done) => {
-      request(app)
-      .put(`/organizers/events/${EventId}`)
-      .set("access_token", organizerTokenA)
-      .send({ 
-        title: "Event B",
-        event_preview: "http://example.com/images/12345",
-        date: "",
-        time: "19:00:00",
-        location: "Central Park Jakarta",
-        capacity: 2000,
-        price_regular: 200000,
-        price_vip: 350000,
-        price_vvip: 500000,
-        OrganizerId: OrganizerIdA,
-        EventTypeId: 2
-      })
-      .end((err, res) => {
-        const { body, status } = res;
-        EventId = body.id;
-        if (err) {
-          return done(err);
-        }
-        expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "Date is required");
-        done();
-      });
-    });
-    test("cannot create Event, date is not greater than today", (done) => {
+    // test("cannot edit Event, no date", (done) => {
+    //   request(app)
+    //   .put(`/organizers/events/${EventId}`)
+    //   .set("access_token", organizerTokenA)
+    //   .send({ 
+    //     title: "Event B",
+    //     event_preview: "http://example.com/images/12345",
+    //     date: "",
+    //     time: "19:00:00",
+    //     location: "Central Park Jakarta",
+    //     capacity_regular: 2000,
+    //     capacity_vip: 200,
+    //     capacity_vvip: 100,
+    //     price_regular: 200000,
+    //     price_vip: 350000,
+    //     price_vvip: 500000,
+    //     OrganizerId: OrganizerIdA,
+    //     EventTypeId: EventTypeIdB,
+    //     StatusId: 2
+    //   })
+    //   .end((err, res) => {
+    //     const { body, status } = res;
+    //     if (err) {
+    //       return done(err);
+    //     }
+    //     expect(status).toBe(400);
+    //     expect(body).toHaveProperty("message", ["Date is required"]);
+    //     done();
+    //   });
+    // });
+    test("cannot edit Event, date is not greater than today", (done) => {
       request(app)
       .put(`/organizers/events/${EventId}`)
       .set("access_token", organizerTokenA)
@@ -852,53 +1210,57 @@ describe("edit Event PUT /organizers/events/:id", () => {
         date: "2020-12-31",
         time: "19:00:00",
         location: "Central Park Jakarta",
-        capacity: 2000,
+        capacity_regular: 2000,
+        capacity_vip: 200,
+        capacity_vvip: 100,
         price_regular: 200000,
         price_vip: 350000,
         price_vvip: 500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: 2
+        EventTypeId: EventTypeIdB,
+        StatusId: 2
       })
       .end((err, res) => {
         const { body, status } = res;
-        EventId = body.id;
         if (err) {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "Date must be greater than today");
+        expect(body).toHaveProperty("message", ["Date must be greater than today"]);
         done();
       });
     });
-    test("cannot create Event, no time", (done) => {
-      request(app)
-      .put(`/organizers/events/${EventId}`)
-      .set("access_token", organizerTokenA)
-      .send({ 
-        title: "Event B",
-        event_preview: "http://example.com/images/12345",
-        date: validDate,
-        time: "",
-        location: "Central Park Jakarta",
-        capacity: 2000,
-        price_regular: 200000,
-        price_vip: 350000,
-        price_vvip: 500000,
-        OrganizerId: OrganizerIdA,
-        EventTypeId: 2
-      })
-      .end((err, res) => {
-        const { body, status } = res;
-        EventId = body.id;
-        if (err) {
-          return done(err);
-        }
-        expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "Time is required");
-        done();
-      });
-    });
-    test("cannot create Event, no location", (done) => {
+    // test("cannot edit Event, no time", (done) => {
+    //   request(app)
+    //   .put(`/organizers/events/${EventId}`)
+    //   .set("access_token", organizerTokenA)
+    //   .send({ 
+    //     title: "Event B",
+    //     event_preview: "http://example.com/images/12345",
+    //     date: validDate,
+    //     time: "",
+    //     location: "Central Park Jakarta",
+    //     capacity_regular: 2000,
+    //     capacity_vip: 200,
+    //     capacity_vvip: 100,
+    //     price_regular: 200000,
+    //     price_vip: 350000,
+    //     price_vvip: 500000,
+    //     OrganizerId: OrganizerIdA,
+    //     EventTypeId: EventTypeIdB,
+    //     StatusId: 2
+    //   })
+    //   .end((err, res) => {
+    //     const { body, status } = res;
+    //     if (err) {
+    //       return done(err);
+    //     }
+    //     expect(status).toBe(400);
+    //     expect(body).toHaveProperty("message", ["Time is required"]);
+    //     done();
+    //   });
+    // });
+    test("cannot edit Event, no location", (done) => {
       request(app)
       .put(`/organizers/events/${EventId}`)
       .set("access_token", organizerTokenA)
@@ -908,25 +1270,27 @@ describe("edit Event PUT /organizers/events/:id", () => {
         date: validDate,
         time: "19:00:00",
         location: "",
-        capacity: 2000,
+        capacity_regular: 2000,
+        capacity_vip: 200,
+        capacity_vvip: 100,
         price_regular: 200000,
         price_vip: 350000,
         price_vvip: 500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: 2
+        EventTypeId: EventTypeIdB,
+        StatusId: 2
       })
       .end((err, res) => {
         const { body, status } = res;
-        EventId = body.id;
         if (err) {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "Location is required");
+        expect(body).toHaveProperty("message", ["Location is required"]);
         done();
       });
     });
-    test("cannot create Event, capacity must be greater than 0", (done) => {
+    test("cannot edit Event, regular capacity must be greater than 0", (done) => {
       request(app)
       .put(`/organizers/events/${EventId}`)
       .set("access_token", organizerTokenA)
@@ -936,25 +1300,27 @@ describe("edit Event PUT /organizers/events/:id", () => {
         date: validDate,
         time: "19:00:00",
         location: "Central Park Jakarta",
-        capacity: 0,
+        capacity_regular: 0,
+        capacity_vip: 200,
+        capacity_vvip: 100,
         price_regular: 200000,
         price_vip: 350000,
         price_vvip: 500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: 2
+        EventTypeId: EventTypeIdB,
+        StatusId: 2
       })
       .end((err, res) => {
         const { body, status } = res;
-        EventId = body.id;
         if (err) {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "Capacity must be greater than 0");
+        expect(body).toHaveProperty("message", ["Regular capacity must be greater than 0"]);
         done();
       });
     });
-    test("cannot create Event, regular price cannnot be less than 0", (done) => {
+    test("cannot edit Event, VIP capacity must be greater than 0", (done) => {
       request(app)
       .put(`/organizers/events/${EventId}`)
       .set("access_token", organizerTokenA)
@@ -964,25 +1330,87 @@ describe("edit Event PUT /organizers/events/:id", () => {
         date: validDate,
         time: "19:00:00",
         location: "Central Park Jakarta",
-        capacity: 2000,
+        capacity_regular: 2000,
+        capacity_vip: 0,
+        capacity_vvip: 100,
+        price_regular: 200000,
+        price_vip: 350000,
+        price_vvip: 500000,
+        OrganizerId: OrganizerIdA,
+        EventTypeId: EventTypeIdB,
+        StatusId: 2
+      })
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(400);
+        expect(body).toHaveProperty("message", ["VIP capacity must be greater than 0"]);
+        done();
+      });
+    });
+    test("cannot edit Event, VVIP capacity must be greater than 0", (done) => {
+      request(app)
+      .put(`/organizers/events/${EventId}`)
+      .set("access_token", organizerTokenA)
+      .send({ 
+        title: "Event B",
+        event_preview: "http://example.com/images/12345",
+        date: validDate,
+        time: "19:00:00",
+        location: "Central Park Jakarta",
+        capacity_regular: 2000,
+        capacity_vip: 200,
+        capacity_vvip: 0,
+        price_regular: 200000,
+        price_vip: 350000,
+        price_vvip: 500000,
+        OrganizerId: OrganizerIdA,
+        EventTypeId: EventTypeIdB,
+        StatusId: 2
+      })
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(400);
+        expect(body).toHaveProperty("message", ["VVIP capacity must be greater than 0"]);
+        done();
+      });
+    });
+    test("cannot edit Event, regular price cannnot be less than 0", (done) => {
+      request(app)
+      .put(`/organizers/events/${EventId}`)
+      .set("access_token", organizerTokenA)
+      .send({ 
+        title: "Event B",
+        event_preview: "http://example.com/images/12345",
+        date: validDate,
+        time: "19:00:00",
+        location: "Central Park Jakarta",
+        capacity_regular: 2000,
+        capacity_vip: 200,
+        capacity_vvip: 100,
         price_regular: -200000,
         price_vip: 350000,
         price_vvip: 500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: 2
+        EventTypeId: EventTypeIdB,
+        StatusId: 2
       })
       .end((err, res) => {
         const { body, status } = res;
-        EventId = body.id;
         if (err) {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "Regular price is invalid");
+        expect(body).toHaveProperty("message", ["Regular price cannot be less than 0"]);
         done();
       });
     });
-    test("cannot create Event, VIP price cannnot be less than 0", (done) => {
+    test("cannot edit Event, VIP price cannnot be less than 0", (done) => {
       request(app)
       .put(`/organizers/events/${EventId}`)
       .set("access_token", organizerTokenA)
@@ -992,25 +1420,27 @@ describe("edit Event PUT /organizers/events/:id", () => {
         date: validDate,
         time: "19:00:00",
         location: "Central Park Jakarta",
-        capacity: 2000,
+        capacity_regular: 2000,
+        capacity_vip: 200,
+        capacity_vvip: 100,
         price_regular: 200000,
         price_vip: -350000,
         price_vvip: 500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: 2
+        EventTypeId: EventTypeIdB,
+        StatusId: 2
       })
       .end((err, res) => {
         const { body, status } = res;
-        EventId = body.id;
         if (err) {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "VIP price is invalid");
+        expect(body).toHaveProperty("message", ["VIP price cannot be less than 0"]);
         done();
       });
     });
-    test("cannot create Event, VVIP price cannnot be less than 0", (done) => {
+    test("cannot edit Event, VVIP price cannnot be less than 0", (done) => {
       request(app)
       .put(`/organizers/events/${EventId}`)
       .set("access_token", organizerTokenA)
@@ -1020,29 +1450,91 @@ describe("edit Event PUT /organizers/events/:id", () => {
         date: validDate,
         time: "19:00:00",
         location: "Central Park Jakarta",
-        capacity: 2000,
+        capacity_regular: 2000,
+        capacity_vip: 200,
+        capacity_vvip: 100,
         price_regular: 200000,
         price_vip: 350000,
         price_vvip: -500000,
         OrganizerId: OrganizerIdA,
-        EventTypeId: 2
+        EventTypeId: EventTypeIdB,
+        StatusId: 2
       })
       .end((err, res) => {
         const { body, status } = res;
-        EventId = body.id;
         if (err) {
           return done(err);
         }
         expect(status).toBe(400);
-        expect(body).toHaveProperty("message", "VVIP price is invalid");
+        expect(body).toHaveProperty("message", ["VVIP price cannot be less than 0"]);
+        done();
+      });
+    });
+    test("cannot create Event, title and location are not provided", (done) => {
+      request(app)
+      .put(`/organizers/events/${EventId}`)
+      .set("access_token", organizerTokenA)
+      .send({ 
+        title: "",
+        event_preview: "http://example.com/images/12345",
+        date: validDate,
+        time: "19:00:00",
+        location: "",
+        capacity_regular: 2000,
+        capacity_vip: 200,
+        capacity_vvip: 100,
+        price_regular: 200000,
+        price_vip: 350000,
+        price_vvip: 500000,
+        OrganizerId: OrganizerIdA,
+        EventTypeId: EventTypeIdB,
+        StatusId: 2
+      })
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(400);
+        expect(body).toHaveProperty("message", [
+          "Title is required",
+          "Location is required"
+        ])
         done();
       });
     });
   });
 });
 
-/* --------------------------------------DELETE-------------------------------------- */
+// GET EVENT
 
+describe("Get All Event", () => {
+  describe("Success Get All Event", () => {
+    const temp = [
+      { location: "Central Park Jakarta" }
+    ]
+    test("response with data", (done) => {
+      request(app)
+        .get("/organizers/events")
+        .set("access_token", organizerTokenA)
+        .end((err, res) => {
+          const { status, body } = res
+          if (err) {
+            return done(err)
+          }
+          expect(status).toBe(200)
+          expect(temp).toEqual(expect.arrayContaining([
+            expect.objectContaining({
+              location: "Central Park Jakarta"
+            })
+          ]))
+          done()
+        })
+    })
+  })
+})
+
+/* --------------------------------------DELETE-------------------------------------- */
 describe("delete Event DELETE /organizers/events/:id", () => {
   describe("error, delete Event", () => {
     test("cannot delete Event, no access_token", (done) => {
@@ -1072,6 +1564,20 @@ describe("delete Event DELETE /organizers/events/:id", () => {
         done();
       });
     });
+    test("cannot delete Event, data not found", (done) => {
+      request(app)
+      .delete(`/organizers/events/100000`)
+      .set("access_token", organizerTokenA)
+      .end((err, res) => {
+        const { body, status } = res;
+        if (err) {
+          return done(err);
+        }
+        expect(status).toBe(404);
+        expect(body).toHaveProperty("message", "Data is not found.");
+        done();
+      });
+    });
   });
   describe("success, Event deleted", () => {
     test("delete Event using EventId", (done) => {
@@ -1089,4 +1595,20 @@ describe("delete Event DELETE /organizers/events/:id", () => {
       });
     });
   });
+  describe("Error Get All Event", () => {
+    test("response with data not found", (done) => {
+      request(app)
+        .get("/organizers/events")
+        .set("access_token", organizerTokenA)
+        .end((err, res) => {
+          const { status, body } = res
+          if (err) {
+            return done(err)
+          }
+          expect(status).toBe(404)
+          expect(body).toHaveProperty("message", "Data not found")
+          done()
+        })
+    })
+  })
 });

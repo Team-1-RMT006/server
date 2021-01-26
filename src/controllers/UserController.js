@@ -1,4 +1,4 @@
-const { Customer, Event, Ticket, Wishlist } = require("../models")
+const { Customer, Event, Ticket, Wishlist, Status } = require("../models")
 const bcrypt = require("bcryptjs")
 const { generateToken } = require("../userHelpers/generateAndVerifyToken")
 const QRCode = require("qrcode")
@@ -24,118 +24,86 @@ class ControllerUser {
         const email = req.body.email
         const password = req.body.password
 
-        Customer.findOne({
-            where: {
-                email
+        if(email === "" && password === "") {
+            throw {
+                status: 400,
+                message: "Email and password are required"
             }
-        })
-            .then(data => {
-                // console.log(data);
-                if(!data) {
-                    res.status(400).json({ message: "Invalid email/password"})
-                }else {
-                    let passwordInDataBase = data.password
-                    if(bcrypt.compareSync(password, passwordInDataBase)) {
-                        const accesToken = generateToken({ id: data.id, email: data.email, name: data.fullName()})
-                        res.status(200).json({access_token: accesToken})
-                    }else {
-                        res.status(500).json(err)
-                    }
+        }else if(email === "") {
+            throw {
+                status: 400,
+                message: 'Email is required'
+            }
+        }else if(password === "") {
+            throw {
+                status: 400,
+                message: 'Password is required'
+            }
+        }else {
+            Customer.findOne({
+                where: {
+                    email
                 }
             })
-            .catch(err => {
-                next(err)
-            })
+                .then(data => {    
+                    if(!data) {
+                        res.status(401).json({ message: "Invalid email/password"})
+                    }else {
+                        let passwordInDataBase = data.password
+                        if(bcrypt.compareSync(password, passwordInDataBase)) {
+                            const accesToken = generateToken({ id: data.id, email: data.email, name: data.fullName()})
+                            res.status(200).json({access_token: accesToken})
+                        }else {
+                            res.status(401).json({"message": "Email or password is invalid"})
+                        }
+                    }
+                })
+                .catch(err => {
+                    // console.log(err);
+                    next(err)
+                })
+
+        }
     }
 
     static getAllDataEvents(req, res, next) { // ada double yang ngehandle
         // console.log(req.dataUser);
         Event.findAll({
-            where: {
-                status: "active" 
-            }
+            include: Status
         })
             .then(data => {
                 res.status(200).json(data) // masih belum di filter, belum tau dapetnya
             })
             .catch(err => {
+                // console.log((err));
                 next(err)
             })
     }
 
     static async buyTicketEvent(req, res, next) {
-        // console.log(JSON.stringify(req.dataUser));
-        // console.log(req.tokenForTicket, "-0-0-0-0-");
         const forTicket = JSON.stringify(req.dataUser)
 
         try {
             const data = await QRCode.toDataURL(forTicket)
-            // console.log(data);
             const newInputData = {
                     class: req.body.class,
                     CustomerId: req.dataUser.id,
-                    EventTypeId: req.body.EventId,
+                    EventId: req.body.EventId,
                     ticketCode: data, // GIMANA HAYOOOOO
                     seat: req.body.seat, 
                     status: "unpaid",
-                    price: req.body.price,
-                    event_preview: req.body.event_preview
-                    // event_preview: req.body.event_preview
+                    price: req.body.price
             }
 
-            
-            // console.log(newInputData);
-            
             const newData = await Ticket.create(newInputData)
-            
             res.status(201).json(newData)
             
         } catch (err) {
-            // console.log(req.body);
-            console.error(err, "---------")
-          }
-
-        // QRCode.toDataURL(forTicket, function(err, url) {
-        //         // console.log(typeof(url));
-        //     // migrateToQRCode = url
-        //         // console.log(migrateToQRCode);
-        //     // console.log(inputData);
-        //     inputData = newInputData
-        // })
-        // console.log(inputData, "---");
-        // Ticket.create(inputData)
-        //     .then(data => {
-        //         console.log("masuk ga sih?======");
-        //             req.status(201).josn(data)
-        //         })
-        //         .catch(err => {
-        //                 next(err)
-        //             })
-                    
-        // let migrateToQRCode = null
-        // QRCode.toDataURL(forTicket)
-        //     .then(url => {
-        //         migrateToQRCode = url
-        //         console.log(url);
-        //         console.log("ini pertama");
-                
-        //     })
-        //     .catch(err => {
-        //         console.log("ini eror");
-        //     })
-        //     const inputData = {
-        //         class: req.body.class,
-        //         CustomerId: req.dataUser.id,
-        //         EventId: req.body.EventId,
-        //         ticketCode: url, // GIMANA HAYOOOOO
-        //         seat: req.body.seat, 
-        //         status: "Unpaid",
-        //         price: req.body.price
-        //     }
-            
+            next(err)
+          } 
     }
 
-    static getAllTicketByCustomer(req, res) {
+    static getAllTicketByCustomer(req, res, next) {
         const CustomerId = req.dataUser.id
 
         Ticket.findAll({
@@ -144,19 +112,30 @@ class ControllerUser {
             }
         })
             .then(data => {
-                res.status(200).json(data)
+                if(data.length > 0) {
+                    res.status(200).json(data)
+                } else {
+                    throw {
+                        status: 404,
+                        message: "Data not found"
+                    }
+                }
             })
             .catch(err => {
-                res.status(500).json(err)
+                next(err)
             })
     }
 
     static paymentTicket(req, res, next) {
-        // console.log('sampai');
+
+        // let idTicket = Number(req.body.idTicket)
         const inputData = {
-            status: req.body.status
+            status: req.body.status,
+            CustomerId: req.dataUser.id
         }
         const id = req.params.id // ini nanti di dapet dari fornt end
+              
+        // console.log(id, 'sampai');
         Ticket.update(inputData, {
             where: {
                 id
@@ -164,7 +143,29 @@ class ControllerUser {
             returning: true
         })
             .then(data => {
-                console.log(data, "ini data");
+                // console.log(data, "ini data");
+                res.status(200).json(data[1][0])
+            })
+            .catch(err => {
+                // console.log(err, "---------");
+                next(err)
+            })
+    }
+
+    static changeStatusTicketEvent(req, res, next) {
+        const inputData = {
+            status: "closed",
+            CustomerId: req.dataUser.id
+        }
+        const id = req.params.id
+
+        Ticket.update(inputData, {
+            where: {
+                id
+            },
+            returning: true
+        })
+            .then(data => {
                 res.status(200).json(data[1][0])
             })
             .catch(err => {
@@ -174,8 +175,6 @@ class ControllerUser {
 
     static getAllDataWishlist(req, res, next) {
         const CustomerId = req.dataUser.id
-        // console.log(CustomerId);
-        let dataWishlist = null
 
         Wishlist.findAll({
             where: {
@@ -183,22 +182,19 @@ class ControllerUser {
             }
         })
             .then(data => {
-                dataWishlist = data
-                // res.status(200).json(data)
-                return Ticket.findAll({
-                    where: {
-                        CustomerId
+                if (data.length > 0) {
+                    res.status(200).json(data)
+                } else {
+                    throw {
+                        status: 404,
+                        message: "Data not found"
                     }
-                })
-            })
-            .then(data => {
-                // console.log(dataWishlist, "----");
-                // console.log(data, "0000");
-                res.status(200).json(dataWishlist)
+                }
             })
             .catch(err => {
                 // console.log(err);
-                res.status(500).json(err)
+                // res.status(500).json(err)
+                next(err)
             })
     }
 
@@ -207,16 +203,16 @@ class ControllerUser {
             CustomerId: req.dataUser.id,
             EventId: Number(req.body.EventId) || null
         }
-        console.log(inputData);
+        // console.log(inputData);
 
         Wishlist.create(inputData)
             .then(data => {
-                console.log("-----");
+                // console.log("-----");
                 res.status(201).json(data)
             })
             .catch(err => {
-                // next(err)
-                console.log(err);
+                next(err)
+                // console.log(err);
                 // res.status(500).json(err)
             })
     }
@@ -225,8 +221,6 @@ class ControllerUser {
         // console.log("test");
         const id = req.params.id
         // // const CustomerId = req.dataUser
-        // console.log(id);
-
         Wishlist.destroy({
             where: {
                 id
@@ -240,20 +234,27 @@ class ControllerUser {
             })
     }
 
-    static getDataHistoryPayment(req, res) {
+    static getDataHistoryPayment(req, res, next) {
         const CustomerId = req.dataUser.id
 
         Ticket.findAll({
             where: {
                 CustomerId,
-                status: "Paid"
+                status: "paid"
             }
         })
             .then(data => {
-                res.status(200).json(data)
+                if (data.length > 0) {
+                    res.status(200).json(data)
+                } else {
+                    throw {
+                        status: 404,
+                        message: "Data not found"
+                    }
+                }
             })
             .catch(err => {
-                res.status(500).json(err)
+                next(err)
             })
     }
 
