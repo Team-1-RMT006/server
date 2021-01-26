@@ -473,6 +473,29 @@ describe("Post buy ticket /customer/book", () => {
     });
   });
 
+  test("response with price must be numeric", (done) => {
+    request(app)
+    .post("/customer/book")
+    .set("access_token", customerTokenA)
+    .send({
+      class: "vip",
+      CustomerId: CustomerIdA,
+      EventId, // GIMANA HAYOOOOO
+      seat: "a10", 
+      status: "unpaid",
+      price: 'contoh'
+    })
+    .end((err, res) => {
+      const { body, status } = res;
+      if (err) {
+        return done(err);
+      }
+      expect(status).toBe(400);
+      expect(body).toHaveProperty("message", ["Price must be numeric"])
+      done();
+    });
+  });
+
   test("response with login first", (done) => {
     request(app)
     .post("/customer/book")
