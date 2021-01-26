@@ -103,7 +103,7 @@ class ControllerUser {
           } 
     }
 
-    static getAllTicketByCustomer(req, res) {
+    static getAllTicketByCustomer(req, res, next) {
         const CustomerId = req.dataUser.id
 
         Ticket.findAll({
@@ -112,10 +112,17 @@ class ControllerUser {
             }
         })
             .then(data => {
-                res.status(200).json(data)
+                if(data.length > 0) {
+                    res.status(200).json(data)
+                } else {
+                    throw {
+                        status: 404,
+                        message: "Data not found"
+                    }
+                }
             })
             .catch(err => {
-                res.status(500).json(err)
+                next(err)
             })
     }
 
@@ -147,7 +154,7 @@ class ControllerUser {
 
     static changeStatusTicketEvent(req, res, next) {
         const inputData = {
-            status: "close",
+            status: "closed",
             CustomerId: req.dataUser.id
         }
         const id = req.params.id
@@ -175,8 +182,14 @@ class ControllerUser {
             }
         })
             .then(data => {
-
-                res.status(200).json(data)
+                if (data.length > 0) {
+                    res.status(200).json(data)
+                } else {
+                    throw {
+                        status: 404,
+                        message: "Data not found"
+                    }
+                }
             })
             .catch(err => {
                 // console.log(err);
@@ -221,7 +234,7 @@ class ControllerUser {
             })
     }
 
-    static getDataHistoryPayment(req, res) {
+    static getDataHistoryPayment(req, res, next) {
         const CustomerId = req.dataUser.id
 
         Ticket.findAll({
@@ -231,10 +244,17 @@ class ControllerUser {
             }
         })
             .then(data => {
-                res.status(200).json(data)
+                if (data.length > 0) {
+                    res.status(200).json(data)
+                } else {
+                    throw {
+                        status: 404,
+                        message: "Data not found"
+                    }
+                }
             })
             .catch(err => {
-                res.status(500).json(err)
+                next(err)
             })
     }
 

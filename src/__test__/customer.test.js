@@ -16,6 +16,7 @@ let EventTypeId = 0
 let EventId = 0
 let id = 0
 let wishListId = 0
+let TicketId
 
 const date = new Date();
 date.setDate(date.getDate() + 1);
@@ -149,6 +150,27 @@ describe("Customer register POST /customer/register", () => {
         done();
       });
     });
+    const temp = [
+    { name: "Ticket"}
+  ]
+  test("response with data", (done) => {
+    request(app)
+    .get("/customer/ticket")
+    .set("access_token", customerTokenA)
+    .end((err, res) => {
+      const { status, body } = res
+      if(err) {
+        return done(err)
+      }
+      expect(status).toBe(401)
+      expect(temp).toEqual(expect.arrayContaining([
+        expect.objectContaining({
+          name: "Ticket"
+        })
+      ]))
+      done()
+    })
+  })
   });
 
   describe("error, register ", () => {
@@ -271,6 +293,37 @@ describe("Customer login POST /customer/login", () => {
         done();
       });
     });
+
+    test("Response with data not found", (done) => {
+      request(app)
+      .get("/customer/history")
+      .set("access_token", customerTokenA)
+      .end((err, res) => {
+        const { status, body } = res
+        if(err) {
+          return done(err)
+        }
+        expect(status).toBe(404)
+        expect(body).toHaveProperty("message", "Data not found")
+        done()
+      })
+    })
+
+    test("response with data", (done) => {
+      request(app)
+      .get("/customer/ticket")
+      .set("access_token", customerTokenA)
+      .end((err, res) => {
+        const { status, body } = res
+        if(err) {
+          return done(err)
+        }
+        expect(status).toBe(404)
+        expect(body).toHaveProperty("message", "Data not found")
+        done()
+      })
+    })
+
     // login Customer B
     test("response with access_token", (done) => {
       request(app)
@@ -306,8 +359,8 @@ describe("Customer login POST /customer/login", () => {
     });
     test("cannot log Organizer in, password is wrong", (done) => {
       request(app)
-      .post("/organizers/login")
-      .send({email: "organizerA@mail.com", password: "1234"})
+      .post("/customer/login")
+      .send({email: "test@mail.com", password: "1234"})
       .end((err, res) => {
         const { body, status } = res;
         if (err) {
@@ -407,6 +460,7 @@ describe("Post buy ticket /customer/book", () => {
       if (err) {
         return done(err);
       }
+      TicketId = res.body.id
       expect(status).toBe(201);
       expect(body).toHaveProperty("class", "vip")
       expect(body).toHaveProperty("CustomerId", CustomerIdA)
@@ -600,9 +654,9 @@ describe("Get All Ticket /customer/ticket", () => {
 
 // PATCH PAYMENT TICKET
 describe("Edit Status Payment /customer/buy/:id", () => {
-  test("need access_token", (done) => {
+  test("response with data", (done) => {
     request(app)
-    .patch(`/customer/buy/${id}`)
+    .patch(`/customer/buy/${TicketId}`)
     .set("access_token", customerTokenA)
     .send({
       status: "paid",
@@ -616,6 +670,27 @@ describe("Edit Status Payment /customer/buy/:id", () => {
       // expect(status).toBe(200)
       // expect(body).t
       // console.log(res.body, "00000000");
+      done()
+    })
+  })
+})
+
+// // POST ADD WISHLIST
+describe("Post Data to Wishlist /customer/wishlist", () => {
+  test("response wishlist data", (done) => {
+    request(app)
+    .post("/customer/wishlist")
+    .set("access_token", customerTokenA)
+    .send({
+      EventId
+    })
+    .end((err, res) => {
+      const { status, body } = res
+      wishListId = body.id
+      if(err) {
+        return done(err)
+      }
+      expect(status).toBe(201)
       done()
     })
   })
@@ -661,27 +736,6 @@ describe("Get All Data Wishlist /customer/wishlist", () => {
   })
 })
 
-// // POST ADD WISHLIST
-describe("Post Data to Wishlist /customer/wishlist", () => {
-  test("response wishlist data", (done) => {
-    request(app)
-    .post("/customer/wishlist")
-    .set("access_token", customerTokenA)
-    .send({
-      EventId
-    })
-    .end((err, res) => {
-      const { status, body } = res
-      wishListId = body.id
-      if(err) {
-        return done(err)
-      }
-      expect(status).toBe(201)
-      done()
-    })
-  })
-})
-
 // DELETE WISHLIST BY ID WISHLIST
 describe("Delete by Id /customer/delete/:id", () => {
   test("Delete data wishlist", (done) => {
@@ -695,6 +749,36 @@ describe("Delete by Id /customer/delete/:id", () => {
       }
       expect(status).toBe(200)
       // console.log(body, "opopopopoop");
+      done()
+    })
+  })
+
+  test("Delete data wishlist", (done) => {
+    request(app)
+    .delete(`/customer/wishlist/${wishListId}`)
+    .set("access_token", customerTokenA)
+    .end((err, res) => {
+      const { body, status } = res
+      if(err) {
+        return done(err)
+      }
+      expect(status).toBe(500)
+      // console.log(body, "opopopopoop");
+      done()
+    })
+  })
+
+  test("response with data not found", (done) => {
+    request(app)
+    .get("/customer/wishlist")
+    .set("access_token", customerTokenA)
+    .end((err, res) => {
+      const { status, body } = res
+      if(err) {
+        return done(err)
+      }
+      expect(status).toBe(404)
+      expect(body).toHaveProperty("message", "Data not found")
       done()
     })
   })
@@ -737,6 +821,21 @@ describe("Get All Data From Ticket Where Status = paid", () => {
       //     name: "History"
       //   })
       // ]))
+      done()
+    })
+  })
+  test("response with data", (done) => {
+    request(app)
+    .patch(`/customer/eventclose/${TicketId}`)
+    .set("access_token", customerTokenA)
+    .end((err, res) => {
+      const{ status, body } = res
+      if(err) {
+        return done(err)
+      }
+      expect(status).toBe(200)
+      // expect(body).t
+      // console.log(res.body, "00000000");
       done()
     })
   })
