@@ -6,7 +6,7 @@ function errorHandler(err, req, res, next) {
       const modelName = err.errors[0].instance.constructor.name
       for (let i = 0; i < err.errors.length; i++) {
         if (err.name === "SequelizeUniqueConstraintError") {
-          errors.push("The email has already been registered");
+          errors.push(err.errors[i].message);
 
         //Admins
         } else if (modelName === "Admin") {
@@ -154,6 +154,20 @@ function errorHandler(err, req, res, next) {
               if (!errors.includes("class is required")) {
                 errors.push(err.errors[i].message);
               }
+            } else if (err.errors[i].message === "Ticket code is required") {
+              if (!errors.includes("Ticket code is required")) {
+                errors.push(err.errors[i].message);
+              }
+            // } else if (err.errors[i].message === "Seat is required") {
+            //     errors.push(err.errors[i].message);
+            } else if (err.errors[i].message === "Status is required") {
+              if (!errors.includes("Status is required")) {
+                errors.push(err.errors[i].message);
+              }
+            } else if (err.errors[i].message === "Status is invalid") {
+              if (!errors.includes("Status is required")) {
+                errors.push(err.errors[i].message);
+              }
             } else if (err.errors[i].message === "Price must be numeric") {
                 errors.push(err.errors[i].message);
             } else if (err.errors[i].message === "Price cannot be less than 0") {
@@ -169,6 +183,22 @@ function errorHandler(err, req, res, next) {
                 errors.push(err.errors[i].message);
               }
             }
+
+        //Status
+        } else if (modelName === "Status") {
+          if (err.errors[i].message === "Status name is required") {
+            if (!errors.includes("Status name is required")) {
+              errors.push(err.errors[i].message);
+            }
+          }
+
+        //EventTypes
+        } else if (modelName === "EventType") {
+          if (err.errors[i].message === "Event type is required") {
+            if (!errors.includes("Event type is required")) {
+              errors.push(err.errors[i].message);
+            }
+          }
         }
       } 
       res.status(400).json({ message: errors });

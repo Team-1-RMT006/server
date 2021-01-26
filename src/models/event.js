@@ -38,14 +38,36 @@ module.exports = (sequelize, DataTypes) => {
     },
     date: {
       type: DataTypes.DATEONLY,
+      allowNull: false,
       validate: {
+        notNull: {
+          args: true,
+          msg: 'Date is required'
+        },
+        notEmpty: {
+          args: true,
+          msg: 'Date is required'
+        },
         isAfter: {
           args: (new Date).toString(),
           msg: "Date must be greater than today"
         }
       }
     },
-    time: DataTypes.TIME,
+    time: {
+      type: DataTypes.TIME,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: 'Time is required'
+        },
+        notEmpty: {
+          args: true,
+          msg: 'Time is required'
+        }
+      }
+    },
     location: {
       type: DataTypes.STRING,
       allowNull: false,

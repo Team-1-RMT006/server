@@ -15,7 +15,24 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   EventType.init({
-    name: DataTypes.STRING
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: {
+        args: true,
+        msg: "Event type must be unique"
+      },
+      validate: {
+        notNull: {
+          args: true,
+          msg: 'Event type is required'
+        },
+        notEmpty: {
+          args: true,
+          msg: 'Event type is required'
+        },
+      }
+    }
   }, {
     sequelize,
     modelName: 'EventType',
