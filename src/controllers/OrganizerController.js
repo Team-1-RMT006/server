@@ -80,27 +80,26 @@ class OrganizerController {
     });
   }
 
-  static showEvents(req, res, next) {
-    Event.findAll({
-      where: {
-        OrganizerId: req.loggedInUser.id
-      },
-      include: [EventType, Organizer],
-      order: [["StatusId", "ASC"]]
-    })
-      .then((data) => {
-          if (data.length > 0) {
-            res.status(200).json(data);
-          } else {
-            throw {
-              status: 404,
-              message: "Data not found"
-            }
-          }
-      })
-      .catch((error) => {
-          next(error);
-      });
+  static async showEvents(req, res, next) {
+    try {
+      const data = await Status.findAll({include: [{
+        model: Event,
+        where: {OrganizerId: req.loggedInUser.id},
+        include: [Ticket, EventType]}
+      ]})
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].Events.length > 0) {
+          res.status(200).json(data)
+        }
+      }
+      throw {
+        status: 404,
+        message: 'Data not found'
+      }
+    } catch (error) {
+      console.log(error);
+      next(error)
+    }
   }
 
   static createEvent(req, res, next) {
