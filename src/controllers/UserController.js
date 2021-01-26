@@ -258,6 +258,24 @@ class ControllerUser {
             })
     }
 
+    static getTicketById(req, res, next) {
+        const id = req.params.id
+
+        Ticket.findByPk(id, {
+            include: [{
+                model: Event,
+                include: [Organizer, EventType, Status]
+            }]
+        })
+            .then(data => {
+                res.status(200).json(data)
+            })
+            .catch(err => {
+                next(err)
+            })
+    }
+    
+
 }
 
 module.exports = ControllerUser
