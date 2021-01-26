@@ -117,14 +117,20 @@ class AdminController {
       const data = await Status.findAll({include: {
         model: Event,
         include: [Ticket]}})
+      let isContainData = false;
+
       for (let i = 0; i < data.length; i++) {
         if (data[i].Events.length > 0) {
-          res.status(200).json(data)
+          isContainData = true;
         }
       }
-      throw {
-        status: 404,
-        message: 'Data not found'
+      if(isContainData) {
+        res.status(200).json(data)
+      } else {
+        throw {
+          status: 404,
+          message: 'Data not found'
+        }
       }
     } catch (error) {
       next(error)
