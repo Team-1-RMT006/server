@@ -48,10 +48,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    seat: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },  
+    seat: DataTypes.STRING,
     status: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -72,8 +69,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     price: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       validate: {
+        notNull: {
+          args: true,
+          msg: 'Price is required'
+        },
         isNumeric: {
           args: true,
           msg: "Price must be numeric"

@@ -16,10 +16,12 @@ module.exports = {
         type: Sequelize.TEXT
       },
       date: {
-        type: Sequelize.DATEONLY
+        type: Sequelize.DATEONLY,
+        allowNull: false
       },
       time: {
-        type: Sequelize.TIME
+        type: Sequelize.TIME,
+        allowNull: false
       },
       location: {
         type: Sequelize.STRING,
@@ -27,24 +29,27 @@ module.exports = {
       },
       capacity_regular: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: true
       },
       capacity_vip: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: true
       },
       capacity_vvip: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: true
       },
       price_regular: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: true
       },
       price_vip: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: true
       },
       price_vvip: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
