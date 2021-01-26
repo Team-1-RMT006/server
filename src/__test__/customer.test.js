@@ -16,6 +16,7 @@ let EventTypeId = 0
 let EventId = 0
 let id = 0
 let wishListId = 0
+let contId = 0
 
 const date = new Date();
 date.setDate(date.getDate() + 1);
@@ -404,6 +405,7 @@ describe("Post buy ticket /customer/book", () => {
     .end((err, res) => {
       const { body, status } = res;
       id = body.id
+      contId = res.body.id
       if (err) {
         return done(err);
       }
@@ -523,7 +525,7 @@ describe("Post buy ticket /customer/book", () => {
     })
     .end((err, res) => {
       const { body, status } = res;
-      id = body.id
+      // id = body.id
       if (err) {
         return done(err);
       }
@@ -609,13 +611,15 @@ describe("Edit Status Payment /customer/buy/:id", () => {
       CustomerId: CustomerIdA
     })
     .end((err, res) => {
+      console.log(id, "ini id");
+      console.log(contId, " ----------- ");
       const{ status, body } = res
       if(err) {
         return done(err)
       }
-      // expect(status).toBe(200)
-      // expect(body).t
-      // console.log(res.body, "00000000");
+      expect(status).toBe(200)
+      expect(body).t
+      console.log(res.body, "00000000");
       done()
     })
   })

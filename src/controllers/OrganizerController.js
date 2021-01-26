@@ -89,7 +89,15 @@ class OrganizerController {
       include: [EventType, Organizer]
     })
       .then((data) => {
-          res.status(200).json(data);
+        const dataEvents = JSON.parse(redis.get("events"))
+
+        if(dataEvents) {
+          res.status(200).json(dataEvents)
+        }else {
+          redis.set("events", JSON.stringify(data))
+          res.status(200).json(dataEvents)
+        }
+          // res.status(200).json(data);
       })
       .catch((error) => {
           next(error);
@@ -101,7 +109,14 @@ class OrganizerController {
     newEvent.OrganizerId = req.loggedInUser.id
     Event.create(newEvent)
       .then((data) => {
-        res.status(201).json(data);
+        const dataEvents = JSON.parse(redis.get("events"))
+
+        if(dataEvents) {
+          dataEvents.push(data)
+          redis.set("events", JSON.stringify(dataEvents))
+        }
+
+        res.status(201).json(dataEvents);
       })
       .catch((error) => {
         console.log('erorrrr >>>>>', error)
@@ -120,7 +135,13 @@ class OrganizerController {
       returning: true
     })
       .then((data) => {
-        res.status(200).json(data[1][0]);
+        const dataEvents = JSON.parse(redis.get("events"))
+
+        if(dataEvents) {
+          dataEvents.push(data)
+          redis.set("events", JSON.stringify(dataEvents))
+        }
+        res.status(200).json(dataEvents[1][0]);
       })
       .catch((error) => {
         next(error);
@@ -136,6 +157,7 @@ class OrganizerController {
     })
       .then((data) => {
         res.status(200).json({ message: "Deleted from database"});
+        redis.del("events")
       })
       .catch((error) => {
         next(error);

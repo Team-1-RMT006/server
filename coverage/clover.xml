@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1611617060278" clover="3.2.0">
-  <project timestamp="1611617060279" name="All files">
-    <metrics statements="637" coveredstatements="572" conditionals="275" coveredconditionals="198" methods="115" coveredmethods="92" elements="1027" coveredelements="862" complexity="0" loc="637" ncloc="637" packages="8" files="29" classes="29"/>
+<coverage generated="1611628674157" clover="3.2.0">
+  <project timestamp="1611628674157" name="All files">
+    <metrics statements="637" coveredstatements="578" conditionals="275" coveredconditionals="199" methods="115" coveredmethods="94" elements="1027" coveredelements="871" complexity="0" loc="637" ncloc="637" packages="8" files="29" classes="29"/>
     <package name="src">
       <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="app.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/buckUpServer3/server/src/app.js">
@@ -19,7 +19,7 @@
       </file>
     </package>
     <package name="src.controllers">
-      <metrics statements="236" coveredstatements="211" conditionals="62" coveredconditionals="60" methods="65" coveredmethods="45"/>
+      <metrics statements="236" coveredstatements="215" conditionals="62" coveredconditionals="60" methods="65" coveredmethods="47"/>
       <file name="AdminController.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/buckUpServer3/server/src/controllers/AdminController.js">
         <metrics statements="121" coveredstatements="121" conditionals="32" coveredconditionals="32" methods="17" coveredmethods="17"/>
         <line num="1" count="3" type="stmt"/>
@@ -197,7 +197,7 @@
         <line num="146" count="3" type="stmt"/>
       </file>
       <file name="UserController.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/buckUpServer3/server/src/controllers/UserController.js">
-        <metrics statements="66" coveredstatements="48" conditionals="14" coveredconditionals="12" methods="31" coveredmethods="18"/>
+        <metrics statements="66" coveredstatements="52" conditionals="14" coveredconditionals="12" methods="31" coveredmethods="20"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
         <line num="3" count="3" type="stmt"/>
@@ -237,10 +237,10 @@
         <line num="109" count="1" type="stmt"/>
         <line num="115" count="1" type="stmt"/>
         <line num="118" count="0" type="stmt"/>
-        <line num="125" count="0" type="stmt"/>
-        <line num="129" count="0" type="stmt"/>
-        <line num="132" count="0" type="stmt"/>
-        <line num="140" count="0" type="stmt"/>
+        <line num="125" count="1" type="stmt"/>
+        <line num="129" count="1" type="stmt"/>
+        <line num="132" count="1" type="stmt"/>
+        <line num="140" count="1" type="stmt"/>
         <line num="144" count="0" type="stmt"/>
         <line num="149" count="0" type="stmt"/>
         <line num="153" count="0" type="stmt"/>
@@ -284,7 +284,7 @@
       </file>
     </package>
     <package name="src.middlewares">
-      <metrics statements="221" coveredstatements="183" conditionals="202" coveredconditionals="131" methods="13" coveredmethods="10"/>
+      <metrics statements="221" coveredstatements="185" conditionals="202" coveredconditionals="132" methods="13" coveredmethods="10"/>
       <file name="authentication.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/buckUpServer3/server/src/middlewares/authentication.js">
         <metrics statements="14" coveredstatements="13" conditionals="4" coveredconditionals="3" methods="1" coveredmethods="1"/>
         <line num="1" count="3" type="stmt"/>
@@ -501,16 +501,16 @@
         <line num="51" count="3" type="stmt"/>
       </file>
       <file name="userAuthorization.js" path="/home/febrianaditya/hacktiv8/phase3/finalProject/buckUpServer3/server/src/middlewares/userAuthorization.js">
-        <metrics statements="21" coveredstatements="14" conditionals="4" coveredconditionals="1" methods="6" coveredmethods="4"/>
+        <metrics statements="21" coveredstatements="16" conditionals="4" coveredconditionals="2" methods="6" coveredmethods="4"/>
         <line num="1" count="3" type="stmt"/>
         <line num="5" count="1" type="stmt"/>
         <line num="6" count="1" type="stmt"/>
         <line num="9" count="1" type="stmt"/>
-        <line num="11" count="0" type="stmt"/>
-        <line num="12" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="13" count="0" type="stmt"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="12" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="13" count="1" type="stmt"/>
         <line num="15" count="0" type="stmt"/>
-        <line num="19" count="1" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
         <line num="29" count="1" type="stmt"/>
         <line num="30" count="1" type="stmt"/>
         <line num="31" count="1" type="stmt"/>

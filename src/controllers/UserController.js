@@ -2,6 +2,9 @@ const { Customer, Event, Ticket, Wishlist, Status } = require("../models")
 const bcrypt = require("bcryptjs")
 const { generateToken } = require("../userHelpers/generateAndVerifyToken")
 const QRCode = require("qrcode")
+const Redis = require("ioredis")
+const redis = new Redis()
+
 class ControllerUser {
 
     static registerCustomer(req, res, next) {
@@ -13,7 +16,7 @@ class ControllerUser {
         }
         Customer.create(inputData)
             .then(data => {
-                res.status(201).json({ id: data.id, first_name: data.first_name, last_name: data.last_name, email: data.email })
+                res.status(201).json({ id: data.id, first_name: data.first_name, last_name: data.last_name, email: data.email })           
             })
             .catch(err => {
                 next(err)
@@ -72,10 +75,19 @@ class ControllerUser {
             include: Status
         })
             .then(data => {
-                res.status(200).json(data) // masih belum di filter, belum tau dapetnya
+                // console.log("------");
+                const dataEvents = JSON.parse(redis.get("events"))
+
+                if(dataEvents) {
+                    res.status(200).json(dataEvents)
+                }else {
+                    redis.set("events", JSON.stringify(data))
+                    res.status(200).json(dataEvents) // masih belum di filter, belum tau dapetnya
+                }
+                
             })
             .catch(err => {
-                // console.log((err));
+                console.log((err));
                 next(err)
             })
     }
@@ -96,9 +108,19 @@ class ControllerUser {
             }
 
             const newData = await Ticket.create(newInputData)
-            res.status(201).json(newData)
+            // console.log("---------");
+            const dataTickets = JSON.parse(redis.get("tickets"))
+
+            if(dataTickets) {
+                dataTickets.push(newData)
+                redis.set("tickets", JSON.stringify(dataTickets))
+            }
+
+            res.status(201).json(dataTickets)
+            // redis.delete()
             
         } catch (err) {
+            // console.log(err);
             next(err)
           } 
     }
@@ -112,7 +134,13 @@ class ControllerUser {
             }
         })
             .then(data => {
-                res.status(200).json(data)
+                const dataTickets = JSON.parse(redis.get("tickets"))
+                if(dataTickets) {
+                    res.status(200).json(dataTickets)
+                }else {
+                    redis.set("tickets", JSON.stringify(data))
+                    res.status(200).json(dataTickets)
+                }
             })
             .catch(err => {
                 res.status(500).json(err)
@@ -136,8 +164,14 @@ class ControllerUser {
             returning: true
         })
             .then(data => {
+                const dataTickets = JSON.parse(redis.get("tickets"))
+                
+                if(dataTickets) {
+                    dataTickets.push(data)
+                    redis.set("tickets", JSON.stringify(dataTickets))
+                }
                 // console.log(data, "ini data");
-                res.status(200).json(data[1][0])
+                res.status(200).json(dataTickets[1][0])
             })
             .catch(err => {
                 // console.log(err, "---------");
@@ -159,7 +193,13 @@ class ControllerUser {
             returning: true
         })
             .then(data => {
-                res.status(200).json(data[1][0])
+                const dataTickets = JSON.parse(redis.get("tickets"))
+
+                if(dataTickets) {
+                    dataTickets.push(data)
+                }
+
+                res.status(200).json(dataTickets[1][0])
             })
             .catch(err => {
                 next(err)
@@ -175,8 +215,14 @@ class ControllerUser {
             }
         })
             .then(data => {
+                const dataWishlists = JSON.parse(redis.get("wishlists"))
 
-                res.status(200).json(data)
+                if(dataWishlists) {
+                    res.status(200).json(dataWishlists)
+                }else {
+                    redis.set("wishlists", JSON.stringify(data))
+                    res.status(200).json(dataWishlists)
+                }
             })
             .catch(err => {
                 // console.log(err);
@@ -195,6 +241,12 @@ class ControllerUser {
         Wishlist.create(inputData)
             .then(data => {
                 // console.log("-----");
+                const dataWishlists = JSON.parse(redis.get("tickets"))
+
+                if(dataWishlists) {
+                    dataWishlists.push(data)
+                    redis.set("wishlists", JSON.stringify(dataWishlists))
+                }
                 res.status(201).json(data)
             })
             .catch(err => {
@@ -215,6 +267,7 @@ class ControllerUser {
         })
             .then(data => {
                 res.status(200).json({ message: "Wishlist deleted successfully"})
+                redis.del("wishlists")
             })
             .catch(err => {
                 next(err)
@@ -231,7 +284,15 @@ class ControllerUser {
             }
         })
             .then(data => {
-                res.status(200).json(data)
+                const history = JSON.parse(redis.get("history"))
+
+                if(history) {
+                    res.status(200).json(history)
+                }else {
+                    redis.set("history", JSON.stringify(data))
+                    res.status(200).json(history)
+                }
+                // res.status(200).json(data)
             })
             .catch(err => {
                 res.status(500).json(err)
