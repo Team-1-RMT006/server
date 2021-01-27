@@ -154,20 +154,20 @@ function errorHandler(err, req, res, next) {
               if (!errors.includes("class is required")) {
                 errors.push(err.errors[i].message);
               }
-            } else if (err.errors[i].message === "Ticket code is required") {
-              if (!errors.includes("Ticket code is required")) {
-                errors.push(err.errors[i].message);
-              }
+            // } else if (err.errors[i].message === "Ticket code is required") {
+            //   if (!errors.includes("Ticket code is required")) {
+            //     errors.push(err.errors[i].message);
+            //   }
             // } else if (err.errors[i].message === "Seat is required") {
             //     errors.push(err.errors[i].message);
-            } else if (err.errors[i].message === "Status is required") {
-              if (!errors.includes("Status is required")) {
-                errors.push(err.errors[i].message);
-              }
-            } else if (err.errors[i].message === "Status is invalid") {
-              if (!errors.includes("Status is required")) {
-                errors.push(err.errors[i].message);
-              }
+            // } else if (err.errors[i].message === "Status is required") {
+            //   if (!errors.includes("Status is required")) {
+            //     errors.push(err.errors[i].message);
+            //   }
+            // } else if (err.errors[i].message === "Status is invalid") {
+            //   if (!errors.includes("Status is required")) {
+            //     errors.push(err.errors[i].message);
+            //   }
             } else if (err.errors[i].message === "Price must be numeric") {
                 errors.push(err.errors[i].message);
             } else if (err.errors[i].message === "Price cannot be less than 0") {
