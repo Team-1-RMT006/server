@@ -185,12 +185,12 @@ function errorHandler(err, req, res, next) {
             }
 
         //Status
-        } else if (modelName === "Status") {
-          if (err.errors[i].message === "Status name is required") {
-            if (!errors.includes("Status name is required")) {
-              errors.push(err.errors[i].message);
-            }
-          }
+        // } else if (modelName === "Status") {
+        //   if (err.errors[i].message === "Status name is required") {
+        //     if (!errors.includes("Status name is required")) {
+        //       errors.push(err.errors[i].message);
+        //     }
+        //   }
 
         //EventTypes
         } else if (modelName === "EventType") {

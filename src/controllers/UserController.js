@@ -155,7 +155,6 @@ class ControllerUser {
             // console.log(data, "ini data");
             res.status(200).json(data[1][0])
         } catch (error) {
-            console.log('errorrr >>>', error)
             next(error)
         }
         // // console.log(id, 'sampai');
@@ -220,8 +219,6 @@ class ControllerUser {
                 }
             })
             .catch(err => {
-                // console.log(err);
-                // res.status(500).json(err)
                 next(err)
             })
     }
