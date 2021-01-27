@@ -2,6 +2,7 @@ const { Customer, Event, Ticket, Wishlist, Status, Organizer, EventType } = requ
 const bcrypt = require("bcryptjs")
 const { generateToken } = require("../userHelpers/generateAndVerifyToken")
 const QRCode = require("qrcode")
+const {sendEmail} = require("../helpers/sendEmail")
 class ControllerUser {
 
     static registerCustomer(req, res, next) {
@@ -126,7 +127,7 @@ class ControllerUser {
             })
     }
 
-    static paymentTicket(req, res, next) {
+    static async paymentTicket(req, res, next) {
 
         // let idTicket = Number(req.body.idTicket)
         const inputData = {
@@ -134,22 +135,48 @@ class ControllerUser {
             CustomerId: req.dataUser.id
         }
         const id = req.params.id // ini nanti di dapet dari fornt end
-              
-        // console.log(id, 'sampai');
-        Ticket.update(inputData, {
-            where: {
-                id
-            },
-            returning: true
-        })
-            .then(data => {
-                // console.log(data, "ini data");
-                res.status(200).json(data[1][0])
-            })
-            .catch(err => {
-                // console.log(err, "---------");
-                next(err)
-            })
+        const emailUser = req.dataUser.email
+        try {
+            const data = await Ticket.update(inputData, { where: { id }, returning: true })
+            const temp = await Ticket.findByPk(id, { include: [Event, Customer] })
+            const description = `Your ${data[1][0].class} ticket with price ${data[1][0].price} is ${data[1][0].status}`
+            const qrCode = data[1][0].ticketCode
+            const objTicket = {
+                title: temp.Event.title,
+                event_preview: temp.Event.event_preview,
+                date: temp.Event.date,
+                time: temp.Event.time,
+                location: temp.Event.location,
+                class: temp.class,
+                price: temp.price,
+                first_name: temp.Customer.first_name
+            }
+            await sendEmail(emailUser, description, qrCode, objTicket )
+            // console.log(data, "ini data");
+            res.status(200).json(data[1][0])
+        } catch (error) {
+            console.log('errorrr >>>', error)
+            next(error)
+        }
+        // // console.log(id, 'sampai');
+        // Ticket.update(inputData, {
+        //     where: {
+        //         id
+        //     },
+        //     returning: true
+        // })
+        //     .then(data => {
+        //         const description = `Your ${data[1][0].class} ticket with price ${data[1][0].price} is ${data[1][0].status}`
+        //         const qrCode = data[1][0].ticketCode
+        //         await sendEmail(emailUser, description, qrCode)
+        //         // console.log(data, "ini data");
+        //         res.status(200).json(data[1][0])
+                
+        //     })
+        //     .catch(err => {
+        //         // console.log(err, "---------");
+        //         next(err)
+        //     })
     }
 
     static changeStatusTicketEvent(req, res, next) {
