@@ -2,7 +2,9 @@ const express = require("express")
 const app = express()
 const route = require('./routes/index')
 const errorhandler = require('./middlewares/errorhandler')
-require('dotenv').config()
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 const cors = require('cors')
 
 app.use(cors())
