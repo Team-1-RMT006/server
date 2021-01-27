@@ -274,8 +274,21 @@ class ControllerUser {
                 next(err)
             })
     }
-    
 
+    static getEventById(req, res, next) {
+        const id = req.params.id
+    
+        Event.findByPk(id, {
+            include: [Ticket, Organizer, EventType, Status]
+        })
+            .then(data => {
+                res.status(200).json(data)
+            })
+            .catch(err => {
+                next(err)
+            })
+      }
+    
 }
 
 module.exports = ControllerUser

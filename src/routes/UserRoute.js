@@ -14,6 +14,7 @@ route.get("/wishlist", ControllerUser.getAllDataWishlist)
 route.get("/ticket", ControllerUser.getAllTicketByCustomer) // ini yang mau di tampilin di history juga ga???
 route.post("/wishlist", ControllerUser.addWishlist)
 route.get("/history", ControllerUser.getDataHistoryPayment)
+route.get("/events/:id", ControllerUser.getEventById)
 route.get("/ticket/:id", authorizationTicket, ControllerUser.getTicketById)
 route.patch("/buy/:id", authorizationPayment, ControllerUser.paymentTicket)
 route.patch("/eventclose/:id", authorizationPayment, ControllerUser.changeStatusTicketEvent)
