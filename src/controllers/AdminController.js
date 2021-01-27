@@ -326,16 +326,24 @@ class AdminController {
       next(error)
     }
   }
-}
 
-static async getOrganizers (req, res, next) {
-  try {
-    const data = await Organizer.findAll({
-      order: [["name", "ASC"]]
-  })
-      res.status(200).json(data)
-  } catch (error) {
-    next(error)
+  static async getOrganizers (req, res, next) {
+    try {
+      const data = await Organizer.findAll({
+        order: [["name", "ASC"]]
+    })
+        res.status(200).json({
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          address: data.address,
+          phone: data.phone,
+          createdAt: data.createdAt,
+          updatedAt: data.updatedAt
+        })
+    } catch (error) {
+      next(error)
+    }
   }
 }
 
