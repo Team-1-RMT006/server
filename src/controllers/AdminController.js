@@ -116,7 +116,7 @@ class AdminController {
     try {
       const data = await Status.findAll({include: {
         model: Event,
-        include: [Ticket]}})
+        include: [Ticket, EventType]}})
       let isContainData = false;
 
       for (let i = 0; i < data.length; i++) {
