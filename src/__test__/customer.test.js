@@ -721,7 +721,7 @@ describe("Get ticket by ID", () => {
       if(err) {
         return done(err)
       }
-      expect(status).toBe(401)
+      expect(status).toBe(404)
       // expect(temp).toEqual(expect.arrayContaining([
       //   expect.objectContaining({
       //     name: "Ticket"
@@ -933,19 +933,19 @@ describe("Get All Data From Ticket Where Status = paid", () => {
       done()
     })
   })
-  test("response with data", (done) => {
-    request(app)
-    .patch(`/customer/eventclose/${TicketId}`)
-    .set("access_token", customerTokenA)
-    .end((err, res) => {
-      const{ status, body } = res
-      if(err) {
-        return done(err)
-      }
-      expect(status).toBe(200)
-      // expect(body).t
-      // console.log(res.body, "00000000");
-      done()
-    })
-  })
+  // test("response with data", (done) => {
+  //   request(app)
+  //   .patch(`/customer/eventclose`)
+  //   .set("access_token", customerTokenA)
+  //   .end((err, res) => {
+  //     const{ status, body } = res
+  //     if(err) {
+  //       return done(err)
+  //     }
+  //     expect(status).toBe(200)
+  //     // expect(body).t
+  //     // console.log(res.body, "00000000");
+  //     done()
+  //   })
+  // })
 })
