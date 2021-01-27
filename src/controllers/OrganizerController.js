@@ -102,12 +102,14 @@ class OrganizerController {
 
   static createEvent(req, res, next) {
     const newEvent = req.body;
+    console.log(req.body);
     newEvent.OrganizerId = req.loggedInUser.id
     Event.create(newEvent)
       .then((data) => {
         res.status(201).json(data);
       })
       .catch((error) => {
+        console.log(error);
         next(error);
       });
   } 

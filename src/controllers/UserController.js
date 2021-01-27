@@ -5,17 +5,21 @@ const QRCode = require("qrcode")
 class ControllerUser {
 
     static registerCustomer(req, res, next) {
+        // console.log("woooooy");
         const inputData  = {
             first_name: req.body.first_name,
             last_name: req.body.last_name,
             email: req.body.email,
             password: req.body.password
         }
+        // console.log(inputData);
         Customer.create(inputData)
             .then(data => {
+                // console.log("p[p[p[");
                 res.status(201).json({ id: data.id, first_name: data.first_name, last_name: data.last_name, email: data.email })
             })
             .catch(err => {
+                // console.log(err);
                 next(err)
             })
     }
