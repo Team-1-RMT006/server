@@ -214,21 +214,18 @@ class AdminController {
     }
   }
 
-  static async getEventById (req, res, next) {
+  static getEventById(req, res, next) {
     const id = req.params.id
-    try {
-      const data = await Event.findByPk(id)
-      if (data) {
-        res.status(200).json(data)
-      } else {
-        throw {
-          status: 404,
-          message: "Data not found"
-        }
-      }
-    } catch (error) {
-      next(error)
-    }
+
+    Event.findByPk(id, {
+        include: [Ticket, Organizer, EventType, Status]
+    })
+        .then(data => {
+            res.status(200).json(data)
+        })
+        .catch(err => {
+            next(err)
+        })
   }
 
   static async getBannerById (req, res, next) {
