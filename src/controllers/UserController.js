@@ -155,13 +155,14 @@ class ControllerUser {
     static changeStatusTicketEvent(req, res, next) {
         const inputData = {
             status: "closed",
-            CustomerId: req.dataUser.id
         }
-        const id = req.params.id
+        const CustomerId = req.body.CustomerId
+        const EventId = req.body.EventId
 
         Ticket.update(inputData, {
             where: {
-                id
+                CustomerId,
+                EventId
             },
             returning: true
         })
