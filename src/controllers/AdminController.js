@@ -1,4 +1,4 @@
-const { Admin, Event, Banner, EventType, Status, Ticket } = require('../models/index')
+const { Admin, Event, Banner, EventType, Status, Ticket, Organizer } = require('../models/index')
 const { getTokenAdmin } = require('../helpers/jwt')
 const { compare } = require('../helpers/bcrypt')
 
@@ -216,16 +216,16 @@ class AdminController {
 
   static getEventById(req, res, next) {
     const id = req.params.id
-
     Event.findByPk(id, {
         include: [Ticket, Organizer, EventType, Status]
     })
-        .then(data => {
-            res.status(200).json(data)
-        })
-        .catch(err => {
-            next(err)
-        })
+    .then(data => {
+        res.status(200).json(data)
+    })
+    .catch(err => {
+        console.log(err)
+        next(err)
+    })
   }
 
   static async getBannerById (req, res, next) {
