@@ -698,19 +698,6 @@ describe("Get Banner", () => {
         ]))
         done()
       })
-  }),
-  test("response with login first", (done) => {
-    request(app)
-      .get("/admin/banner")
-      .end((err, res) => {
-        const { status, body } = res
-        if (err) {
-          return done(err)
-        }
-        expect(status).toBe(401)
-        expect(body).toHaveProperty("message", "Please login first")
-        done()
-      })
   })
 })
 
