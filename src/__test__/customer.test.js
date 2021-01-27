@@ -693,6 +693,42 @@ describe("Get ticket by ID", () => {
       // ]))
       done()
     })
+  }),
+  test("response with unauthorized", (done) => {
+    request(app)
+    .get("/customer/ticket/" + TicketId)
+    .set("access_token", customerTokenB)
+    .end((err, res) => {
+      const { status, body } = res
+      if(err) {
+        return done(err)
+      }
+      expect(status).toBe(401)
+      // expect(temp).toEqual(expect.arrayContaining([
+      //   expect.objectContaining({
+      //     name: "Ticket"
+      //   })
+      // ]))
+      done()
+    })
+  }),
+  test("response with data not found", (done) => {
+    request(app)
+    .patch("/customer/eventclose/" + TicketId)
+    .set("access_token", customerTokenB)
+    .end((err, res) => {
+      const { status, body } = res
+      if(err) {
+        return done(err)
+      }
+      expect(status).toBe(401)
+      // expect(temp).toEqual(expect.arrayContaining([
+      //   expect.objectContaining({
+      //     name: "Ticket"
+      //   })
+      // ]))
+      done()
+    })
   })
 })
 
@@ -741,6 +777,26 @@ describe("Edit Status Payment /customer/buy/:id", () => {
 })
 
 // // POST ADD WISHLIST
+describe("Post Data to Wishlist /customer/wishlist", () => {
+  test("response wishlist data", (done) => {
+    request(app)
+    .post("/customer/wishlist")
+    .set("access_token", customerTokenA)
+    .send({
+      EventId
+    })
+    .end((err, res) => {
+      const { status, body } = res
+      wishListId = body.id
+      if(err) {
+        return done(err)
+      }
+      expect(status).toBe(201)
+      done()
+    })
+  })
+})
+
 describe("Post Data to Wishlist /customer/wishlist", () => {
   test("response wishlist data", (done) => {
     request(app)
@@ -832,22 +888,10 @@ describe("Delete by Id /customer/delete/:id", () => {
       done()
     })
   })
-
-  test("response with data not found", (done) => {
-    request(app)
-    .get("/customer/wishlist")
-    .set("access_token", customerTokenA)
-    .end((err, res) => {
-      const { status, body } = res
-      if(err) {
-        return done(err)
-      }
-      expect(status).toBe(404)
-      expect(body).toHaveProperty("message", "Data not found")
-      done()
-    })
-  })
 })
+
+
+  
 
 describe("Get All Data From Ticket Where Status = paid", () => {
   const temp = [
