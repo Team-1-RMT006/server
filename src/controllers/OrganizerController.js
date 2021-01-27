@@ -157,7 +157,7 @@ class OrganizerController {
         .catch(err => {
             next(err)
         })
-    }
+  }
 }
 
 module.exports = OrganizerController;
