@@ -933,6 +933,7 @@ describe("Get All Data From Ticket Where Status = paid", () => {
       done()
     })
   })
+<<<<<<< HEAD
   test("response with data", (done) => {
     request(app)
     .patch(`/customer/eventclose`)
@@ -991,4 +992,21 @@ describe("Get All Data From Ticket Where Status = paid", () => {
       done()
     })
   })
+=======
+  // test("response with data", (done) => {
+  //   request(app)
+  //   .patch(`/customer/eventclose`)
+  //   .set("access_token", customerTokenA)
+  //   .end((err, res) => {
+  //     const{ status, body } = res
+  //     if(err) {
+  //       return done(err)
+  //     }
+  //     expect(status).toBe(200)
+  //     // expect(body).t
+  //     // console.log(res.body, "00000000");
+  //     done()
+  //   })
+  // })
+>>>>>>> main
 })
