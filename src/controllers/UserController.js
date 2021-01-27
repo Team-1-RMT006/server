@@ -1,4 +1,4 @@
-const { Customer, Event, Ticket, Wishlist, Status } = require("../models")
+const { Customer, Event, Ticket, Wishlist, Status, Organizer, EventType } = require("../models")
 const bcrypt = require("bcryptjs")
 const { generateToken } = require("../userHelpers/generateAndVerifyToken")
 const QRCode = require("qrcode")

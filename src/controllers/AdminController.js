@@ -1,4 +1,4 @@
-const { Admin, Event, Banner, EventType, Status, Ticket } = require('../models/index')
+const { Admin, Event, Banner, EventType, Status, Ticket, Organizer } = require('../models/index')
 const { getTokenAdmin } = require('../helpers/jwt')
 const { compare } = require('../helpers/bcrypt')
 
@@ -325,6 +325,17 @@ class AdminController {
     } catch (error) {
       next(error)
     }
+  }
+}
+
+static async getOrganizers (req, res, next) {
+  try {
+    const data = await Organizer.findAll({
+      order: [["name", "ASC"]]
+  })
+      res.status(200).json(data)
+  } catch (error) {
+    next(error)
   }
 }
 
