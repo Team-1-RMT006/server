@@ -721,7 +721,7 @@ describe("Get ticket by ID", () => {
       if(err) {
         return done(err)
       }
-      expect(status).toBe(401)
+      expect(status).toBe(404)
       // expect(temp).toEqual(expect.arrayContaining([
       //   expect.objectContaining({
       //     name: "Ticket"
@@ -935,8 +935,12 @@ describe("Get All Data From Ticket Where Status = paid", () => {
   })
   test("response with data", (done) => {
     request(app)
-    .patch(`/customer/eventclose/${TicketId}`)
+    .patch(`/customer/eventclose`)
     .set("access_token", customerTokenA)
+    .send({
+      CustomerId: CustomerIdA,
+      EventId
+    })
     .end((err, res) => {
       const{ status, body } = res
       if(err) {
@@ -945,6 +949,45 @@ describe("Get All Data From Ticket Where Status = paid", () => {
       expect(status).toBe(200)
       // expect(body).t
       // console.log(res.body, "00000000");
+      done()
+    })
+  }),
+  test("response data not found", (done) => {
+    request(app)
+    .get("/customer/wishlist")
+    .set("access_token", customerTokenB)
+    .end((err, res) => {
+      const { status, body } = res
+      if(err) {
+        return done(err)
+      }
+      expect(status).toBe(404)
+      // expect(temp).toEqual(expect.arrayContaining([
+      //   expect.objectContaining({
+      //     name: "History"
+      //   })
+      // ]))
+      done()
+    })
+  }),
+  test("response internal error", (done) => {
+    request(app)
+    .post("/customer/wishlist")
+    .set("access_token", customerTokenB)
+    .send({
+      EventId: 10000
+    })
+    .end((err, res) => {
+      const { status, body } = res
+      if(err) {
+        return done(err)
+      }
+      expect(status).toBe(500)
+      // expect(temp).toEqual(expect.arrayContaining([
+      //   expect.objectContaining({
+      //     name: "History"
+      //   })
+      // ]))
       done()
     })
   })
