@@ -1,4 +1,4 @@
-const { Organizer, EventType, Event, Ticket, Status } = require('../models');
+const { Organizer, EventType, Event, Ticket, Status, Customer } = require('../models');
 const { compare } = require("../organizerHelpers/bcrypt");
 const { sign } = require("../organizerHelpers/jwt");
 
@@ -149,7 +149,12 @@ class OrganizerController {
     const id = req.params.id
 
     Event.findByPk(id, {
-        include: [Ticket, Organizer, EventType, Status]
+        include: [
+        {
+          model: Ticket,
+          include: Customer
+        },
+        Organizer, EventType, Status]
     })
         .then(data => {
             res.status(200).json(data)

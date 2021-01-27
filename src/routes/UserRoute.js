@@ -7,6 +7,7 @@ const { authorizationPayment, authorizationWishlist, authorizationTicket } = req
 route.post("/register", ControllerUser.registerCustomer)
 route.post("/login", ControllerUser.loginRegister)
 route.get("/eventactive", ControllerUser.getAllDataEvents) // mau ngambil di Customer?
+route.patch("/eventclose", ControllerUser.changeStatusTicketEvent)
 
 route.use(authentication)
 route.post("/book", ControllerUser.buyTicketEvent)
@@ -17,7 +18,6 @@ route.get("/history", ControllerUser.getDataHistoryPayment)
 route.get("/events/:id", ControllerUser.getEventById)
 route.get("/ticket/:id", authorizationTicket, ControllerUser.getTicketById)
 route.patch("/buy/:id", authorizationPayment, ControllerUser.paymentTicket)
-route.patch("/eventclose/:id", authorizationPayment, ControllerUser.changeStatusTicketEvent)
 route.delete("/wishlist/:id", authorizationWishlist, ControllerUser.deleteWishList)
 
 
