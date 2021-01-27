@@ -191,7 +191,7 @@ describe("Register Admin", () => {
           return done(err)
         }
         expect(status).toBe(400)
-        expect(body).toHaveProperty("message", ["The email has already been registered"])
+        expect(body).toHaveProperty("message", ["Email has already been registered"])
         done()
       })
   })
@@ -1008,6 +1008,30 @@ describe("Delete Event Type", () => {
         }
         expect(status).toBe(404)
         expect(body).toHaveProperty("message", "Data not found")
+        done()
+      })
+  })
+})
+
+describe("Get Organizer", () => {
+  const temp = [
+    { name: "Organizer" }
+  ]
+  test("get data", (done) => {
+    request(app)
+      .get("/admin/organizers")
+      .set("access_token", access_token)
+      .end((err, res) => {
+        const { status, body } = res
+        if (err) {
+          return done(err)
+        }
+        expect(status).toBe(200)
+        expect(temp).toEqual(expect.arrayContaining([
+          expect.objectContaining({
+            name: "Organizer"
+          })
+        ]))
         done()
       })
   })

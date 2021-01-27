@@ -221,7 +221,14 @@ class AdminController {
         include: [Ticket, Organizer, EventType, Status]
     })
         .then(data => {
+          if (data) {
             res.status(200).json(data)
+          } else {
+            throw {
+              status: 404,
+              message: "Data not found"
+            }
+          }
         })
         .catch(err => {
             next(err)
@@ -330,17 +337,10 @@ class AdminController {
   static async getOrganizers (req, res, next) {
     try {
       const data = await Organizer.findAll({
-        order: [["name", "ASC"]]
+        order: [["name", "ASC"]],
+        attributes: ['id', 'name','email', 'address','phone', 'createdAt','updatedAt']
     })
-        res.status(200).json({
-          id: data.id,
-          name: data.name,
-          email: data.email,
-          address: data.address,
-          phone: data.phone,
-          createdAt: data.createdAt,
-          updatedAt: data.updatedAt
-        })
+        res.status(200).json(data)
     } catch (error) {
       next(error)
     }

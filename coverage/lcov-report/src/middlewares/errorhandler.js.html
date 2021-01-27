@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.32% </span>
+                <span class="strong">90.98% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>124/142</span>
+                <span class='fraction'>121/133</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68.68% </span>
+                <span class="strong">71.76% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>125/182</span>
+                <span class='fraction'>122/170</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.23% </span>
+                <span class="strong">90.91% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>123/141</span>
+                <span class='fraction'>120/132</span>
             </div>
         
             
@@ -423,19 +423,19 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -633,20 +633,20 @@
               <span class="missing-if-branch" title="else path not taken" >E</span>if (!errors.includes("class is required")) {
                 errors.push(err.errors[i].message);
               }
-            } else <span class="missing-if-branch" title="if path not taken" >I</span>if (err.errors[i].message === "Ticket code is required") {
-<span class="cstat-no" title="statement not covered" >              if (!errors.includes("Ticket code is required")) {</span>
-<span class="cstat-no" title="statement not covered" >                errors.push(err.errors[i].message);</span>
-              }
+            // } else if (err.errors[i].message === "Ticket code is required") {
+            //   if (!errors.includes("Ticket code is required")) {
+            //     errors.push(err.errors[i].message);
+            //   }
             // } else if (err.errors[i].message === "Seat is required") {
             //     errors.push(err.errors[i].message);
-            } else <span class="missing-if-branch" title="if path not taken" >I</span>if (err.errors[i].message === "Status is required") {
-<span class="cstat-no" title="statement not covered" >              if (!errors.includes("Status is required")) {</span>
-<span class="cstat-no" title="statement not covered" >                errors.push(err.errors[i].message);</span>
-              }
-            } else <span class="missing-if-branch" title="if path not taken" >I</span>if (err.errors[i].message === "Status is invalid") {
-<span class="cstat-no" title="statement not covered" >              if (!errors.includes("Status is required")) {</span>
-<span class="cstat-no" title="statement not covered" >                errors.push(err.errors[i].message);</span>
-              }
+            // } else if (err.errors[i].message === "Status is required") {
+            //   if (!errors.includes("Status is required")) {
+            //     errors.push(err.errors[i].message);
+            //   }
+            // } else if (err.errors[i].message === "Status is invalid") {
+            //   if (!errors.includes("Status is required")) {
+            //     errors.push(err.errors[i].message);
+            //   }
             } else if (err.errors[i].message === "Price must be numeric") {
                 errors.push(err.errors[i].message);
             } else <span class="missing-if-branch" title="else path not taken" >E</span>if (err.errors[i].message === "Price cannot be less than 0") {
@@ -694,7 +694,7 @@ module.exports = errorHandler;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Jan 26 2021 23:31:19 GMT+0700 (Western Indonesia Time)
+                at Wed Jan 27 2021 12:47:43 GMT+0700 (Western Indonesia Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

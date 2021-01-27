@@ -1534,6 +1534,27 @@ describe("Get All Event", () => {
   })
 })
 
+describe("get event by ID", () => {
+  test("response data", (done) => {
+    request(app)
+        .get("/organizers/events/" + EventId)
+        .set("access_token", organizerTokenA)
+        .end((err, res) => {
+          const { status, body } = res
+          if (err) {
+            return done(err)
+          }
+          expect(status).toBe(200)
+          // expect(temp).toEqual(expect.arrayContaining([
+          //   expect.objectContaining({
+          //     location: "Central Park Jakarta"
+          //   })
+          // ]))
+          done()
+        })
+  })
+})
+
 /* --------------------------------------DELETE-------------------------------------- */
 describe("delete Event DELETE /organizers/events/:id", () => {
   describe("error, delete Event", () => {

@@ -675,6 +675,48 @@ describe("Get All Ticket /customer/ticket", () => {
   })
 })
 
+describe("Get ticket by ID", () => {
+  test("response with data", (done) => {
+    request(app)
+    .get("/customer/ticket/" + TicketId)
+    .set("access_token", customerTokenA)
+    .end((err, res) => {
+      const { status, body } = res
+      if(err) {
+        return done(err)
+      }
+      expect(status).toBe(200)
+      // expect(temp).toEqual(expect.arrayContaining([
+      //   expect.objectContaining({
+      //     name: "Ticket"
+      //   })
+      // ]))
+      done()
+    })
+  })
+})
+
+describe("Get event by ID", () => {
+  test("response with data", (done) => {
+    request(app)
+    .get("/customer/events/" + EventId)
+    .set("access_token", customerTokenA)
+    .end((err, res) => {
+      const { status, body } = res
+      if(err) {
+        return done(err)
+      }
+      expect(status).toBe(200)
+      // expect(temp).toEqual(expect.arrayContaining([
+      //   expect.objectContaining({
+      //     name: "Ticket"
+      //   })
+      // ]))
+      done()
+    })
+  })
+})
+
 // PATCH PAYMENT TICKET
 describe("Edit Status Payment /customer/buy/:id", () => {
   test("response with data", (done) => {
