@@ -4,13 +4,12 @@ function authorizationPayment(req, res, next) {
 
     const id = req.params.id
     const CustomerId = req.dataUser.id
-
     Ticket.findByPk(id)
         .then(data => {
-            if(CustomerId === data.CustomerId) {
+            if (CustomerId === data.CustomerId) {
                 next()
-            }else {
-                res.status(401).json({ message: "You dont have permission"})
+            } else {
+                res.status(401).json({ message: "You dont have permission" })
             }
         })
         .catch(err => {
@@ -25,16 +24,16 @@ function authorizationWishlist(req, res, next) {
 
     Wishlist.findByPk(id)
         .then(data => {
-            if(CustomerId === data.CustomerId) {
+            if (CustomerId === data.CustomerId) {
                 next()
-            }else {
-                res.status(401).json({ message: "You dont have permission"})
+            } else {
+                res.status(401).json({ message: "You dont have permission" })
             }
         })
         .catch(err => {
             next(err)
         })
-        
+
 }
 
 function authorizationTicket(req, res, next) {
@@ -43,16 +42,16 @@ function authorizationTicket(req, res, next) {
 
     Ticket.findByPk(id)
         .then(data => {
-            if(CustomerId === data.CustomerId) {
+            if (CustomerId === data.CustomerId) {
                 next()
-            }else {
-                res.status(401).json({ message: "You dont have permission"})
+            } else {
+                res.status(401).json({ message: "You dont have permission" })
             }
         })
         .catch(err => {
             next(err)
         })
-        
+
 }
 
 module.exports = {

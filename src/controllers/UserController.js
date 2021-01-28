@@ -2,11 +2,11 @@ const { Customer, Event, Ticket, Wishlist, Status, Organizer, EventType } = requ
 const bcrypt = require("bcryptjs")
 const { generateToken } = require("../userHelpers/generateAndVerifyToken")
 const QRCode = require("qrcode")
-const {sendEmail} = require("../helpers/sendEmail")
+const { sendEmail } = require("../helpers/sendEmail")
 class ControllerUser {
 
     static registerCustomer(req, res, next) {
-        const inputData  = {
+        const inputData = {
             first_name: req.body.first_name,
             last_name: req.body.last_name,
             email: req.body.email,
@@ -25,42 +25,41 @@ class ControllerUser {
         const email = req.body.email
         const password = req.body.password
 
-        if(email === "" && password === "") {
+        if (email === "" && password === "") {
             throw {
                 status: 400,
                 message: "Email and password are required"
             }
-        }else if(email === "") {
+        } else if (email === "") {
             throw {
                 status: 400,
                 message: 'Email is required'
             }
-        }else if(password === "") {
+        } else if (password === "") {
             throw {
                 status: 400,
                 message: 'Password is required'
             }
-        }else {
+        } else {
             Customer.findOne({
                 where: {
                     email
                 }
             })
-                .then(data => {    
-                    if(!data) {
-                        res.status(401).json({ message: "Invalid email/password"})
-                    }else {
+                .then(data => {
+                    if (!data) {
+                        res.status(401).json({ message: "Invalid email/password" })
+                    } else {
                         let passwordInDataBase = data.password
-                        if(bcrypt.compareSync(password, passwordInDataBase)) {
-                            const accesToken = generateToken({ id: data.id, email: data.email, name: data.fullName()})
-                            res.status(200).json({access_token: accesToken})
-                        }else {
-                            res.status(401).json({"message": "Email or password is invalid"})
+                        if (bcrypt.compareSync(password, passwordInDataBase)) {
+                            const accesToken = generateToken({ id: data.id, email: data.email, name: data.fullName() })
+                            res.status(200).json({ access_token: accesToken })
+                        } else {
+                            res.status(401).json({ "message": "Email or password is invalid" })
                         }
                     }
                 })
                 .catch(err => {
-                    // console.log(err);
                     next(err)
                 })
 
@@ -68,7 +67,6 @@ class ControllerUser {
     }
 
     static getAllDataEvents(req, res, next) { // ada double yang ngehandle
-        // console.log(req.dataUser);
         Event.findAll({
             include: Status
         })
@@ -76,7 +74,6 @@ class ControllerUser {
                 res.status(200).json(data) // masih belum di filter, belum tau dapetnya
             })
             .catch(err => {
-                // console.log((err));
                 next(err)
             })
     }
@@ -87,21 +84,21 @@ class ControllerUser {
         try {
             const data = await QRCode.toDataURL(forTicket)
             const newInputData = {
-                    class: req.body.class,
-                    CustomerId: req.dataUser.id,
-                    EventId: req.body.EventId,
-                    ticketCode: data, // GIMANA HAYOOOOO
-                    seat: req.body.seat, 
-                    status: "unpaid",
-                    price: req.body.price
+                class: req.body.class,
+                CustomerId: req.dataUser.id,
+                EventId: req.body.EventId,
+                ticketCode: data, // GIMANA HAYOOOOO
+                seat: req.body.seat,
+                status: "unpaid",
+                price: req.body.price
             }
 
             const newData = await Ticket.create(newInputData)
             res.status(201).json(newData)
-            
+
         } catch (err) {
             next(err)
-          } 
+        }
     }
 
     static getAllTicketByCustomer(req, res, next) {
@@ -113,7 +110,7 @@ class ControllerUser {
             }
         })
             .then(data => {
-                if(data.length > 0) {
+                if (data.length > 0) {
                     res.status(200).json(data)
                 } else {
                     throw {
@@ -128,7 +125,6 @@ class ControllerUser {
     }
 
     static async paymentTicket(req, res, next) {
-
         // let idTicket = Number(req.body.idTicket)
         const inputData = {
             // status: req.body.status,
@@ -136,6 +132,7 @@ class ControllerUser {
             status: "paid"
         }
         const id = req.params.id // ini nanti di dapet dari fornt end
+
         const emailUser = req.dataUser.email
         try {
             const data = await Ticket.update(inputData, { where: { id }, returning: true })
@@ -152,13 +149,11 @@ class ControllerUser {
                 price: temp.price,
                 first_name: temp.Customer.first_name
             }
-            await sendEmail(emailUser, description, qrCode, objTicket )
-            // console.log(data, "ini data");
+            await sendEmail(emailUser, description, qrCode, objTicket)
             res.status(200).json(data[1][0])
         } catch (error) {
             next(error)
         }
-        // // console.log(id, 'sampai');
         // Ticket.update(inputData, {
         //     where: {
         //         id
@@ -169,12 +164,10 @@ class ControllerUser {
         //         const description = `Your ${data[1][0].class} ticket with price ${data[1][0].price} is ${data[1][0].status}`
         //         const qrCode = data[1][0].ticketCode
         //         await sendEmail(emailUser, description, qrCode)
-        //         // console.log(data, "ini data");
         //         res.status(200).json(data[1][0])
-                
+
         //     })
         //     .catch(err => {
-        //         // console.log(err, "---------");
         //         next(err)
         //     })
     }
@@ -229,22 +222,18 @@ class ControllerUser {
             CustomerId: req.dataUser.id,
             EventId: Number(req.body.EventId) || null
         }
-        // console.log(inputData);
 
         Wishlist.create(inputData)
             .then(data => {
-                // console.log("-----");
                 res.status(201).json(data)
             })
             .catch(err => {
                 next(err)
-                // console.log(err);
                 // res.status(500).json(err)
             })
     }
 
     static deleteWishList(req, res, next) {
-        // console.log("test");
         const id = req.params.id
         // // const CustomerId = req.dataUser
         Wishlist.destroy({
@@ -253,7 +242,7 @@ class ControllerUser {
             }
         })
             .then(data => {
-                res.status(200).json({ message: "Wishlist deleted successfully"})
+                res.status(200).json({ message: "Wishlist deleted successfully" })
             })
             .catch(err => {
                 next(err)
@@ -303,7 +292,6 @@ class ControllerUser {
 
     static getEventById(req, res, next) {
         const id = req.params.id
-    
         Event.findByPk(id, {
             include: [Ticket, Organizer, EventType, Status]
         })
@@ -313,8 +301,8 @@ class ControllerUser {
             .catch(err => {
                 next(err)
             })
-      }
-    
+    }
+
 }
 
 module.exports = ControllerUser

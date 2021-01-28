@@ -16,7 +16,7 @@ class AdminController {
     }
   }
 
-  static async loginAdmin (req, res, next) {
+  static async loginAdmin(req, res, next) {
     const obj = {
       email: req.body.email,
       password: req.body.password
@@ -38,7 +38,7 @@ class AdminController {
           message: 'Password is required'
         }
       } else {
-        const dataUser = await Admin.findOne({ where: { email: obj.email }})
+        const dataUser = await Admin.findOne({ where: { email: obj.email } })
         if (dataUser) {
           const dataCompared = compare(obj.password, dataUser.password)
           if (dataCompared) {
@@ -63,7 +63,7 @@ class AdminController {
     }
   }
 
-  static async createEvent (req, res, next) {
+  static async createEvent(req, res, next) {
     const obj = {
       title: req.body.title,
       event_preview: req.body.event_preview,
@@ -87,7 +87,7 @@ class AdminController {
     }
   }
 
-  static async editEvent (req, res, next) {
+  static async editEvent(req, res, next) {
     const obj = {
       id: req.params.id,
       title: req.body.title,
@@ -105,18 +105,21 @@ class AdminController {
       StatusId: req.body.StatusId
     }
     try {
-      const data = await Event.update(obj, { where: { id: obj.id }, returning: true})
+      const data = await Event.update(obj, { where: { id: obj.id }, returning: true })
       res.status(200).json(data[1][0])
     } catch (error) {
       next(error)
     }
   }
 
-  static async getEvent (req, res, next) {
+  static async getEvent(req, res, next) {
     try {
-      const data = await Status.findAll({include: {
-        model: Event,
-        include: [Ticket]}})
+      const data = await Status.findAll({
+        include: {
+          model: Event,
+          include: [Ticket]
+        }
+      })
       let isContainData = false;
 
       for (let i = 0; i < data.length; i++) {
@@ -124,7 +127,7 @@ class AdminController {
           isContainData = true;
         }
       }
-      if(isContainData) {
+      if (isContainData) {
         res.status(200).json(data)
       } else {
         throw {
@@ -137,10 +140,10 @@ class AdminController {
     }
   }
 
-  static async deleteEvent (req, res, next) {
+  static async deleteEvent(req, res, next) {
     const id = req.params.id
     try {
-      const data = await Event.destroy({ where: { id }})
+      const data = await Event.destroy({ where: { id } })
       if (data > 0) {
         res.status(200).json({ message: 'Data deleted successful' })
       } else {
@@ -154,7 +157,7 @@ class AdminController {
     }
   }
 
-  static async createBanner (req, res, next) {
+  static async createBanner(req, res, next) {
     const obj = {
       image_url: req.body.image_url,
       detail: req.body.detail
@@ -167,7 +170,7 @@ class AdminController {
     }
   }
 
-  static async getBanner (req, res, next) {
+  static async getBanner(req, res, next) {
     try {
       const data = await Banner.findAll()
       if (data.length > 0) {
@@ -183,24 +186,24 @@ class AdminController {
     }
   }
 
-  static async editBanner (req, res, next) {
+  static async editBanner(req, res, next) {
     const obj = {
       id: req.params.id,
       image_url: req.body.image_url,
       detail: req.body.detail
     }
     try {
-      const data = await Banner.update(obj, { where: { id: obj.id }, returning: true})
+      const data = await Banner.update(obj, { where: { id: obj.id }, returning: true })
       res.status(200).json(data[1][0])
     } catch (error) {
       next(error)
     }
   }
 
-  static async deleteBanner (req, res, next) {
+  static async deleteBanner(req, res, next) {
     const id = req.params.id
     try {
-      const data = await Banner.destroy({ where: { id }})
+      const data = await Banner.destroy({ where: { id } })
       if (data > 0) {
         res.status(200).json({ message: 'Data deleted successful' })
       } else {
@@ -218,24 +221,24 @@ class AdminController {
     const id = req.params.id
 
     Event.findByPk(id, {
-        include: [Ticket, Organizer, EventType, Status]
+      include: [Ticket, Organizer, EventType, Status]
     })
-        .then(data => {
-          if (data) {
-            res.status(200).json(data)
-          } else {
-            throw {
-              status: 404,
-              message: "Data not found"
-            }
+      .then(data => {
+        if (data) {
+          res.status(200).json(data)
+        } else {
+          throw {
+            status: 404,
+            message: "Data not found"
           }
-        })
-        .catch(err => {
-            next(err)
-        })
+        }
+      })
+      .catch(err => {
+        next(err)
+      })
   }
 
-  static async getBannerById (req, res, next) {
+  static async getBannerById(req, res, next) {
     const id = req.params.id
     try {
       const data = await Banner.findByPk(id)
@@ -252,7 +255,7 @@ class AdminController {
     }
   }
 
-  static async createEventType (req, res, next) {
+  static async createEventType(req, res, next) {
     const obj = {
       name: req.body.name
     }
@@ -264,7 +267,7 @@ class AdminController {
     }
   }
 
-  static async getEventType (req, res, next) {
+  static async getEventType(req, res, next) {
     try {
       const data = await EventType.findAll()
       if (data.length > 0) {
@@ -280,7 +283,7 @@ class AdminController {
     }
   }
 
-  static async editEventType (req, res, next) {
+  static async editEventType(req, res, next) {
     const obj = {
       id: req.params.id,
       name: req.body.name
@@ -300,10 +303,10 @@ class AdminController {
     }
   }
 
-  static async deleteEventType (req, res, next) {
+  static async deleteEventType(req, res, next) {
     const id = req.params.id
     try {
-      const data = await EventType.destroy({ where: { id }})
+      const data = await EventType.destroy({ where: { id } })
       if (data > 0) {
         res.status(200).json({ message: 'Data deleted successful' })
       } else {
@@ -317,7 +320,7 @@ class AdminController {
     }
   }
 
-  static async getEventTypeById (req, res, next) {
+  static async getEventTypeById(req, res, next) {
     const id = req.params.id
     try {
       const data = await EventType.findByPk(id)
@@ -334,13 +337,13 @@ class AdminController {
     }
   }
 
-  static async getOrganizers (req, res, next) {
+  static async getOrganizers(req, res, next) {
     try {
       const data = await Organizer.findAll({
         order: [["name", "ASC"]],
-        attributes: ['id', 'name','email', 'address','phone', 'createdAt','updatedAt']
-    })
-        res.status(200).json(data)
+        attributes: ['id', 'name', 'email', 'address', 'phone', 'createdAt', 'updatedAt']
+      })
+      res.status(200).json(data)
     } catch (error) {
       next(error)
     }
