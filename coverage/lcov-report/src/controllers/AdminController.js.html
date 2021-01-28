@@ -407,7 +407,10 @@
 <a name='L348'></a><a href='#L348'>348</a>
 <a name='L349'></a><a href='#L349'>349</a>
 <a name='L350'></a><a href='#L350'>350</a>
-<a name='L351'></a><a href='#L351'>351</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
+<a name='L351'></a><a href='#L351'>351</a>
+<a name='L352'></a><a href='#L352'>352</a>
+<a name='L353'></a><a href='#L353'>353</a>
+<a name='L354'></a><a href='#L354'>354</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -524,6 +527,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -775,7 +781,7 @@ class AdminController {
     }
   }
 &nbsp;
-  static async loginAdmin (req, res, next) {
+  static async loginAdmin(req, res, next) {
     const obj = {
       email: req.body.email,
       password: req.body.password
@@ -797,7 +803,7 @@ class AdminController {
           message: 'Password is required'
         }
       } else {
-        const dataUser = await Admin.findOne({ where: { email: obj.email }})
+        const dataUser = await Admin.findOne({ where: { email: obj.email } })
         if (dataUser) {
           const dataCompared = compare(obj.password, dataUser.password)
           if (dataCompared) {
@@ -822,7 +828,7 @@ class AdminController {
     }
   }
 &nbsp;
-  static async createEvent (req, res, next) {
+  static async createEvent(req, res, next) {
     const obj = {
       title: req.body.title,
       event_preview: req.body.event_preview,
@@ -846,7 +852,7 @@ class AdminController {
     }
   }
 &nbsp;
-  static async editEvent (req, res, next) {
+  static async editEvent(req, res, next) {
     const obj = {
       id: req.params.id,
       title: req.body.title,
@@ -864,18 +870,21 @@ class AdminController {
       StatusId: req.body.StatusId
     }
     try {
-      const data = await Event.update(obj, { where: { id: obj.id }, returning: true})
+      const data = await Event.update(obj, { where: { id: obj.id }, returning: true })
       res.status(200).json(data[1][0])
     } catch (error) {
       next(error)
     }
   }
 &nbsp;
-  static async getEvent (req, res, next) {
+  static async getEvent(req, res, next) {
     try {
-      const data = await Status.findAll({include: {
-        model: Event,
-        include: [Ticket]}})
+      const data = await Status.findAll({
+        include: {
+          model: Event,
+          include: [Ticket]
+        }
+      })
       let isContainData = false;
 &nbsp;
       for (let i = 0; i &lt; data.length; i++) {
@@ -883,7 +892,7 @@ class AdminController {
           isContainData = true;
         }
       }
-      if(isContainData) {
+      if (isContainData) {
         res.status(200).json(data)
       } else {
         throw {
@@ -896,10 +905,10 @@ class AdminController {
     }
   }
 &nbsp;
-  static async deleteEvent (req, res, next) {
+  static async deleteEvent(req, res, next) {
     const id = req.params.id
     try {
-      const data = await Event.destroy({ where: { id }})
+      const data = await Event.destroy({ where: { id } })
       if (data &gt; 0) {
         res.status(200).json({ message: 'Data deleted successful' })
       } else {
@@ -913,7 +922,7 @@ class AdminController {
     }
   }
 &nbsp;
-  static async createBanner (req, res, next) {
+  static async createBanner(req, res, next) {
     const obj = {
       image_url: req.body.image_url,
       detail: req.body.detail
@@ -926,7 +935,7 @@ class AdminController {
     }
   }
 &nbsp;
-  static async getBanner (req, res, next) {
+  static async getBanner(req, res, next) {
     try {
       const data = await Banner.findAll()
       if (data.length &gt; 0) {
@@ -942,24 +951,24 @@ class AdminController {
     }
   }
 &nbsp;
-  static async editBanner (req, res, next) {
+  static async editBanner(req, res, next) {
     const obj = {
       id: req.params.id,
       image_url: req.body.image_url,
       detail: req.body.detail
     }
     try {
-      const data = await Banner.update(obj, { where: { id: obj.id }, returning: true})
+      const data = await Banner.update(obj, { where: { id: obj.id }, returning: true })
       res.status(200).json(data[1][0])
     } catch (error) {
       next(error)
     }
   }
 &nbsp;
-  static async deleteBanner (req, res, next) {
+  static async deleteBanner(req, res, next) {
     const id = req.params.id
     try {
-      const data = await Banner.destroy({ where: { id }})
+      const data = await Banner.destroy({ where: { id } })
       if (data &gt; 0) {
         res.status(200).json({ message: 'Data deleted successful' })
       } else {
@@ -977,24 +986,24 @@ class AdminController {
     const id = req.params.id
 &nbsp;
     Event.findByPk(id, {
-        include: [Ticket, Organizer, EventType, Status]
+      include: [Ticket, Organizer, EventType, Status]
     })
-        .then(data =&gt; {
-          if (data) {
-            res.status(200).json(data)
-          } else {
-            throw {
-              status: 404,
-              message: "Data not found"
-            }
+      .then(data =&gt; {
+        if (data) {
+          res.status(200).json(data)
+        } else {
+          throw {
+            status: 404,
+            message: "Data not found"
           }
-        })
-        .catch(err =&gt; {
-            next(err)
-        })
+        }
+      })
+      .catch(err =&gt; {
+        next(err)
+      })
   }
 &nbsp;
-  static async getBannerById (req, res, next) {
+  static async getBannerById(req, res, next) {
     const id = req.params.id
     try {
       const data = await Banner.findByPk(id)
@@ -1011,7 +1020,7 @@ class AdminController {
     }
   }
 &nbsp;
-  static async createEventType (req, res, next) {
+  static async createEventType(req, res, next) {
     const obj = {
       name: req.body.name
     }
@@ -1023,7 +1032,7 @@ class AdminController {
     }
   }
 &nbsp;
-  static async getEventType (req, res, next) {
+  static async getEventType(req, res, next) {
     try {
       const data = await EventType.findAll()
       if (data.length &gt; 0) {
@@ -1039,7 +1048,7 @@ class AdminController {
     }
   }
 &nbsp;
-  static async editEventType (req, res, next) {
+  static async editEventType(req, res, next) {
     const obj = {
       id: req.params.id,
       name: req.body.name
@@ -1059,10 +1068,10 @@ class AdminController {
     }
   }
 &nbsp;
-  static async deleteEventType (req, res, next) {
+  static async deleteEventType(req, res, next) {
     const id = req.params.id
     try {
-      const data = await EventType.destroy({ where: { id }})
+      const data = await EventType.destroy({ where: { id } })
       if (data &gt; 0) {
         res.status(200).json({ message: 'Data deleted successful' })
       } else {
@@ -1076,7 +1085,7 @@ class AdminController {
     }
   }
 &nbsp;
-  static async getEventTypeById (req, res, next) {
+  static async getEventTypeById(req, res, next) {
     const id = req.params.id
     try {
       const data = await EventType.findByPk(id)
@@ -1093,13 +1102,13 @@ class AdminController {
     }
   }
 &nbsp;
-  static async getOrganizers (req, res, next) {
+  static async getOrganizers(req, res, next) {
     try {
       const data = await Organizer.findAll({
         order: [["name", "ASC"]],
-        attributes: ['id', 'name','email', 'address','phone', 'createdAt','updatedAt']
-    })
-        res.status(200).json(data)
+        attributes: ['id', 'name', 'email', 'address', 'phone', 'createdAt', 'updatedAt']
+      })
+      res.status(200).json(data)
     } catch (error) {
 <span class="cstat-no" title="statement not covered" >      next(error)</span>
     }
@@ -1114,11 +1123,7 @@ module.exports = AdminController
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-<<<<<<< HEAD
-                at Thu Jan 28 2021 06:05:13 GMT+0700 (Western Indonesia Time)
-=======
-                at Thu Jan 28 2021 00:37:52 GMT+0700 (Western Indonesia Time)
->>>>>>> main
+                at Thu Jan 28 2021 23:32:34 GMT+0700 (Western Indonesia Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
