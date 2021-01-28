@@ -82,7 +82,7 @@ class ControllerUser {
 
     static async buyTicketEvent(req, res, next) {
         const forTicket = JSON.stringify(req.dataUser)
-
+        
         try {
             const data = await QRCode.toDataURL(forTicket)
             const newInputData = {
@@ -94,12 +94,14 @@ class ControllerUser {
                     status: "unpaid",
                     price: req.body.price
             }
-
+            console.log('<<<<<<<<<< INI BUY TICKET THEN')
             const newData = await Ticket.create(newInputData)
             res.status(201).json(newData)
             
         } catch (err) {
+console.log(' <<<<<<<< DINSISNISNIS')
             next(err)
+            
           } 
     }
 
@@ -260,7 +262,7 @@ class ControllerUser {
 
     static getTicketById(req, res, next) {
         const id = req.params.id
-
+        console.log(id)
         Ticket.findByPk(id, {
             include: [{
                 model: Event,
@@ -277,11 +279,13 @@ class ControllerUser {
 
     static getEventById(req, res, next) {
         const id = req.params.id
+        console.log(",,,,,,,,,,")
     
         Event.findByPk(id, {
             include: [Ticket, Organizer, EventType, Status]
         })
             .then(data => {
+                console.log(data, '<<<<<')
                 res.status(200).json(data)
             })
             .catch(err => {

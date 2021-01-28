@@ -2,7 +2,7 @@ const { verifyToken } = require("../userHelpers/generateAndVerifyToken")
 const { Customer } = require("../models")
 
 function authentication(req, res, next) {
-
+    console.log('<<<<<<<< AUHT')
     try{
         let access_token = req.headers.access_token
 
@@ -14,7 +14,7 @@ function authentication(req, res, next) {
             let email = decoded.email
             req.dataUser = decoded
             req.tokenForTicket = access_token
-
+            console.log(decoded, 'userAuth')
             Customer.findOne({
                 where: {
                     id,
