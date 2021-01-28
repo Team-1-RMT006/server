@@ -50,7 +50,6 @@ module.exports = {
 
         transporter.sendMail(message, (err, info) => {
             if (err) throw err;
-            // console.log('Email sent: ' + info.response);
         });
       })
       
