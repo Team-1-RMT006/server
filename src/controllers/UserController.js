@@ -131,8 +131,9 @@ class ControllerUser {
 
         // let idTicket = Number(req.body.idTicket)
         const inputData = {
-            status: req.body.status,
-            CustomerId: req.dataUser.id
+            // status: req.body.status,
+            // CustomerId: req.dataUser.id
+            status: "paid"
         }
         const id = req.params.id // ini nanti di dapet dari fornt end
         const emailUser = req.dataUser.email
