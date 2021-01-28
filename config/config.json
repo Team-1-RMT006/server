@@ -15,6 +15,10 @@
     "logging": false
   },
   "production": {
-    "use_env_variable": "DATABASE_URL"
+    "username": "lobbvwhwahehly",
+    "password": "cd4cef325357c314667cec1209ad7f3ad30212eb99eee830ce4655477e9b343a",
+    "database": "dbaeo19odmc2oh",
+    "host": "ec2-54-156-85-145.compute-1.amazonaws.com",
+    "dialect": "postgres"
   }
 }

@@ -68,6 +68,9 @@ class ControllerUser {
 
     static getAllDataEvents(req, res, next) { // ada double yang ngehandle
         Event.findAll({
+            where: {
+                StatusId: 1
+            },
             include: Status
         })
             .then(data => {
